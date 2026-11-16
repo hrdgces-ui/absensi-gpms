@@ -1,66 +1,532 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Absensi Kamera & GPS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Absensi Operasional - RS Harum Sisma Medika</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .shadow-card-soft { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+    .shadow-glow-emerald { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.12); opacity: 0.2; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-ring { animation: pulseRing 3.5s infinite ease-in-out; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans">
+<body class="bg-slate-100 text-slate-800 flex flex-col h-[100dvh] max-w-md mx-auto relative overflow-hidden select-none">
 
-<div class="max-w-md mx-auto bg-white min-h-screen relative shadow-lg overflow-hidden flex flex-col">
+<!-- HEADER -->
+<header class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-lg border-b border-slate-700 shrink-0">
+  <div class="flex items-center space-x-3 w-full">
+    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md overflow-hidden shrink-0 border border-slate-200">
+      <i class="fa-solid fa-hospital text-blue-600 text-2xl"></i>
+    </div>
     
-    <!-- Bagian Header & Konten Utama -->
-    <div class="flex-1 p-4">
-        <h1 class="text-xl font-bold text-slate-800 mb-4">Sistem Absensi & Laporan</h1>
-        
-        <!-- Tombol untuk membuka kamera -->
-        <button onclick="openTaskLiveCamera()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition">
-            <i class="fa-solid fa-camera mr-2"></i> Buka Kamera Absensi
-        </button>
+    <div class="flex flex-col justify-center py-1">
+      <h1 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-0.5">Project Operation</h1>
+      <div class="flex items-center gap-2">
+        <h2 class="text-[14px] font-black tracking-wide uppercase text-white leading-none">RS Harum Sisma Medika</h2>
+      </div>
     </div>
+  </div>
 
-    <!-- Modal Kamera (Awalnya Tersembunyi) -->
-    <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-black flex flex-col max-w-md mx-auto h-full">
-        
-        <!-- Header Modal Kamera -->
-        <div class="bg-slate-900 text-white p-3 flex justify-between items-center z-10 shrink-0">
-            <span class="text-xs font-bold uppercase tracking-wider">Ambil Foto Laporan</span>
-            <button type="button" onclick="closeTaskLiveCamera()" class="text-slate-400 hover:text-rose-400 p-1 transition-colors">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
-        
-        <!-- Area Preview Video -->
-        <div class="relative w-full bg-black flex items-center justify-center overflow-hidden flex-1">
-            <video id="cameraVideo" class="w-full h-full object-cover" autoplay playsinline></video>
-            <canvas id="cameraCanvas" class="hidden"></canvas>
-            
-            <!-- Simulasi Watermark (Overlay saat preview) -->
-            <div class="absolute bottom-2 left-2 right-2 text-white text-[10px] font-mono bg-black/50 backdrop-blur-sm p-2 rounded flex flex-col pointer-events-none">
-                <span id="camWmDate" class="font-bold text-emerald-400">Loading Date...</span>
-                <span id="camWmLocation">📍 Mencari koordinat GPS...</span>
-                <span id="camWmUser">User: Karyawan</span>
-            </div>
-        </div>
-        
-        <!-- Kontrol Kamera Bawah -->
-        <div class="bg-slate-900 p-6 flex items-center justify-center gap-8 shrink-0 pb-10">
-            <button onclick="switchCamera()" class="w-12 h-12 rounded-full bg-slate-700 text-white flex items-center justify-center shadow transition active:scale-95">
-                <i class="fa-solid fa-camera-rotate text-lg"></i>
-            </button>
-            <button onclick="capturePhoto()" class="w-20 h-20 rounded-full bg-white border-4 border-emerald-500 text-emerald-600 flex items-center justify-center shadow-lg active:scale-90 transition transform">
-                <i class="fa-solid fa-camera text-3xl"></i>
-            </button>
-            <div class="w-12 h-12"></div> <!-- Spacer penyeimbang layout -->
-        </div>
+  <div class="flex items-center shrink-0 ml-2">
+    <button onclick="toggleUserDropdown()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition cursor-pointer shadow-md max-w-[110px]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+      <span class="text-[11px] truncate w-full text-left" id="headerActiveUserShort">Pilih Akun</span>
+      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Dropdown Pilihan Karyawan -->
+<div id="userDropdownCard" class="hidden absolute top-20 left-4 right-4 z-50 bg-white border border-slate-200 rounded-2xl shadow-2xl p-5 flex flex-col max-h-[75vh]">
+  <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3 shrink-0">
+    <div>
+      <span class="text-sm font-bold text-slate-800 block">Pilih Man Power</span>
+      <span class="text-[10px] text-slate-500">Database Project RS Harum</span>
     </div>
-
+    <button onclick="toggleUserDropdown()" class="text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="overflow-y-auto space-y-2 text-xs pb-1 pr-1" id="userListContainer"></div>
 </div>
 
-<!-- Memanggil file JavaScript -->
-<script src="app.js"></script>
+<main class="flex-1 overflow-y-auto p-4 space-y-4">
 
+  <!-- ================= BERANDA PANE ================= -->
+  <div id="tabContent-beranda" class="space-y-4 tab-content-pane">
+    
+    <div id="gpsStatusCard" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft transition-all">
+      <div class="flex items-center space-x-3">
+        <div id="gpsIconBg" class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">
+          <i class="fa-solid fa-location-crosshairs"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span id="gpsDotIndicator" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span id="gpsStatusTitle" class="text-xs font-bold text-emerald-900">DI LOKASI PROJECT</span>
+          </div>
+          <p class="text-[10px] text-emerald-700 mt-0.5 line-clamp-1">Lat: -6.2422 | Long: 106.8973</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tombol Test Lokasi (Simulasi) -->
+    <div class="bg-white border border-slate-200 rounded-xl p-2 shadow-sm space-y-1">
+      <div class="text-[9px] font-bold text-slate-500 text-center uppercase tracking-wider mb-1">--- Simulasi GPS ---</div>
+      <div class="flex items-center justify-between gap-2">
+        <button onclick="setQuickGps(true)" class="flex-1 text-[10px] bg-emerald-50 py-1.5 rounded text-emerald-700 font-semibold border border-emerald-200">Dalam Radius RS</button>
+        <button onclick="setQuickGps(false)" class="flex-1 text-[10px] bg-red-50 py-1.5 rounded text-red-700 font-semibold border border-red-200">Di Luar Area</button>
+      </div>
+    </div>
+
+    <div id="gpsLockedAlert" class="hidden bg-red-50 border-l-4 border-red-500 p-3 rounded-xl shadow-sm text-red-900">
+      <div class="flex items-start space-x-2">
+        <i class="fa-solid fa-circle-xmark text-red-500 text-lg mt-0.5"></i>
+        <div>
+          <h4 class="text-xs font-bold">Luar Area (Akses Absen Terkunci)</h4>
+          <p class="text-[10px] text-red-700 mt-1">Anda tidak berada di koordinat RS. Harum Sisma Medika (Jl. S. Kalimalang Tarum Barat).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jam Digital -->
+    <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center relative overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-600/20 rounded-full blur-xl"></div>
+      <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest" id="liveDateText">Memuat Tanggal...</p>
+      <div class="text-3xl font-black text-white tracking-wider my-1 font-mono" id="liveClockText">00:00:00 <span class="text-xs text-blue-400 font-sans">WIB</span></div>
+      
+      <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-left">
+        <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col justify-center items-center">
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">JAM MASUK</span>
+          <span id="clockInSummary" class="text-sm font-black text-slate-300">-- : --</span>
+        </div>
+        <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col justify-center items-center">
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">JAM PULANG</span>
+          <span id="clockOutSummary" class="text-sm font-black text-slate-300">-- : --</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pilihan Shift -->
+    <div id="shiftSelectorBox" class="bg-white border border-slate-200 rounded-2xl p-3 shadow-card-soft space-y-2">
+      <span class="text-xs font-bold text-slate-800 flex items-center">
+        <i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1.5"></i> Jadwal Kerja (Pilih Salah Satu):
+      </span>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="selectShift('Shift 1')" id="btnShift1" class="border border-blue-500 bg-blue-50 text-blue-700 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col btn-shift">
+          <span>Shift 1</span>
+          <span class="text-[9px] font-normal opacity-80">08:00 - 20:00</span>
+        </button>
+        <button onclick="selectShift('Shift 2')" id="btnShift2" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col btn-shift">
+          <span>Shift 2</span>
+          <span class="text-[9px] font-normal opacity-80">20:00 - 08:00</span>
+        </button>
+        <button onclick="selectShift('Non Shift')" id="btnShift3" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col btn-shift">
+          <span>Non Shift (SPV)</span>
+          <span class="text-[9px] font-normal opacity-80">08:00 - 16:00</span>
+        </button>
+        <button onclick="selectShift('Lembur')" id="btnShift4" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col btn-shift">
+          <span>Lembur Wajib (OT)</span>
+          <span class="text-[9px] font-normal opacity-80">Sabtu, 12:00 - 18:00</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tombol Absen Utama -->
+    <div class="py-4 flex flex-col items-center justify-center space-y-4">
+      
+      <div class="flex bg-slate-200/70 p-1.5 rounded-xl w-60 z-10 relative shadow-inner">
+        <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition">MASUK</button>
+        <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer">PULANG</button>
+      </div>
+
+      <div class="relative flex items-center justify-center mt-2">
+        <div id="btnGlowRing" class="absolute w-44 h-44 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
+        <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-36 h-36 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white shadow-glow-emerald flex flex-col items-center justify-center border-4 border-white/80 active:scale-95 transition duration-200 group cursor-pointer">
+          <i id="mainAbsenIcon" class="fa-solid fa-fingerprint text-4xl mb-1 group-hover:scale-110 transition"></i>
+          <span id="mainAbsenLabel" class="text-xs font-black uppercase tracking-wider">TAP ABSEN</span>
+          <span id="mainAbsenSublabel" class="hidden text-[9px] text-emerald-100 font-bold mt-1 bg-black/20 px-2 py-0.5 rounded-full text-center leading-tight">MASUK<br>SHIFT 1</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LEADER / SPV PANE ================= -->
+  <div id="tabContent-tim" class="space-y-4 tab-content-pane hidden">
+    <div id="leaderDashboardContent" class="space-y-4">
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-lg flex items-center justify-between border border-slate-700">
+        <div>
+          <h3 class="text-sm font-black uppercase tracking-widest text-amber-400">Dashboard SPV</h3>
+          <p class="text-[10px] text-slate-300 mt-0.5 font-medium">RS Harum Sisma Medika</p>
+        </div>
+        <div class="w-10 h-10 bg-amber-400/20 rounded-xl flex items-center justify-center">
+          <i class="fa-solid fa-users-gear text-xl text-amber-400"></i>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-card-soft overflow-hidden flex flex-col">
+        <div class="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+          <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-list-check text-blue-600 mr-1.5"></i> Man Power di Lokasi</h4>
+          <span class="text-[9px] text-slate-500 font-medium">Real-time</span>
+        </div>
+        <div class="overflow-y-auto p-2 space-y-2 bg-white" id="spvTeamListContainer">
+            <!-- Akan diisi Javascript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADMIN DB PANE ================= -->
+  <div id="tabContent-admin" class="space-y-4 tab-content-pane hidden">
+    <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Database Man Power</h3>
+        <p class="text-[10px] text-slate-400">Total: 4 Personil</p>
+      </div>
+      <i class="fa-solid fa-database text-xl text-blue-400"></i>
+    </div>
+    
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-card-soft overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+            <h4 class="text-xs font-bold text-slate-800">Daftar Anggota Tim</h4>
+        </div>
+        <div class="p-2 space-y-2" id="adminDatabaseList">
+            <!-- Akan diisi Javascript -->
+        </div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="bg-white border-t border-slate-200 px-6 py-2 pb-safe flex justify-between items-center shrink-0 w-full z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+  <button onclick="switchTab('beranda')" id="nav-beranda" class="flex flex-col items-center space-y-1 p-2 text-emerald-600 transition nav-btn">
+    <i class="fa-solid fa-fingerprint text-xl pointer-events-none"></i>
+    <span class="text-[9px] font-bold pointer-events-none">Absen</span>
+  </button>
+  <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-2 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
+    <i class="fa-solid fa-users-gear text-xl pointer-events-none"></i>
+    <span class="text-[9px] font-bold pointer-events-none">Tim (SPV)</span>
+  </button>
+  <button onclick="switchTab('admin')" id="nav-admin" class="flex flex-col items-center space-y-1 p-2 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
+    <i class="fa-solid fa-server text-xl pointer-events-none"></i>
+    <span class="text-[9px] font-bold pointer-events-none">DB Data</span>
+  </button>
+</nav>
+
+<!-- Notifikasi Toast -->
+<div id="toastNotification" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none z-50 text-xs font-medium border border-slate-700 w-11/12 max-w-[350px]">
+  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+  <span id="toastMessage">Pesan Notifikasi</span>
+</div>
+
+<!-- Modal Kamera Selfie -->
+<div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+  <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col transform transition-all">
+    <div class="p-4 bg-slate-900 text-white flex justify-between items-center border-b border-slate-700">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-camera-rotate text-emerald-400"></i>
+        <h3 class="text-sm font-bold tracking-wide">Foto Lokasi</h3>
+      </div>
+      <button onclick="closeCamera()" class="text-slate-400 hover:text-white transition bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+    
+    <div class="relative bg-black aspect-[3/4] w-full flex items-center justify-center overflow-hidden">
+      <video id="cameraVideo" class="w-full h-full object-cover" playsinline autoplay></video>
+      <div id="cameraLoading" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-900 z-0">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+        <p class="text-[10px] font-bold animate-pulse text-slate-300 uppercase tracking-widest">Menyiapkan Kamera...</p>
+      </div>
+    </div>
+    
+    <div class="p-5 bg-white flex flex-col items-center relative">
+      <button onclick="captureAndSubmit()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer group">
+        <i class="fa-solid fa-camera text-2xl group-hover:scale-110 transition-transform"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // DATABASE KHUSUS RS. HARUM SISMA MEDIKA (4 Orang)
+  const dbKaryawan = [
+    { id: 1, nip: 'New 01', nama: 'Ahmad Sobari', role: 'SPV', lokasi: 'RS. Harum Sisma Medika' },
+    { id: 2, nip: 'New 02', nama: 'Ahmad Firdaus', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' },
+    { id: 3, nip: 'New 03', nama: 'Chandra Wisnu', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' },
+    { id: 4, nip: 'New 04', nama: 'Zia Dahri Ramadhan', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' }
+  ];
+
+  // State Aplikasi
+  let activeUser = null;
+  let currentShift = 'Shift 1';
+  let jenisAbsen = 'masuk';
+  let isGpsLocked = false;
+  let cameraStream = null;
+
+  // Inisialisasi Aplikasi
+  window.onload = () => {
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderUserList();
+    renderAdminDbList();
+    setJenisAbsen('masuk');
+    updateAbsenSublabel();
+  };
+
+  // Jam Digital
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('liveClockText').innerHTML = 
+      now.toLocaleTimeString('id-ID', { hour12: false }) + ' <span class="text-xs text-blue-400 font-sans">WIB</span>';
+    
+    const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('liveDateText').innerText = now.toLocaleDateString('id-ID', optionsDate);
+  }
+
+  // --- DROPDOWN & PILIH USER ---
+  function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdownCard');
+    dropdown.classList.toggle('hidden');
+  }
+
+  function renderUserList() {
+    const container = document.getElementById('userListContainer');
+    container.innerHTML = '';
+    dbKaryawan.forEach(user => {
+      let roleBadge = '';
+      if(user.role === 'SPV') roleBadge = '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>';
+      else roleBadge = '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[8px] font-bold">OPR</span>';
+      
+      container.innerHTML += `
+        <div onclick="selectUser(${user.id})" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50 hover:border-emerald-200 cursor-pointer transition flex items-center justify-between">
+          <div>
+            <p class="font-bold text-slate-800">${user.nama} ${roleBadge}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${user.nip}</p>
+          </div>
+          <i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>
+        </div>
+      `;
+    });
+  }
+
+  function selectUser(id) {
+    activeUser = dbKaryawan.find(u => u.id === id);
+    document.getElementById('headerActiveUserShort').innerText = activeUser.nama.split(' ')[0];
+    toggleUserDropdown();
+    showToast(`Login sebagai: ${activeUser.nama} (${activeUser.role})`, 'success');
+
+    // Tampilkan hak akses tab khusus SPV
+    document.getElementById('nav-tim').classList.add('hidden');
+    document.getElementById('nav-admin').classList.add('hidden');
+    
+    if(activeUser.role === 'SPV') {
+      document.getElementById('nav-tim').classList.remove('hidden');
+      document.getElementById('nav-admin').classList.remove('hidden');
+    }
+  }
+
+  // --- RENDERING ADMIN DB & TIM PANE ---
+  function renderAdminDbList() {
+    const container = document.getElementById('adminDatabaseList');
+    const spvContainer = document.getElementById('spvTeamListContainer');
+    container.innerHTML = '';
+    spvContainer.innerHTML = '';
+    
+    dbKaryawan.forEach(user => {
+      let roleStyle = user.role === 'SPV' ? 'text-amber-600' : 'text-slate-600';
+      
+      const card = `
+        <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-white shadow-sm mb-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs font-bold">
+               ${user.nama.charAt(0)}
+            </div>
+            <div>
+              <p class="font-bold text-xs text-slate-800">${user.nama}</p>
+              <p class="text-[9px] text-slate-500">NIP: ${user.nip} | <span class="${roleStyle} font-bold">${user.role}</span></p>
+            </div>
+          </div>
+          <span class="text-emerald-500 text-[10px] font-bold bg-emerald-50 px-2 py-1 rounded">Aktif</span>
+        </div>
+      `;
+      container.innerHTML += card;
+      spvContainer.innerHTML += card;
+    });
+  }
+
+  // --- TABS ---
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content-pane').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`tabContent-${tabId}`).classList.remove('hidden');
+
+    document.querySelectorAll('.nav-btn').forEach(el => {
+      el.classList.remove('text-emerald-600');
+      el.classList.add('text-slate-400');
+    });
+    
+    const activeNav = document.getElementById(`nav-${tabId}`);
+    if(activeNav) {
+      activeNav.classList.remove('text-slate-400');
+      activeNav.classList.add('text-emerald-600');
+    }
+  }
+
+  // --- ABSENSI & SHIFT ---
+  function setJenisAbsen(jenis) {
+    jenisAbsen = jenis;
+    const btnMasuk = document.getElementById('btnJenisMasuk');
+    const btnPulang = document.getElementById('btnJenisPulang');
+    const mainLabel = document.getElementById('mainAbsenLabel');
+
+    if (jenis === 'masuk') {
+      btnMasuk.className = "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition";
+      btnPulang.className = "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer";
+      mainLabel.innerText = "TAP ABSEN MASUK";
+    } else {
+      btnPulang.className = "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition";
+      btnMasuk.className = "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer";
+      mainLabel.innerText = "TAP ABSEN PULANG";
+    }
+    updateAbsenSublabel();
+  }
+
+  function selectShift(shiftId) {
+    currentShift = shiftId;
+    
+    const btns = ['btnShift1', 'btnShift2', 'btnShift3', 'btnShift4'];
+    const ids = ['Shift 1', 'Shift 2', 'Non Shift', 'Lembur'];
+
+    for (let i = 0; i < btns.length; i++) {
+      const btn = document.getElementById(btns[i]);
+      if (ids[i] === shiftId) {
+        btn.className = "border border-blue-500 bg-blue-50 text-blue-700 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col";
+      } else {
+        btn.className = "border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col";
+      }
+    }
+    updateAbsenSublabel();
+  }
+
+  function updateAbsenSublabel() {
+    const sub = document.getElementById('mainAbsenSublabel');
+    sub.classList.remove('hidden');
+    let shiftText = currentShift.toUpperCase();
+    sub.innerHTML = `${jenisAbsen.toUpperCase()}<br>${shiftText}`;
+  }
+
+  // --- SIMULASI GPS ---
+  function setQuickGps(isInside) {
+    const statusCard = document.getElementById('gpsStatusCard');
+    const alertCard = document.getElementById('gpsLockedAlert');
+    const iconBg = document.getElementById('gpsIconBg');
+    const title = document.getElementById('gpsStatusTitle');
+    const absenBtn = document.getElementById('mainAbsenBtn');
+
+    if (isInside) {
+      isGpsLocked = false;
+      alertCard.classList.add('hidden');
+      statusCard.classList.replace('bg-red-50', 'bg-emerald-50');
+      statusCard.classList.replace('border-red-200', 'border-emerald-200');
+      iconBg.classList.replace('bg-red-500', 'bg-emerald-500');
+      title.innerText = 'DI LOKASI PROJECT';
+      title.classList.replace('text-red-900', 'text-emerald-900');
+      
+      absenBtn.disabled = false;
+      absenBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'grayscale');
+    } else {
+      isGpsLocked = true;
+      alertCard.classList.remove('hidden');
+      statusCard.classList.replace('bg-emerald-50', 'bg-red-50');
+      statusCard.classList.replace('border-emerald-200', 'border-red-200');
+      iconBg.classList.replace('bg-emerald-500', 'bg-red-500');
+      title.innerText = 'LUAR AREA PROJECT';
+      title.classList.replace('text-emerald-900', 'text-red-900');
+      
+      absenBtn.disabled = true;
+      absenBtn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
+    }
+  }
+
+  // --- KAMERA & PROSES ABSEN ---
+  async function triggerAbsenAction() {
+    if (!activeUser) {
+      showToast('Pilih Man Power terlebih dahulu!', 'error');
+      toggleUserDropdown();
+      return;
+    }
+    if (isGpsLocked) {
+      showToast('Gagal! Posisi di luar koordinat RS.', 'error');
+      return;
+    }
+
+    document.getElementById('cameraModal').classList.remove('hidden');
+    document.getElementById('cameraLoading').classList.remove('hidden');
+    
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      const video = document.getElementById('cameraVideo');
+      video.srcObject = cameraStream;
+      video.onloadedmetadata = () => {
+        document.getElementById('cameraLoading').classList.add('hidden');
+      };
+    } catch (err) {
+      document.getElementById('cameraLoading').innerHTML = '<p class="text-xs text-red-500 font-bold p-4 text-center">Akses Kamera Ditolak / Tidak Tersedia.</p>';
+    }
+  }
+
+  function closeCamera() {
+    document.getElementById('cameraModal').classList.add('hidden');
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      cameraStream = null;
+    }
+  }
+
+  function captureAndSubmit() {
+    closeCamera();
+    const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    
+    if (jenisAbsen === 'masuk') {
+      document.getElementById('clockInSummary').innerText = timeNow;
+      showToast(`Absen MASUK (${currentShift}) Berhasil!`, 'success');
+    } else {
+      document.getElementById('clockOutSummary').innerText = timeNow;
+      showToast(`Absen PULANG (${currentShift}) Berhasil!`, 'success');
+    }
+  }
+
+  // --- TOAST NOTIFIKASI ---
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toastNotification');
+    const msg = document.getElementById('toastMessage');
+    const icon = document.getElementById('toastIcon');
+
+    msg.innerText = message;
+    if (type === 'success') {
+      icon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+    } else {
+      icon.className = 'fa-solid fa-circle-exclamation text-red-400 text-lg';
+    }
+
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 3000);
+  }
+</script>
 </body>
 </html>
