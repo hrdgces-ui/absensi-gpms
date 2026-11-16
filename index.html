@@ -1,80 +1,9 @@
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- Nama Singkat Saat Dijadikan Pintasan di Layar HP -->
-  <title>GPMS V1.0</title>
-  <meta name="application-name" content="GPMS V1.0">
-  <meta name="apple-mobile-web-app-title" content="GPMS V1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#0f172a">
-
-  <!-- Ikon Pintasan Layar Utama (Mengambil GPMS.jpeg) -->
-  <link id="appFavicon" rel="icon" type="image/jpeg" href="GPMS.jpeg">
-  <link id="appAppleIcon" rel="apple-touch-icon" href="GPMS.jpeg">
-  <link id="appShortcutIcon" rel="shortcut icon" type="image/jpeg" href="GPMS.jpeg">
-
-  <!-- Script Otomatis Pembuat Ikon Kotak 512x512 & Manifest Agar Logo Tidak Gepeng -->
-  <script>
-    (function() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-
-      // Background hitam-biru gelap elegan dengan sudut membulat
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, 512, 512);
-
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = function() {
-        // Pasang gambar GPMS.jpeg tepat di tengah kotak 512x512 agar proporsional
-        const scale = Math.min(470 / img.width, 470 / img.height);
-        const w = img.width * scale;
-        const h = img.height * scale;
-        ctx.drawImage(img, (512 - w) / 2, (512 - h) / 2, w, h);
-        terapkanIkonDanManifest(canvas.toDataURL('image/png'));
-      };
-      img.onerror = function() {
-        // Cadangan otomatis jika GPMS.jpeg belum termuat
-        ctx.fillStyle = '#fff200';
-        ctx.beginPath(); ctx.arc(135, 256, 105, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#0019a8';
-        ctx.fillRect(190, 196, 280, 120);
-        ctx.fillStyle = '#fff200';
-        ctx.font = 'bold 115px Arial';
-        ctx.fillText('pms', 215, 292);
-        terapkanIkonDanManifest(canvas.toDataURL('image/png'));
-      };
-      img.src = 'GPMS.jpeg';
-
-      function terapkanIkonDanManifest(iconDataUrl) {
-        document.getElementById('appFavicon').href = iconDataUrl;
-        document.getElementById('appAppleIcon').href = iconDataUrl;
-        document.getElementById('appShortcutIcon').href = iconDataUrl;
-
-        const manifest = {
-          name: "GIANT PARKING MANAGEMENT SYSTEM V1.0",
-          short_name: "GPMS V1.0",
-          start_url: "./",
-          display: "standalone",
-          background_color: "#0f172a",
-          theme_color: "#0f172a",
-          icons: [
-            { src: iconDataUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
-            { src: iconDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
-          ]
-        };
-        const linkManifest = document.createElement('link');
-        linkManifest.rel = 'manifest';
-        linkManifest.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
-        document.head.appendChild(linkManifest);
-      }
-    })();
-  </script>
-
+  <title>GIANT PARKING MANAGEMENT SYSTEM V1.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -91,3 +20,1111 @@
     .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
   </style>
 </head>
+<body class="bg-slate-100 text-slate-800 flex flex-col h-[100dvh] max-w-md mx-auto relative overflow-hidden select-none">
+
+<!-- HEADER: LOGO GPMS & GIANT PARKING MANAGEMENT SYSTEM V1.0 -->
+<header class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-lg border-b border-slate-700 shrink-0">
+  <div class="flex items-center space-x-3 w-full">
+    <div class="w-16 h-11 rounded-xl bg-black flex items-center justify-center shadow-md overflow-hidden shrink-0 border border-slate-700 p-0.5">
+      <img src="GPMS.jpeg" alt="GPMS Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 220 100%22><rect width=%22220%22 height=%22100%22 fill=%22%23000000%22/><circle cx=%2252%22 cy=%2250%22 r=%2242%22 fill=%22%23fff200%22/><path d=%22M95 18 L60 50 L95 82 L95 72 L208 72 L208 28 L95 28 Z%22 fill=%22%230019a8%22 stroke=%22%23334155%22 stroke-width=%221.5%22/><ellipse cx=%2254%22 cy=%2250%22 rx=%2232%22 ry=%2221%22 fill=%22none%22 stroke=%22%230019a8%22 stroke-width=%228%22/><path d=%22M52 50 L85 50 L80 62 L52 62 Z%22 fill=%22%23fff200%22/><text x=%2295%22 y=%2263%22 font-family=%22Arial, sans-serif%22 font-size=%2244%22 font-weight=%22bold%22 fill=%22%23fff200%22>pms</text></svg>';">
+    </div>
+    <div class="flex flex-col justify-center">
+      <h1 class="text-[12px] font-black text-emerald-400 uppercase tracking-wider leading-tight">GIANT PARKING</h1>
+      <h2 class="text-[11px] font-extrabold text-white uppercase tracking-wide leading-tight mt-0.5">MANAGEMENT SYSTEM V1.0</h2>
+    </div>
+  </div>
+
+  <div class="flex items-center shrink-0 ml-2">
+    <button onclick="toggleUserDropdown()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition cursor-pointer shadow-md max-w-[115px]">
+      <span id="headerStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+      <span class="text-[11px] truncate w-full text-left" id="headerActiveUserShort">Login PIN</span>
+      <i class="fa-solid fa-lock text-[10px] text-slate-400 shrink-0" id="headerLockIcon"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Dropdown Pilihan Karyawan -->
+<div id="userDropdownCard" class="hidden absolute top-16 left-4 right-4 z-40 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 flex flex-col max-h-[75vh]">
+  <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3 shrink-0">
+    <div>
+      <span class="text-sm font-bold text-slate-800 block">Pilih Akun & Masukkan PIN</span>
+      <span class="text-[10px] text-slate-500">GIANT PARKING MANAGEMENT SYSTEM</span>
+    </div>
+    <button onclick="toggleUserDropdown()" class="text-slate-500 hover:text-slate-800 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="overflow-y-auto space-y-2 text-xs pb-1 pr-1" id="userListContainer"></div>
+</div>
+
+<!-- MODAL VERIFIKASI PIN (UNTUK LOGIN & APPROVAL) -->
+<div id="pinModal" class="hidden fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl border border-slate-200 p-5 space-y-4 text-center">
+    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-emerald-400 mx-auto flex items-center justify-center text-xl shadow-md">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <div>
+      <h3 class="text-sm font-black text-slate-800 uppercase" id="pinModalTitle">Verifikasi PIN Login</h3>
+      <p class="text-[11px] text-slate-500 mt-0.5 font-semibold" id="pinModalSubtitle">Pilih Akun</p>
+    </div>
+    <div class="relative">
+      <input type="password" id="pinInputField" placeholder="Masukkan PIN..." onkeydown="if(event.key==='Enter') verifyPinSubmit()" class="w-full border-2 border-slate-200 focus:border-emerald-500 outline-none rounded-xl py-2.5 px-4 text-center text-sm font-black tracking-widest bg-slate-50 text-slate-800">
+      <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+        <i id="pinEyeIcon" class="fa-solid fa-eye"></i>
+      </button>
+    </div>
+    <div class="grid grid-cols-2 gap-2 pt-1">
+      <button onclick="closePinModal()" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600">BATAL</button>
+      <button onclick="verifyPinSubmit()" class="py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">KONFIRMASI</button>
+    </div>
+  </div>
+</div>
+
+<main class="flex-1 overflow-y-auto p-4 space-y-4">
+
+  <!-- ================= 1. BERANDA ABSENSI PANE ================= -->
+  <div id="tabContent-beranda" class="space-y-3.5 tab-content-pane">
+    <div id="gpsStatusCard" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft transition-all">
+      <div class="flex items-center space-x-3">
+        <div id="gpsIconBg" class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">
+          <i class="fa-solid fa-location-crosshairs"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span id="gpsStatusTitle" class="text-xs font-bold text-emerald-900">DI LOKASI PROJECT</span>
+          </div>
+          <p id="gpsCoordText" class="text-[10px] text-emerald-700 mt-0.5 line-clamp-1">Target: -6.2422, 106.8973 (Radius 150m)</p>
+        </div>
+      </div>
+      <button onclick="detectRealGps()" class="bg-white/80 hover:bg-white text-slate-700 px-2.5 py-1.5 rounded-lg text-[10px] font-bold border border-slate-200 shadow-sm shrink-0">
+        <i class="fa-solid fa-satellite-dish mr-1 text-blue-600"></i>GPS Asli
+      </button>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl p-2 shadow-sm space-y-1">
+      <div class="text-[9px] font-bold text-slate-500 text-center uppercase tracking-wider mb-1">--- Mode Test / Simulasi GPS ---</div>
+      <div class="flex items-center justify-between gap-2">
+        <button onclick="setQuickGps(true)" class="flex-1 text-[10px] bg-emerald-50 py-1.5 rounded text-emerald-700 font-semibold border border-emerald-200">Dalam Radius Area</button>
+        <button onclick="setQuickGps(false)" class="flex-1 text-[10px] bg-red-50 py-1.5 rounded text-red-700 font-semibold border border-red-200">Di Luar Area</button>
+      </div>
+    </div>
+
+    <div id="gpsLockedAlert" class="hidden bg-red-50 border-l-4 border-red-500 p-3 rounded-xl shadow-sm text-red-900">
+      <div class="flex items-start space-x-2">
+        <i class="fa-solid fa-circle-xmark text-red-500 text-lg mt-0.5"></i>
+        <div>
+          <h4 class="text-xs font-bold">Luar Area (Akses Absen Terkunci)</h4>
+          <p class="text-[10px] text-red-700 mt-1">Anda berada di luar radius 150m dari titik lokasi kerja.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center">
+      <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest" id="liveDateText">Memuat Tanggal...</p>
+      <div class="text-3xl font-black text-white tracking-wider my-1 font-mono" id="liveClockText">00:00:00 <span class="text-xs text-blue-400 font-sans">WIB</span></div>
+      <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-left">
+        <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK IN</span>
+          <span id="clockInSummary" class="text-sm font-black text-slate-300">-- : --</span>
+        </div>
+        <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK OUT</span>
+          <span id="clockOutSummary" class="text-sm font-black text-slate-300">-- : --</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-card-soft space-y-2">
+      <span class="text-xs font-bold text-slate-800 flex items-center">
+        <i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1.5"></i> Jadwal Kerja (Pilih Salah Satu):
+      </span>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="selectShift('Shift 1')" id="btnShift1" class="border border-blue-500 bg-blue-50 text-blue-700 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col">
+          <span>Shift 1</span><span class="text-[9px] font-normal opacity-80">08:00 - 20:00</span>
+        </button>
+        <button onclick="selectShift('Shift 2')" id="btnShift2" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col">
+          <span>Shift 2</span><span class="text-[9px] font-normal opacity-80">20:00 - 08:00</span>
+        </button>
+        <button onclick="selectShift('Non Shift')" id="btnShift3" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col">
+          <span>Non Shift (SPV)</span><span class="text-[9px] font-normal opacity-80">08:00 - 16:00</span>
+        </button>
+        <button onclick="selectShift('Lembur')" id="btnShift4" class="border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col">
+          <span>Lembur Wajib (OT)</span><span class="text-[9px] font-normal opacity-80">Sabtu, 12:00 - 18:00</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="py-3 flex flex-col items-center justify-center space-y-4">
+      <div class="flex bg-slate-200/70 p-1.5 rounded-xl w-60 z-10 relative shadow-inner">
+        <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition">MASUK</button>
+        <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer">PULANG</button>
+      </div>
+      <div class="relative flex items-center justify-center mt-2">
+        <div class="absolute w-44 h-44 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
+        <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-36 h-36 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white shadow-glow-emerald flex flex-col items-center justify-center border-4 border-white/80 active:scale-95 transition cursor-pointer">
+          <i class="fa-solid fa-fingerprint text-4xl mb-1"></i>
+          <span id="mainAbsenLabel" class="text-xs font-black uppercase tracking-wider">TAP ABSEN</span>
+          <span id="mainAbsenSublabel" class="text-[9px] text-emerald-100 font-bold mt-1 bg-black/20 px-2 py-0.5 rounded-full text-center leading-tight">MASUK<br>SHIFT 1</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. TASK REPORT (WAJIB 3 FOTO) PANE ================= -->
+  <div id="tabContent-laporan" class="space-y-3.5 tab-content-pane hidden">
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
+      <div>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Laporan Pekerjaan Harian</h3>
+        <p class="text-[10px] text-slate-300">Wajib Unggah 3 Foto (Before, Progress, After)</p>
+      </div>
+      <i class="fa-solid fa-camera-retro text-xl text-emerald-400"></i>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Area / Pos Kerja</label>
+        <select id="taskArea" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-semibold">
+          <option value="Pos Masuk Utama">Pos Masuk Utama</option>
+          <option value="Pos Keluar">Pos Keluar</option>
+          <option value="Area Parkir Motor">Area Parkir Motor</option>
+          <option value="Area Parkir Mobil">Area Parkir Mobil</option>
+          <option value="Lobby & Drop Off">Lobby & Drop Off</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Deskripsi Pekerjaan</label>
+        <input type="text" id="taskDesc" placeholder="Contoh: Penataan barikade & pengecekan palang..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50">
+      </div>
+      <div class="grid grid-cols-3 gap-2 pt-1">
+        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
+          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'before')">
+          <img id="preview-before" class="hidden absolute inset-0 w-full h-full object-cover">
+          <i class="fa-solid fa-camera text-slate-400 text-lg mb-1"></i>
+          <span class="text-[9px] font-bold text-slate-600">1. BEFORE</span>
+        </label>
+        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
+          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'during')">
+          <img id="preview-during" class="hidden absolute inset-0 w-full h-full object-cover">
+          <i class="fa-solid fa-spinner text-slate-400 text-lg mb-1"></i>
+          <span class="text-[9px] font-bold text-slate-600">2. PROGRESS</span>
+        </label>
+        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
+          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'after')">
+          <img id="preview-after" class="hidden absolute inset-0 w-full h-full object-cover">
+          <i class="fa-solid fa-check-double text-slate-400 text-lg mb-1"></i>
+          <span class="text-[9px] font-bold text-slate-600">3. AFTER</span>
+        </label>
+      </div>
+      <button id="btnSubmitTask" onclick="submitTaskReport()" disabled class="w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md">
+        LENGKAPI 3 FOTO UNTUK KIRIM
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= 3. CUTI (H-14), IZIN, & SAKIT PANE ================= -->
+  <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
+      <div>
+        <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Form Cuti, Izin & Sakit</h3>
+        <p class="text-[10px] text-slate-300">Alur: SPV &rarr; Admin Ops &rarr; Manager (Auto-Bypass &gt;2 Hari)</p>
+      </div>
+      <i class="fa-solid fa-envelope-open-text text-xl text-blue-400"></i>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Kategori Pengajuan</label>
+        <select id="izinJenis" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold text-slate-800">
+          <option value="Cuti Tahunan">1. Cuti Tahunan (Wajib Pengajuan H-14)</option>
+          <option value="Izin">2. Izin (Tanpa SKD)</option>
+          <option value="Sakit Tanpa SKD">3. Sakit Tanpa SKD (Surat Keterangan Dokter)</option>
+          <option value="Sakit Dengan SKD">4. Sakit Dengan SKD (Wajib Upload SKD)</option>
+        </select>
+      </div>
+
+      <div id="izinRuleBanner" class="bg-amber-50 border border-amber-200 text-amber-800 p-2.5 rounded-xl text-[10px] font-semibold">
+        <i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Tanggal mulai cuti wajib minimal <b>14 hari ke depan</b> dari hari ini.
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tgl Mulai</label>
+          <input type="date" id="izinMulai" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tgl Selesai</label>
+          <input type="date" id="izinSelesai" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Alasan Lengkap</label>
+        <textarea id="izinAlasan" rows="2" placeholder="Tuliskan alasan lengkap pengajuan..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50"></textarea>
+      </div>
+
+      <div id="skdUploadBox">
+        <label id="skdLabel" class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Lampiran Bukti / SKD (Opsional)</label>
+        <input type="file" id="izinFile" accept="image/*" onchange="validasiSyaratIzin()" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700">
+      </div>
+
+      <button id="btnSubmitIzin" onclick="submitIzin()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer">
+        KIRIM PENGAJUAN
+      </button>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1"></i> Status Pengajuan Terakhir</h4>
+        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+      <div id="riwayatIzinUserContainer" class="space-y-2 text-xs"></div>
+    </div>
+  </div>
+
+  <!-- ================= 4. PANEL APPROVAL (SPV, ADMIN OPS, MANAGER) ================= -->
+  <div id="tabContent-tim" class="space-y-4 tab-content-pane hidden">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-lg flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-black uppercase tracking-widest text-amber-400" id="approvalHeaderRole">Panel Approval</h3>
+        <p class="text-[10px] text-slate-300 mt-0.5">Wajib Verifikasi PIN &bull; Auto-Bypass &gt;2 Hari</p>
+      </div>
+      <button onclick="syncServerData()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-card-soft overflow-hidden">
+      <div class="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-file-signature text-emerald-600 mr-1.5"></i> Antrean Approval Cuti / Izin / Sakit</h4>
+      </div>
+      <div class="p-3 space-y-3" id="approvalQueueContainer"></div>
+    </div>
+  </div>
+
+  <!-- ================= 5. ADMIN DB PANE (KHUSUS ADMIN OPERASIONAL) ================= -->
+  <div id="tabContent-admin" class="space-y-4 tab-content-pane hidden">
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Admin Database Karyawan & PIN</h3>
+        <p class="text-[10px] text-slate-400" id="totalKaryawanText">Akses Khusus Admin Operasional</p>
+      </div>
+      <i class="fa-solid fa-users-cog text-xl text-blue-400"></i>
+    </div>
+
+    <!-- Form Tambah / Edit Karyawan + PIN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-card-soft space-y-2.5">
+      <h4 class="text-xs font-bold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru</h4>
+      <input type="hidden" id="empEditId" value="">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">NIP</label>
+          <input type="text" id="empNip" placeholder="Cth: New 05" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Jabatan</label>
+          <select id="empRole" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-semibold">
+            <option value="Operator">Operator</option>
+            <option value="SPV">SPV</option>
+            <option value="Admin Operasional">Admin Operasional</option>
+            <option value="Manager">Manager</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Nama Lengkap</label>
+          <input type="text" id="empNama" placeholder="Nama Karyawan..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">PIN Login / Approval</label>
+          <input type="text" id="empPin" placeholder="Cth: 1234" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold text-emerald-700">
+        </div>
+      </div>
+      <div>
+        <label class="text-[9px] font-bold text-slate-500 uppercase">Area Kerja</label>
+        <input type="text" id="empLokasi" value="RS. Harum Sisma Medika" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      </div>
+      <div class="flex gap-2 pt-1">
+        <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm">
+          SIMPAN KARYAWAN
+        </button>
+        <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">
+          BATAL
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-card-soft overflow-hidden">
+      <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+        <h4 class="text-xs font-bold text-slate-800">Daftar Man Power & PIN Aktif</h4>
+        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+      </div>
+      <div class="p-2.5 space-y-2" id="adminDatabaseList"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bg-white border-t border-slate-200 px-3 py-2 pb-safe flex justify-around items-center shrink-0 w-full z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+  <button onclick="switchTab('beranda')" id="nav-beranda" class="flex flex-col items-center space-y-1 p-1.5 text-emerald-600 transition nav-btn">
+    <i class="fa-solid fa-fingerprint text-lg"></i>
+    <span class="text-[9px] font-bold">Absen</span>
+  </button>
+  <button onclick="switchTab('laporan')" id="nav-laporan" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
+    <i class="fa-solid fa-camera text-lg"></i>
+    <span class="text-[9px] font-bold">Task 3 Foto</span>
+  </button>
+  <button onclick="switchTab('izin')" id="nav-izin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
+    <i class="fa-solid fa-calendar-plus text-lg"></i>
+    <span class="text-[9px] font-bold">Cuti/Izin</span>
+  </button>
+  <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
+    <i class="fa-solid fa-file-circle-check text-lg"></i>
+    <span class="text-[9px] font-bold">Approval</span>
+  </button>
+  <button onclick="switchTab('admin')" id="nav-admin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
+    <i class="fa-solid fa-user-shield text-lg"></i>
+    <span class="text-[9px] font-bold">Admin DB</span>
+  </button>
+</nav>
+
+<!-- Notifikasi Toast -->
+<div id="toastNotification" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none z-50 text-xs font-medium border border-slate-700 w-11/12 max-w-[350px]">
+  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+  <span id="toastMessage">Pesan Notifikasi</span>
+</div>
+
+<!-- Modal Kamera Selfie -->
+<div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+  <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+    <div class="p-4 bg-slate-900 text-white flex justify-between items-center border-b border-slate-700">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-camera-rotate text-emerald-400"></i>
+        <h3 class="text-sm font-bold tracking-wide">Foto Lokasi Absensi</h3>
+      </div>
+      <button onclick="closeCamera()" class="text-slate-400 hover:text-white bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div class="relative bg-black aspect-[3/4] w-full flex items-center justify-center overflow-hidden">
+      <video id="cameraVideo" class="w-full h-full object-cover" playsinline autoplay></video>
+      <canvas id="captureCanvas" class="hidden"></canvas>
+      <div id="cameraLoading" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-900 z-0">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+        <p class="text-[10px] font-bold animate-pulse text-slate-300 uppercase tracking-widest">Menyiapkan Kamera...</p>
+      </div>
+    </div>
+    <div class="p-5 bg-white flex flex-col items-center">
+      <button onclick="captureAndSubmit()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer">
+        <i class="fa-solid fa-camera text-2xl"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzf2rfgRp3urlJmou_bpJz_dz01n0t1m3tsliWO-_nNF9BVK2S-VeF8Kl3uDjSfa9N/exec";
+  const PROJECT_LOCATION = { name: "RS. Harum Sisma Medika", lat: -6.2422, lng: 106.8973, maxRadiusMeters: 150 };
+
+  // DATABASE MAN POWER BESERTA PIN MASING-MASING
+  let dbKaryawan = [
+    { id: "EMP_1", nip: "New 01", nama: "Ahmad Sobari", role: "SPV", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
+    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
+    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
+    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
+    { id: "EMP_5", nip: "ADM 01", nama: "Ali Eka Wahyudi", role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin" },
+    { id: "EMP_6", nip: "MGR 01", nama: "Bima", role: "Manager", lokasi: "RS. Harum Sisma Medika", pin: "manager" }
+  ];
+
+  let dbIzinList = [];
+  let activeUser = null;
+  let pendingPinUser = null;
+  let pendingApprovalAction = null; // Menyimpan aksi approval yang menunggu verifikasi PIN
+  let currentShift = 'Shift 1';
+  let jenisAbsen = 'masuk';
+  let isGpsLocked = false;
+  let currentCoordStr = "-6.2422, 106.8973";
+  let currentDistanceMeters = 10;
+  let cameraStream = null;
+  let taskPhotos = { before: null, during: null, after: null };
+
+  window.onload = () => {
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderUserList();
+    renderAdminDbList();
+    renderApprovalQueue();
+    validasiSyaratIzin();
+    syncServerData();
+  };
+
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('liveClockText').innerHTML = 
+      now.toLocaleTimeString('id-ID', { hour12: false }) + ' <span class="text-xs text-blue-400 font-sans">WIB</span>';
+    document.getElementById('liveDateText').innerText = 
+      now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function getFallbackPin(role) {
+    if (role === 'Manager') return 'manager';
+    if (role === 'Admin Operasional') return 'admin';
+    return '1234';
+  }
+
+  async function syncServerData() {
+    try {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if (data.status === "success") {
+        if (data.karyawan && data.karyawan.length > 0) {
+          dbKaryawan = data.karyawan.map(u => ({
+            ...u,
+            pin: u.pin ? String(u.pin).trim() : getFallbackPin(u.role)
+          }));
+        }
+        if (data.izinList) dbIzinList = data.izinList;
+        renderUserList();
+        renderAdminDbList();
+        renderApprovalQueue();
+        renderRiwayatIzinUser();
+      }
+    } catch (e) {
+      console.log("Mode sinkronisasi lokal sementara");
+    }
+  }
+
+  function toggleUserDropdown() {
+    document.getElementById('userDropdownCard').classList.toggle('hidden');
+  }
+
+  function getRoleBadge(role) {
+    if (role === 'SPV') return '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>';
+    if (role === 'Admin Operasional') return '<span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[8px] font-bold">ADMIN OPS</span>';
+    if (role === 'Manager') return '<span class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[8px] font-bold">MANAGER</span>';
+    return '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[8px] font-bold">OPERATOR</span>';
+  }
+
+  function renderUserList() {
+    const container = document.getElementById('userListContainer');
+    container.innerHTML = '';
+    dbKaryawan.forEach(user => {
+      container.innerHTML += `
+        <div onclick="promptLoginPin('${user.id}')" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50 cursor-pointer transition flex items-center justify-between">
+          <div>
+            <p class="font-bold text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; ${user.lokasi}</p>
+          </div>
+          <div class="flex items-center space-x-1 text-slate-400">
+            <i class="fa-solid fa-key text-[10px]"></i>
+            <span class="text-[9px] font-bold">PIN</span>
+          </div>
+        </div>`;
+    });
+  }
+
+  // =========================================================================
+  // SISTEM VERIFIKASI PIN (UNTUK LOGIN ABSEN & KONFIRMASI APPROVAL)
+  // =========================================================================
+  function promptLoginPin(id) {
+    const user = dbKaryawan.find(u => String(u.id) === String(id));
+    if (!user) return;
+    pendingPinUser = user;
+    pendingApprovalAction = null;
+    document.getElementById('userDropdownCard').classList.add('hidden');
+    document.getElementById('pinModalTitle').innerText = "Verifikasi PIN Login";
+    document.getElementById('pinModalSubtitle').innerText = `${user.nama} (${user.role})`;
+    document.getElementById('pinInputField').value = '';
+    document.getElementById('pinModal').classList.remove('hidden');
+    setTimeout(() => document.getElementById('pinInputField').focus(), 100);
+  }
+
+  function promptApprovalPin(idPengajuan, keputusan) {
+    if (!activeUser) {
+      showToast('Login dengan PIN terlebih dahulu!', 'error');
+      toggleUserDropdown();
+      return;
+    }
+    pendingPinUser = activeUser;
+    pendingApprovalAction = { idPengajuan, keputusan };
+    document.getElementById('pinModalTitle').innerText = `PIN Approval (${keputusan})`;
+    document.getElementById('pinModalSubtitle').innerText = `Konfirmasi ${activeUser.nama} (${activeUser.role})`;
+    document.getElementById('pinInputField').value = '';
+    document.getElementById('pinModal').classList.remove('hidden');
+    setTimeout(() => document.getElementById('pinInputField').focus(), 100);
+  }
+
+  function togglePinVisibility() {
+    const input = document.getElementById('pinInputField');
+    const icon = document.getElementById('pinEyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-solid fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa-solid fa-eye';
+    }
+  }
+
+  function closePinModal() {
+    document.getElementById('pinModal').classList.add('hidden');
+    pendingPinUser = null;
+    pendingApprovalAction = null;
+  }
+
+  async function verifyPinSubmit() {
+    if (!pendingPinUser) return;
+    const inputPin = document.getElementById('pinInputField').value.trim();
+    const expectedPin = String(pendingPinUser.pin || getFallbackPin(pendingPinUser.role)).trim();
+
+    if (inputPin !== expectedPin) {
+      showToast('PIN Salah! Akses ditolak.', 'error');
+      document.getElementById('pinInputField').value = '';
+      return;
+    }
+
+    // Jika verifikasi PIN untuk eksekusi Approval
+    if (pendingApprovalAction) {
+      const { idPengajuan, keputusan } = pendingApprovalAction;
+      closePinModal();
+      await kirimKeServer({
+        action: "approval_izin",
+        idPengajuan: idPengajuan,
+        roleApprover: activeUser.role,
+        keputusan: keputusan
+      }, `Approval (${keputusan}) Terverifikasi!`);
+      setTimeout(syncServerData, 1200);
+      return;
+    }
+
+    // Jika verifikasi PIN untuk Login Akun
+    activeUser = pendingPinUser;
+    closePinModal();
+
+    document.getElementById('headerActiveUserShort').innerText = activeUser.nama.split(' ')[0];
+    document.getElementById('headerStatusDot').className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
+    document.getElementById('headerLockIcon').className = "fa-solid fa-unlock-keyhole text-[10px] text-emerald-400 shrink-0";
+    showToast(`Login Berhasil: ${activeUser.nama} (${activeUser.role})`, 'success');
+
+    const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
+    document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
+
+    const isAdminOps = activeUser.role === 'Admin Operasional';
+    document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
+
+    if (!isAdminOps && !document.getElementById('tabContent-admin').classList.contains('hidden')) {
+      switchTab('beranda');
+    }
+    renderApprovalQueue();
+    renderRiwayatIzinUser();
+  }
+
+  function switchTab(tabId) {
+    if (!activeUser && tabId !== 'beranda') {
+      showToast('Silakan pilih akun & masukkan PIN terlebih dahulu!', 'error');
+      toggleUserDropdown();
+      return;
+    }
+    document.querySelectorAll('.tab-content-pane').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`tabContent-${tabId}`).classList.remove('hidden');
+    document.querySelectorAll('.nav-btn').forEach(el => {
+      el.classList.remove('text-emerald-600');
+      el.classList.add('text-slate-400');
+    });
+    const activeNav = document.getElementById(`nav-${tabId}`);
+    if (activeNav) {
+      activeNav.classList.remove('text-slate-400');
+      activeNav.classList.add('text-emerald-600');
+    }
+  }
+
+  // =========================================================================
+  // VALIDASI SYARAT CUTI (H-14), IZIN, SAKIT TANPA SKD & SAKIT DENGAN SKD
+  // =========================================================================
+  function validasiSyaratIzin() {
+    const jenis = document.getElementById('izinJenis').value;
+    const tglMulai = document.getElementById('izinMulai').value;
+    const fileInput = document.getElementById('izinFile');
+    const banner = document.getElementById('izinRuleBanner');
+    const skdLabel = document.getElementById('skdLabel');
+    const btn = document.getElementById('btnSubmitIzin');
+
+    let valid = true;
+    let pesan = "";
+
+    if (jenis === "Cuti Tahunan") {
+      skdLabel.innerText = "Lampiran Tambahan (Opsional)";
+      if (tglMulai) {
+        const mulaiDate = new Date(tglMulai + "T00:00:00");
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+        if (diffDays < 14) {
+          valid = false;
+          pesan = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Ditolak: Pengajuan Cuti wajib minimal <b>14 hari (H-14)</b> sebelum hari H! (Pilihan Anda: H-${diffDays})`;
+        } else {
+          pesan = `<i class="fa-solid fa-circle-check mr-1"></i> Memenuhi syarat H-14 (${diffDays} hari sebelum hari H cuti).`;
+        }
+      } else {
+        pesan = `<i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Wajib diajukan minimal <b>14 hari (H-14)</b> sebelum hari H cuti.`;
+      }
+    } else if (jenis === "Izin" || jenis === "Sakit Tanpa SKD") {
+      skdLabel.innerText = "Lampiran Bukti (Tidak Wajib / Tanpa SKD)";
+      pesan = `<i class="fa-solid fa-circle-check mr-1"></i> ${jenis}: Dapat diajukan tanpa melampirkan Surat Keterangan Dokter (SKD).`;
+    } else if (jenis === "Sakit Dengan SKD") {
+      skdLabel.innerText = "Wajib Upload Foto Surat Keterangan Dokter (SKD) *";
+      if (!fileInput.files || !fileInput.files[0]) {
+        valid = false;
+        pesan = `<i class="fa-solid fa-file-medical mr-1"></i> Wajib mengunggah foto <b>Surat Keterangan Dokter (SKD)</b> untuk melanjutkan!`;
+      } else {
+        pesan = `<i class="fa-solid fa-circle-check mr-1"></i> File SKD sudah dilampirkan dan siap dikirim.`;
+      }
+    }
+
+    banner.innerHTML = pesan;
+    banner.className = valid
+      ? "bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl text-[10px] font-semibold"
+      : "bg-red-50 border border-red-200 text-red-800 p-2.5 rounded-xl text-[10px] font-semibold";
+
+    btn.disabled = !valid;
+    btn.className = valid
+      ? "w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer"
+      : "w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md";
+  }
+
+  async function submitIzin() {
+    if (!activeUser) { showToast('Login dengan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    const jenis = document.getElementById('izinJenis').value;
+    const mulai = document.getElementById('izinMulai').value;
+    const selesai = document.getElementById('izinSelesai').value;
+    const alasan = document.getElementById('izinAlasan').value.trim();
+    const fileInput = document.getElementById('izinFile');
+
+    if (!mulai || !selesai || !alasan) {
+      showToast('Lengkapi tanggal mulai, selesai, dan alasan!', 'error');
+      return;
+    }
+
+    if (jenis === "Cuti Tahunan") {
+      const mulaiDate = new Date(mulai + "T00:00:00");
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+      if (diffDays < 14) {
+        showToast('Gagal! Cuti wajib diajukan minimal 14 hari sebelum hari H!', 'error');
+        return;
+      }
+    }
+
+    if (jenis === "Sakit Dengan SKD" && (!fileInput.files || !fileInput.files[0])) {
+      showToast('Wajib melampirkan foto SKD!', 'error');
+      return;
+    }
+
+    const sendPayload = async (buktiBase64) => {
+      await kirimKeServer({
+        action: "ajukan_izin",
+        nip: activeUser.nip,
+        nama: activeUser.nama,
+        role: activeUser.role,
+        lokasi: activeUser.lokasi,
+        jenisIzin: jenis,
+        tglMulai: mulai,
+        tglSelesai: selesai,
+        alasan: alasan,
+        buktiBase64: buktiBase64
+      }, "Pengajuan berhasil dikirim ke SPV!");
+      document.getElementById('izinAlasan').value = '';
+      document.getElementById('izinFile').value = '';
+      validasiSyaratIzin();
+      setTimeout(syncServerData, 1500);
+    };
+
+    if (fileInput.files && fileInput.files[0]) {
+      compressFileToBase64(fileInput.files[0], base64 => sendPayload(base64));
+    } else {
+      await sendPayload("");
+    }
+  }
+
+  // =========================================================================
+  // RENDER ANTREAN APPROVAL (WAJIB PIN SAAT APPROVE / REJECT)
+  // =========================================================================
+  function renderApprovalQueue() {
+    const container = document.getElementById('approvalQueueContainer');
+    if (!container) return;
+    const roleTitle = document.getElementById('approvalHeaderRole');
+    if (activeUser) roleTitle.innerText = `Panel Approval (${activeUser.role})`;
+
+    if (dbIzinList.length === 0) {
+      container.innerHTML = '<p class="text-[11px] text-slate-400 text-center py-4">Belum ada pengajuan izin/cuti.</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    dbIzinList.forEach(item => {
+      let canApprove = false;
+      if (activeUser) {
+        if (activeUser.role === 'SPV' && item.appSpv === 'PENDING') canApprove = true;
+        if (activeUser.role === 'Admin Operasional' && item.appAdmin === 'PENDING') canApprove = true;
+        if (activeUser.role === 'Manager' && item.appMgr === 'PENDING') canApprove = true;
+      }
+
+      const actionButtons = canApprove ? `
+        <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-100">
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+            <i class="fa-solid fa-key mr-1"></i>APPROVE (${activeUser.role})
+          </button>
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+            <i class="fa-solid fa-xmark mr-1"></i>REJECT
+          </button>
+        </div>` : '';
+
+      container.innerHTML += `
+        <div class="p-3 border border-slate-200 rounded-xl bg-slate-50/60 space-y-1.5 text-xs">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-black text-slate-800">${item.nama}</span>
+              <span class="text-[10px] text-slate-500">(${item.nip})</span>
+            </div>
+            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${item.jenisIzin}</span>
+          </div>
+          <p class="text-[10px] text-slate-600"><i class="fa-regular fa-calendar mr-1"></i>${item.tglMulai} s/d ${item.tglSelesai}</p>
+          <p class="text-[10px] text-slate-700 bg-white p-2 rounded-lg border border-slate-100"><b>Alasan:</b> ${item.alasan}</p>
+          <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] text-center">
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">1. SPV</span>
+              <span class="font-bold text-slate-700">${item.appSpv}</span>
+            </div>
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">2. ADMIN OPS</span>
+              <span class="font-bold text-slate-700">${item.appAdmin}</span>
+            </div>
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">3. MANAGER</span>
+              <span class="font-bold text-slate-700">${item.appMgr}</span>
+            </div>
+          </div>
+          ${actionButtons}
+        </div>`;
+    });
+  }
+
+  function renderRiwayatIzinUser() {
+    const container = document.getElementById('riwayatIzinUserContainer');
+    if (!container) return;
+    const list = activeUser ? dbIzinList.filter(i => i.nip === activeUser.nip) : dbIzinList.slice(0, 5);
+    if (list.length === 0) {
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan.</p>';
+      return;
+    }
+    container.innerHTML = list.map(item => `
+      <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex justify-between items-center">
+        <div>
+          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} <span class="text-[9px] font-normal text-slate-500">(${item.tglMulai})</span></p>
+          <p class="text-[9px] text-slate-500">SPV: ${item.appSpv} | Admin: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
+        </div>
+        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border border-slate-200">${item.statusAkhir}</span>
+      </div>
+    `).join('');
+  }
+
+  // =========================================================================
+  // FITUR ADMIN DB + KELOLA PIN (KHUSUS ADMIN OPERASIONAL)
+  // =========================================================================
+  function renderAdminDbList() {
+    const container = document.getElementById('adminDatabaseList');
+    if (!container) return;
+    document.getElementById('totalKaryawanText').innerText = `Total: ${dbKaryawan.length} Personil GPMS`;
+    container.innerHTML = '';
+
+    dbKaryawan.forEach(user => {
+      container.innerHTML += `
+        <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50/70">
+          <div>
+            <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; PIN: <span class="font-bold text-emerald-700">${user.pin || getFallbackPin(user.role)}</span></p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center text-xs" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center text-xs" title="Hapus">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>`;
+    });
+  }
+
+  function siapkanEditKaryawan(id) {
+    const emp = dbKaryawan.find(u => String(u.id) === String(id));
+    if (!emp) return;
+    document.getElementById('empEditId').value = emp.id;
+    document.getElementById('empNip').value = emp.nip;
+    document.getElementById('empNama').value = emp.nama;
+    document.getElementById('empRole').value = emp.role;
+    document.getElementById('empPin').value = emp.pin || getFallbackPin(emp.role);
+    document.getElementById('empLokasi').value = emp.lokasi;
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500 mr-1"></i> Edit Data & PIN: ${emp.nama}`;
+    document.getElementById('btnSaveEmp').innerText = "UPDATE KARYAWAN & PIN";
+    document.getElementById('btnCancelEditEmp').classList.remove('hidden');
+  }
+
+  function batalEditKaryawan() {
+    document.getElementById('empEditId').value = '';
+    document.getElementById('empNip').value = '';
+    document.getElementById('empNama').value = '';
+    document.getElementById('empPin').value = '';
+    document.getElementById('empRole').value = 'Operator';
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru`;
+    document.getElementById('btnSaveEmp').innerText = "SIMPAN KARYAWAN";
+    document.getElementById('btnCancelEditEmp').classList.add('hidden');
+  }
+
+  async function simpanDataKaryawan() {
+    if (!activeUser || activeUser.role !== 'Admin Operasional') {
+      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
+      return;
+    }
+    const editId = document.getElementById('empEditId').value;
+    const nip = document.getElementById('empNip').value.trim();
+    const nama = document.getElementById('empNama').value.trim();
+    const role = document.getElementById('empRole').value;
+    const pin = document.getElementById('empPin').value.trim() || getFallbackPin(role);
+    const lokasi = document.getElementById('empLokasi').value.trim();
+
+    if (!nip || !nama || !lokasi) {
+      showToast('Lengkapi NIP, Nama, dan Area Kerja!', 'error');
+      return;
+    }
+
+    const subAction = editId ? "edit" : "add";
+    await kirimKeServer({
+      action: "crud_karyawan",
+      subAction: subAction,
+      empId: editId || ("EMP_" + Date.now()),
+      empNip: nip,
+      empNama: nama,
+      empRole: role,
+      empLokasi: lokasi,
+      empPin: pin
+    }, editId ? "Data karyawan & PIN diperbarui!" : "Karyawan baru ditambahkan!");
+
+    batalEditKaryawan();
+    setTimeout(syncServerData, 1200);
+  }
+
+  async function hapusKaryawan(id, nama) {
+    if (!activeUser || activeUser.role !== 'Admin Operasional') {
+      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
+      return;
+    }
+    if (!confirm(`Hapus karyawan ${nama} dari database GPMS?`)) return;
+    await kirimKeServer({
+      action: "crud_karyawan",
+      subAction: "delete",
+      empId: id
+    }, `Karyawan ${nama} dihapus!`);
+    setTimeout(syncServerData, 1200);
+  }
+
+  // =========================================================================
+  // ABSENSI, GPS & TASK 3 FOTO
+  // =========================================================================
+  function setJenisAbsen(jenis) {
+    jenisAbsen = jenis;
+    const isMasuk = jenis === 'masuk';
+    document.getElementById('btnJenisMasuk').className = isMasuk
+      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition"
+      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer";
+    document.getElementById('btnJenisPulang').className = !isMasuk
+      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition"
+      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer";
+    document.getElementById('mainAbsenLabel').innerText = isMasuk ? "TAP ABSEN MASUK" : "TAP ABSEN PULANG";
+    updateAbsenSublabel();
+  }
+
+  function selectShift(shiftId) {
+    currentShift = shiftId;
+    const btns = ['btnShift1', 'btnShift2', 'btnShift3', 'btnShift4'];
+    const ids = ['Shift 1', 'Shift 2', 'Non Shift', 'Lembur'];
+    btns.forEach((b, i) => {
+      document.getElementById(b).className = ids[i] === shiftId
+        ? "border border-blue-500 bg-blue-50 text-blue-700 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col"
+        : "border border-slate-200 bg-slate-50 text-slate-500 p-2 rounded-lg text-[10px] font-bold text-left flex flex-col";
+    });
+    updateAbsenSublabel();
+  }
+
+  function updateAbsenSublabel() {
+    document.getElementById('mainAbsenSublabel').innerHTML = `${jenisAbsen.toUpperCase()}<br>${currentShift.toUpperCase()}`;
+  }
+
+  function hitungJarakMeter(lat1, lon1, lat2, lon2) {
+    const R = 6371e3;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+  }
+
+  function detectRealGps() {
+    if (!navigator.geolocation) { showToast("Browser tidak mendukung GPS", "error"); return; }
+    showToast("Mendeteksi titik GPS...", "success");
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      currentCoordStr = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      currentDistanceMeters = hitungJarakMeter(lat, lng, PROJECT_LOCATION.lat, PROJECT_LOCATION.lng);
+      document.getElementById('gpsCoordText').innerText = `Posisi: ${currentCoordStr} (Jarak: ${currentDistanceMeters}m)`;
+      setQuickGps(currentDistanceMeters <= PROJECT_LOCATION.maxRadiusMeters);
+    }, () => showToast("Gagal mengambil GPS, aktifkan izin lokasi", "error"), { enableHighAccuracy: true });
+  }
+
+  function setQuickGps(isInside) {
+    const statusCard = document.getElementById('gpsStatusCard');
+    const alertCard = document.getElementById('gpsLockedAlert');
+    const iconBg = document.getElementById('gpsIconBg');
+    const title = document.getElementById('gpsStatusTitle');
+    const absenBtn = document.getElementById('mainAbsenBtn');
+
+    isGpsLocked = !isInside;
+    alertCard.classList.toggle('hidden', isInside);
+    statusCard.className = isInside
+      ? "bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft"
+      : "bg-red-50 border border-red-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft";
+    iconBg.className = isInside
+      ? "w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm"
+      : "w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center text-lg shadow-sm";
+    title.innerText = isInside ? 'DI LOKASI PROJECT' : 'LUAR AREA PROJECT';
+    title.className = isInside ? "text-xs font-bold text-emerald-900" : "text-xs font-bold text-red-900";
+    absenBtn.disabled = !isInside;
+    absenBtn.classList.toggle('opacity-50', !isInside);
+    absenBtn.classList.toggle('grayscale', !isInside);
+  }
+
+  async function triggerAbsenAction() {
+    if (!activeUser) { showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    if (isGpsLocked) { showToast('Gagal! Posisi di luar radius lokasi.', 'error'); return; }
+    document.getElementById('cameraModal').classList.remove('hidden');
+    document.getElementById('cameraLoading').classList.remove('hidden');
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      const video = document.getElementById('cameraVideo');
+      video.srcObject = cameraStream;
+      video.onloadedmetadata = () => document.getElementById('cameraLoading').classList.add('hidden');
+    } catch (err) {
+      document.getElementById('cameraLoading').innerHTML = '<p class="text-xs text-red-500 font-bold p-4 text-center">Kamera tidak dapat diakses.</p>';
+    }
+  }
+
+  function closeCamera() {
+    document.getElementById('cameraModal').classList.add('hidden');
+    if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  }
+
+  async function captureAndSubmit() {
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = 480; canvas.height = 640;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+    closeCamera();
+
+    const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    if (jenisAbsen === 'masuk') document.getElementById('clockInSummary').innerText = timeNow;
+    else document.getElementById('clockOutSummary').innerText = timeNow;
+
+    await kirimKeServer({
+      action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
+      lokasi: activeUser.lokasi, shift: currentShift, jenisAbsen: jenisAbsen,
+      koordinat: currentCoordStr, jarak: currentDistanceMeters, fotoBase64: fotoBase64
+    }, `Absen ${jenisAbsen.toUpperCase()} (${currentShift}) Tercatat!`);
+  }
+
+  function compressFileToBase64(file, callback) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(600 / img.width, 600 / img.height, 1);
+        canvas.width = img.width * scale; canvas.height = img.height * scale;
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        callback(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleTaskPhoto(input, slot) {
+    if (!input.files || !input.files[0]) return;
+    compressFileToBase64(input.files[0], base64 => {
+      taskPhotos[slot] = base64;
+      const preview = document.getElementById(`preview-${slot}`);
+      preview.src = base64;
+      preview.classList.remove('hidden');
+      checkTaskLock();
+    });
+  }
+
+  function checkTaskLock() {
+    const btn = document.getElementById('btnSubmitTask');
+    const ready = taskPhotos.before && taskPhotos.during && taskPhotos.after;
+    btn.disabled = !ready;
+    btn.className = ready
+      ? "w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer"
+      : "w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md";
+    btn.innerText = ready ? "KIRIM LAPORAN 3 FOTO SEKARANG" : "LENGKAPI 3 FOTO UNTUK KIRIM";
+  }
+
+  async function submitTaskReport() {
+    if (!activeUser) { showToast('Login dengan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    const desc = document.getElementById('taskDesc').value.trim();
+    if (!desc) { showToast('Isi deskripsi pekerjaan!', 'error'); return; }
+    await kirimKeServer({
+      action: "task_report", nip: activeUser.nip, nama: activeUser.nama, lokasi: activeUser.lokasi,
+      shift: currentShift, area: document.getElementById('taskArea').value, deskripsi: desc,
+      fotoBefore: taskPhotos.before, fotoDuring: taskPhotos.during, fotoAfter: taskPhotos.after
+    }, "Laporan 3 Foto Berhasil Terkirim!");
+    taskPhotos = { before: null, during: null, after: null };
+    ['before', 'during', 'after'].forEach(s => document.getElementById(`preview-${s}`).classList.add('hidden'));
+    document.getElementById('taskDesc').value = '';
+    checkTaskLock();
+  }
+
+  async function kirimKeServer(payload, pesanSukses) {
+    showToast("Memproses data ke server...", "success");
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      showToast(pesanSukses, "success");
+    } catch (e) {
+      showToast("Gagal mengirim data ke server", "error");
+    }
+  }
+
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toastNotification');
+    document.getElementById('toastMessage').innerText = message;
+    document.getElementById('toastIcon').className = type === 'success'
+      ? 'fa-solid fa-circle-check text-emerald-400 text-lg'
+      : 'fa-solid fa-circle-exclamation text-red-400 text-lg';
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 3000);
+  }
+</script>
+</body>
+</html>
