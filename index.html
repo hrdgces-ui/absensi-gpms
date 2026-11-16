@@ -17,29 +17,20 @@
       100% { transform: scale(0.95); opacity: 0.8; }
     }
     .animate-pulse-ring { animation: pulseRing 3.5s infinite ease-in-out; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 flex flex-col h-[100dvh] max-w-md mx-auto relative overflow-hidden select-none">
 
-<!-- HEADER: LOGO GPMS & GIANT PARKING MANAGEMENT SYSTEM V1.0 (2 BARIS) -->
+<!-- HEADER: LOGO GPMS & GIANT PARKING MANAGEMENT SYSTEM V1.0 -->
 <header class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-lg border-b border-slate-700 shrink-0">
   <div class="flex items-center space-x-3 w-full">
-    <!-- Kotak Logo GPMS di Kiri Atas -->
     <div class="w-16 h-11 rounded-xl bg-black flex items-center justify-center shadow-md overflow-hidden shrink-0 border border-slate-700 p-0.5">
       <img src="GPMS.jpeg" alt="GPMS Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 220 100%22><rect width=%22220%22 height=%22100%22 fill=%22%23000000%22/><circle cx=%2252%22 cy=%2250%22 r=%2242%22 fill=%22%23fff200%22/><path d=%22M95 18 L60 50 L95 82 L95 72 L208 72 L208 28 L95 28 Z%22 fill=%22%230019a8%22 stroke=%22%23334155%22 stroke-width=%221.5%22/><ellipse cx=%2254%22 cy=%2250%22 rx=%2232%22 ry=%2221%22 fill=%22none%22 stroke=%22%230019a8%22 stroke-width=%228%22/><path d=%22M52 50 L85 50 L80 62 L52 62 Z%22 fill=%22%23fff200%22/><text x=%2295%22 y=%2263%22 font-family=%22Arial, sans-serif%22 font-size=%2244%22 font-weight=%22bold%22 fill=%22%23fff200%22>pms</text></svg>';">
     </div>
-
-    <!-- Judul 2 Baris Kebawah (Tanpa Nama RS Harum Sisma Medika) -->
     <div class="flex flex-col justify-center">
-      <h1 class="text-[12px] font-black text-emerald-400 uppercase tracking-wider leading-tight">
-        GIANT PARKING
-      </h1>
-      <h2 class="text-[11px] font-extrabold text-white uppercase tracking-wide leading-tight mt-0.5">
-        MANAGEMENT SYSTEM V1.0
-      </h2>
+      <h1 class="text-[12px] font-black text-emerald-400 uppercase tracking-wider leading-tight">GIANT PARKING</h1>
+      <h2 class="text-[11px] font-extrabold text-white uppercase tracking-wide leading-tight mt-0.5">MANAGEMENT SYSTEM V1.0</h2>
     </div>
   </div>
 
@@ -56,7 +47,7 @@
 <div id="userDropdownCard" class="hidden absolute top-16 left-4 right-4 z-50 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 flex flex-col max-h-[75vh]">
   <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3 shrink-0">
     <div>
-      <span class="text-sm font-bold text-slate-800 block">Pilih Man Power GPMS</span>
+      <span class="text-sm font-bold text-slate-800 block">Pilih Akun Personel</span>
       <span class="text-[10px] text-slate-500">GIANT PARKING MANAGEMENT SYSTEM</span>
     </div>
     <button onclick="toggleUserDropdown()" class="text-slate-500 hover:text-slate-800 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
@@ -68,7 +59,6 @@
 
   <!-- ================= 1. BERANDA ABSENSI PANE ================= -->
   <div id="tabContent-beranda" class="space-y-3.5 tab-content-pane">
-    
     <div id="gpsStatusCard" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft transition-all">
       <div class="flex items-center space-x-3">
         <div id="gpsIconBg" class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">
@@ -76,7 +66,7 @@
         </div>
         <div>
           <div class="flex items-center space-x-1.5">
-            <span id="gpsDotIndicator" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
             <span id="gpsStatusTitle" class="text-xs font-bold text-emerald-900">DI LOKASI PROJECT</span>
           </div>
           <p id="gpsCoordText" class="text-[10px] text-emerald-700 mt-0.5 line-clamp-1">Target: -6.2422, 106.8973 (Radius 150m)</p>
@@ -87,7 +77,6 @@
       </button>
     </div>
 
-    <!-- Tombol Test Lokasi (Simulasi) -->
     <div class="bg-white border border-slate-200 rounded-xl p-2 shadow-sm space-y-1">
       <div class="text-[9px] font-bold text-slate-500 text-center uppercase tracking-wider mb-1">--- Mode Test / Simulasi GPS ---</div>
       <div class="flex items-center justify-between gap-2">
@@ -106,23 +95,21 @@
       </div>
     </div>
 
-    <!-- Jam Digital -->
-    <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center relative overflow-hidden">
+    <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center">
       <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest" id="liveDateText">Memuat Tanggal...</p>
       <div class="text-3xl font-black text-white tracking-wider my-1 font-mono" id="liveClockText">00:00:00 <span class="text-xs text-blue-400 font-sans">WIB</span></div>
       <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-left">
         <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
-          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">JAM MASUK</span>
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK IN</span>
           <span id="clockInSummary" class="text-sm font-black text-slate-300">-- : --</span>
         </div>
         <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
-          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">JAM PULANG</span>
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK OUT</span>
           <span id="clockOutSummary" class="text-sm font-black text-slate-300">-- : --</span>
         </div>
       </div>
     </div>
 
-    <!-- Pilihan Shift -->
     <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-card-soft space-y-2">
       <span class="text-xs font-bold text-slate-800 flex items-center">
         <i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1.5"></i> Jadwal Kerja (Pilih Salah Satu):
@@ -143,16 +130,15 @@
       </div>
     </div>
 
-    <!-- Tombol Absen Utama -->
     <div class="py-3 flex flex-col items-center justify-center space-y-4">
       <div class="flex bg-slate-200/70 p-1.5 rounded-xl w-60 z-10 relative shadow-inner">
         <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition">MASUK</button>
-        <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer">PULANG</button>
+        <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer">PULANG</button>
       </div>
       <div class="relative flex items-center justify-center mt-2">
-        <div id="btnGlowRing" class="absolute w-44 h-44 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
-        <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-36 h-36 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white shadow-glow-emerald flex flex-col items-center justify-center border-4 border-white/80 active:scale-95 transition duration-200 group cursor-pointer">
-          <i class="fa-solid fa-fingerprint text-4xl mb-1 group-hover:scale-110 transition"></i>
+        <div class="absolute w-44 h-44 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
+        <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-36 h-36 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white shadow-glow-emerald flex flex-col items-center justify-center border-4 border-white/80 active:scale-95 transition cursor-pointer">
+          <i class="fa-solid fa-fingerprint text-4xl mb-1"></i>
           <span id="mainAbsenLabel" class="text-xs font-black uppercase tracking-wider">TAP ABSEN</span>
           <span id="mainAbsenSublabel" class="text-[9px] text-emerald-100 font-bold mt-1 bg-black/20 px-2 py-0.5 rounded-full text-center leading-tight">MASUK<br>SHIFT 1</span>
         </button>
@@ -185,8 +171,6 @@
         <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Deskripsi Pekerjaan</label>
         <input type="text" id="taskDesc" placeholder="Contoh: Penataan barikade & pengecekan palang..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50">
       </div>
-
-      <!-- 3 Slot Foto Wajib -->
       <div class="grid grid-cols-3 gap-2 pt-1">
         <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
           <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'before')">
@@ -207,91 +191,148 @@
           <span class="text-[9px] font-bold text-slate-600">3. AFTER</span>
         </label>
       </div>
-
       <button id="btnSubmitTask" onclick="submitTaskReport()" disabled class="w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md">
         LENGKAPI 3 FOTO UNTUK KIRIM
       </button>
     </div>
   </div>
 
-  <!-- ================= 3. IZIN & CUTI PANE ================= -->
+  <!-- ================= 3. CUTI (H-14), IZIN, & SAKIT (SKD / TANPA SKD) PANE ================= -->
   <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Form Pengajuan Izin / Sakit</h3>
-        <p class="text-[10px] text-slate-300">Tercatat Otomatis ke Sheet Izin GPMS</p>
+        <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Form Cuti, Izin & Sakit</h3>
+        <p class="text-[10px] text-slate-300">Alur: SPV &rarr; Admin Ops &rarr; Manager (Auto-Bypass &gt;2 Hari)</p>
       </div>
       <i class="fa-solid fa-envelope-open-text text-xl text-blue-400"></i>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
       <div>
-        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Jenis Pengajuan</label>
-        <select id="izinJenis" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-semibold">
-          <option value="Sakit Dengan Surat">Sakit Dengan Surat Dokter</option>
-          <option value="Izin Kepentingan Keluarga">Izin Kepentingan Keluarga</option>
-          <option value="Cuti Tahunan">Cuti Tahunan</option>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Kategori Pengajuan</label>
+        <select id="izinJenis" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold text-slate-800">
+          <option value="Cuti Tahunan">1. Cuti Tahunan (Wajib Pengajuan H-14)</option>
+          <option value="Izin">2. Izin (Tanpa SKD)</option>
+          <option value="Sakit Tanpa SKD">3. Sakit Tanpa SKD (Surat Keterangan Dokter)</option>
+          <option value="Sakit Dengan SKD">4. Sakit Dengan SKD (Wajib Upload SKD)</option>
         </select>
       </div>
+
+      <!-- Info Box Aturan Dinamis -->
+      <div id="izinRuleBanner" class="bg-amber-50 border border-amber-200 text-amber-800 p-2.5 rounded-xl text-[10px] font-semibold">
+        <i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Tanggal mulai cuti wajib minimal <b>14 hari ke depan</b> dari hari ini.
+      </div>
+
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tgl Mulai</label>
-          <input type="date" id="izinMulai" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+          <input type="date" id="izinMulai" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tgl Selesai</label>
           <input type="date" id="izinSelesai" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
         </div>
       </div>
+
       <div>
         <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Alasan Lengkap</label>
-        <textarea id="izinAlasan" rows="2" placeholder="Tuliskan keterangan izin/sakit..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50"></textarea>
+        <textarea id="izinAlasan" rows="2" placeholder="Tuliskan alasan lengkap pengajuan..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50"></textarea>
       </div>
-      <div>
-        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Foto Surat Dokter / Bukti (Opsional)</label>
-        <input type="file" id="izinFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700">
+
+      <div id="skdUploadBox">
+        <label id="skdLabel" class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Lampiran Bukti / SKD (Opsional)</label>
+        <input type="file" id="izinFile" accept="image/*" onchange="validasiSyaratIzin()" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700">
       </div>
-      <button id="btnSubmitIzin" onclick="submitIzin()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md">
-        KIRIM PENGAJUAN IZIN
+
+      <button id="btnSubmitIzin" onclick="submitIzin()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer">
+        KIRIM PENGAJUAN
       </button>
+    </div>
+
+    <!-- Riwayat Status Pengajuan -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1"></i> Status Pengajuan Terakhir</h4>
+        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+      <div id="riwayatIzinUserContainer" class="space-y-2 text-xs"></div>
     </div>
   </div>
 
-  <!-- ================= 4. LEADER / SPV PANE ================= -->
+  <!-- ================= 4. PANEL APPROVAL (SPV, ADMIN OPS, MANAGER) ================= -->
   <div id="tabContent-tim" class="space-y-4 tab-content-pane hidden">
     <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-lg flex items-center justify-between">
       <div>
-        <h3 class="text-sm font-black uppercase tracking-widest text-amber-400">Dashboard SPV</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5 font-medium">GIANT PARKING MANAGEMENT SYSTEM V1.0</p>
+        <h3 class="text-sm font-black uppercase tracking-widest text-amber-400" id="approvalHeaderRole">Panel Approval</h3>
+        <p class="text-[10px] text-slate-300 mt-0.5">Auto-Bypass Aktif (&gt;2 Hari) &bull; Push Email Pkl 08.00 WIB</p>
       </div>
-      <div class="w-10 h-10 bg-amber-400/20 rounded-xl flex items-center justify-center">
-        <i class="fa-solid fa-users-gear text-xl text-amber-400"></i>
-      </div>
+      <button onclick="syncServerData()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-card-soft overflow-hidden flex flex-col">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-card-soft overflow-hidden">
       <div class="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-list-check text-blue-600 mr-1.5"></i> Man Power di Lokasi</h4>
-        <span class="text-[9px] text-slate-500 font-medium">Real-time</span>
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-file-signature text-emerald-600 mr-1.5"></i> Antrean Approval Cuti / Izin / Sakit</h4>
       </div>
-      <div class="p-2 space-y-2 bg-white" id="spvTeamListContainer"></div>
+      <div class="p-3 space-y-3" id="approvalQueueContainer"></div>
     </div>
   </div>
 
-  <!-- ================= 5. ADMIN DB PANE ================= -->
+  <!-- ================= 5. ADMIN DB PANE (KHUSUS ADMIN OPERASIONAL) ================= -->
   <div id="tabContent-admin" class="space-y-4 tab-content-pane hidden">
-    <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
       <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Database Man Power</h3>
-        <p class="text-[10px] text-slate-400">Total: 4 Personil GPMS</p>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Admin Database Karyawan</h3>
+        <p class="text-[10px] text-slate-400" id="totalKaryawanText">Akses Khusus Admin Operasional</p>
       </div>
-      <i class="fa-solid fa-database text-xl text-blue-400"></i>
+      <i class="fa-solid fa-users-cog text-xl text-blue-400"></i>
     </div>
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-card-soft overflow-hidden">
-      <div class="p-3 bg-slate-50 border-b border-slate-200">
-        <h4 class="text-xs font-bold text-slate-800">Daftar Anggota Tim</h4>
+
+    <!-- Form Tambah / Edit Karyawan -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-card-soft space-y-2.5">
+      <h4 class="text-xs font-bold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru</h4>
+      <input type="hidden" id="empEditId" value="">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">NIP</label>
+          <input type="text" id="empNip" placeholder="Cth: New 05" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Jabatan</label>
+          <select id="empRole" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-semibold">
+            <option value="Operator">Operator</option>
+            <option value="SPV">SPV</option>
+            <option value="Admin Operasional">Admin Operasional</option>
+            <option value="Manager">Manager</option>
+          </select>
+        </div>
       </div>
-      <div class="p-2 space-y-2" id="adminDatabaseList"></div>
+      <div>
+        <label class="text-[9px] font-bold text-slate-500 uppercase">Nama Lengkap</label>
+        <input type="text" id="empNama" placeholder="Nama Karyawan..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      </div>
+      <div>
+        <label class="text-[9px] font-bold text-slate-500 uppercase">Area Kerja</label>
+        <input type="text" id="empLokasi" value="RS. Harum Sisma Medika" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      </div>
+      <div class="flex gap-2 pt-1">
+        <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm">
+          SIMPAN KARYAWAN
+        </button>
+        <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">
+          BATAL
+        </button>
+      </div>
+    </div>
+
+    <!-- Daftar Karyawan dengan Tombol Edit & Hapus -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-card-soft overflow-hidden">
+      <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+        <h4 class="text-xs font-bold text-slate-800">Daftar Man Power Aktif</h4>
+        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+      </div>
+      <div class="p-2.5 space-y-2" id="adminDatabaseList"></div>
     </div>
   </div>
 
@@ -309,15 +350,15 @@
   </button>
   <button onclick="switchTab('izin')" id="nav-izin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
     <i class="fa-solid fa-calendar-plus text-lg"></i>
-    <span class="text-[9px] font-bold">Izin/Cuti</span>
+    <span class="text-[9px] font-bold">Cuti/Izin</span>
   </button>
   <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
-    <i class="fa-solid fa-users-gear text-lg"></i>
-    <span class="text-[9px] font-bold">Tim (SPV)</span>
+    <i class="fa-solid fa-file-circle-check text-lg"></i>
+    <span class="text-[9px] font-bold">Approval</span>
   </button>
   <button onclick="switchTab('admin')" id="nav-admin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
-    <i class="fa-solid fa-server text-lg"></i>
-    <span class="text-[9px] font-bold">DB Data</span>
+    <i class="fa-solid fa-user-shield text-lg"></i>
+    <span class="text-[9px] font-bold">Admin DB</span>
   </button>
 </nav>
 
@@ -327,7 +368,7 @@
   <span id="toastMessage">Pesan Notifikasi</span>
 </div>
 
-<!-- Modal Kamera Selfie + Canvas Kompresi -->
+<!-- Modal Kamera Selfie -->
 <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
   <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col">
     <div class="p-4 bg-slate-900 text-white flex justify-between items-center border-b border-slate-700">
@@ -348,7 +389,7 @@
       </div>
     </div>
     <div class="p-5 bg-white flex flex-col items-center">
-      <button id="btnCaptureSubmit" onclick="captureAndSubmit()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer">
+      <button onclick="captureAndSubmit()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer">
         <i class="fa-solid fa-camera text-2xl"></i>
       </button>
     </div>
@@ -356,25 +397,19 @@
 </div>
 
 <script>
-  // =========================================================================
-  // 1. KONFIGURASI BACKEND & KOORDINAT LOKASI KERJA GPMS
-  // =========================================================================
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzf2rfgRp3urlJmou_bpJz_dz01n0t1m3tsliWO-_nNF9BVK2S-VeF8Kl3uDjSfa9N/exec";
-  const PROJECT_LOCATION = {
-    name: "Area Operasional GPMS",
-    lat: -6.2422,
-    lng: 106.8973,
-    maxRadiusMeters: 150
-  };
+  const PROJECT_LOCATION = { name: "RS. Harum Sisma Medika", lat: -6.2422, lng: 106.8973, maxRadiusMeters: 150 };
 
-  // DATABASE MAN POWER GPMS (4 Orang)
-  const dbKaryawan = [
-    { id: 1, nip: 'New 01', nama: 'Ahmad Sobari', role: 'SPV', lokasi: 'RS. Harum Sisma Medika' },
-    { id: 2, nip: 'New 02', nama: 'Ahmad Firdaus', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' },
-    { id: 3, nip: 'New 03', nama: 'Chandra Wisnu', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' },
-    { id: 4, nip: 'New 04', nama: 'Zia Dahri Ramadhan', role: 'Operator', lokasi: 'RS. Harum Sisma Medika' }
+  let dbKaryawan = [
+    { id: "EMP_1", nip: "New 01", nama: "Ahmad Sobari", role: "SPV", lokasi: "RS. Harum Sisma Medika" },
+    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika" },
+    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika" },
+    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika" },
+    { id: "EMP_5", nip: "ADM 01", nama: "Ali Eka Wahyudi", role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika" },
+    { id: "EMP_6", nip: "MGR 01", nama: "Bima", role: "Manager", lokasi: "RS. Harum Sisma Medika" }
   ];
 
+  let dbIzinList = [];
   let activeUser = null;
   let currentShift = 'Shift 1';
   let jenisAbsen = 'masuk';
@@ -389,8 +424,9 @@
     setInterval(updateClock, 1000);
     renderUserList();
     renderAdminDbList();
-    setJenisAbsen('masuk');
-    updateAbsenSublabel();
+    renderApprovalQueue();
+    validasiSyaratIzin();
+    syncServerData();
   };
 
   function updateClock() {
@@ -401,23 +437,44 @@
       now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  // --- DROPDOWN & PILIH USER ---
+  // SINKRONISASI DATA DARI GOOGLE SHEET (GET)
+  async function syncServerData() {
+    try {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if (data.status === "success") {
+        if (data.karyawan && data.karyawan.length > 0) dbKaryawan = data.karyawan;
+        if (data.izinList) dbIzinList = data.izinList;
+        renderUserList();
+        renderAdminDbList();
+        renderApprovalQueue();
+        renderRiwayatIzinUser();
+      }
+    } catch (e) {
+      console.log("Mode sinkronisasi lokal sementara");
+    }
+  }
+
   function toggleUserDropdown() {
     document.getElementById('userDropdownCard').classList.toggle('hidden');
+  }
+
+  function getRoleBadge(role) {
+    if (role === 'SPV') return '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>';
+    if (role === 'Admin Operasional') return '<span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[8px] font-bold">ADMIN OPS</span>';
+    if (role === 'Manager') return '<span class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[8px] font-bold">MANAGER</span>';
+    return '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[8px] font-bold">OPERATOR</span>';
   }
 
   function renderUserList() {
     const container = document.getElementById('userListContainer');
     container.innerHTML = '';
     dbKaryawan.forEach(user => {
-      const badge = user.role === 'SPV' 
-        ? '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>'
-        : '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[8px] font-bold">OPR</span>';
       container.innerHTML += `
-        <div onclick="selectUser(${user.id})" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50 cursor-pointer transition flex items-center justify-between">
+        <div onclick="selectUser('${user.id}')" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50 cursor-pointer transition flex items-center justify-between">
           <div>
-            <p class="font-bold text-slate-800">${user.nama} ${badge}</p>
-            <p class="text-[10px] text-slate-500">NIP: ${user.nip}</p>
+            <p class="font-bold text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; ${user.lokasi}</p>
           </div>
           <i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>
         </div>`;
@@ -425,36 +482,25 @@
   }
 
   function selectUser(id) {
-    activeUser = dbKaryawan.find(u => u.id === id);
+    activeUser = dbKaryawan.find(u => String(u.id) === String(id));
+    if (!activeUser) return;
     document.getElementById('headerActiveUserShort').innerText = activeUser.nama.split(' ')[0];
     toggleUserDropdown();
     showToast(`Login: ${activeUser.nama} (${activeUser.role})`, 'success');
 
-    document.getElementById('nav-tim').classList.toggle('hidden', activeUser.role !== 'SPV');
-    document.getElementById('nav-admin').classList.toggle('hidden', activeUser.role !== 'SPV');
-  }
+    // Hak Akses Tab Approval: SPV, Admin Operasional, & Manager
+    const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
+    document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
 
-  function renderAdminDbList() {
-    const container = document.getElementById('adminDatabaseList');
-    const spvContainer = document.getElementById('spvTeamListContainer');
-    container.innerHTML = '';
-    spvContainer.innerHTML = '';
-    dbKaryawan.forEach(user => {
-      const roleStyle = user.role === 'SPV' ? 'text-amber-600' : 'text-slate-600';
-      const card = `
-        <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-white shadow-sm">
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-xs font-bold">${user.nama.charAt(0)}</div>
-            <div>
-              <p class="font-bold text-xs text-slate-800">${user.nama}</p>
-              <p class="text-[9px] text-slate-500">NIP: ${user.nip} | <span class="${roleStyle} font-bold">${user.role}</span></p>
-            </div>
-          </div>
-          <span class="text-emerald-500 text-[10px] font-bold bg-emerald-50 px-2 py-1 rounded">Aktif</span>
-        </div>`;
-      container.innerHTML += card;
-      spvContainer.innerHTML += card;
-    });
+    // Hak Akses Tab Admin DB: HANYA ADMIN OPERASIONAL
+    const isAdminOps = activeUser.role === 'Admin Operasional';
+    document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
+
+    if (!isAdminOps && !document.getElementById('tabContent-admin').classList.contains('hidden')) {
+      switchTab('beranda');
+    }
+    renderApprovalQueue();
+    renderRiwayatIzinUser();
   }
 
   function switchTab(tabId) {
@@ -471,7 +517,307 @@
     }
   }
 
-  // --- ABSENSI & SHIFT ---
+  // =========================================================================
+  // VALIDASI SYARAT CUTI (H-14), IZIN, SAKIT TANPA SKD & SAKIT DENGAN SKD
+  // =========================================================================
+  function validasiSyaratIzin() {
+    const jenis = document.getElementById('izinJenis').value;
+    const tglMulai = document.getElementById('izinMulai').value;
+    const fileInput = document.getElementById('izinFile');
+    const banner = document.getElementById('izinRuleBanner');
+    const skdLabel = document.getElementById('skdLabel');
+    const btn = document.getElementById('btnSubmitIzin');
+
+    let valid = true;
+    let pesan = "";
+
+    if (jenis === "Cuti Tahunan") {
+      skdLabel.innerText = "Lampiran Tambahan (Opsional)";
+      if (tglMulai) {
+        const mulaiDate = new Date(tglMulai + "T00:00:00");
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+        if (diffDays < 14) {
+          valid = false;
+          pesan = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Ditolak: Pengajuan Cuti wajib minimal <b>14 hari (H-14)</b> sebelum hari H! (Pilihan Anda: H-${diffDays})`;
+        } else {
+          pesan = `<i class="fa-solid fa-circle-check mr-1"></i> Memenuhi syarat H-14 (${diffDays} hari sebelum hari H cuti).`;
+        }
+      } else {
+        pesan = `<i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Wajib diajukan minimal <b>14 hari (H-14)</b> sebelum hari H cuti.`;
+      }
+    } else if (jenis === "Izin" || jenis === "Sakit Tanpa SKD") {
+      skdLabel.innerText = "Lampiran Bukti (Tidak Wajib / Tanpa SKD)";
+      pesan = `<i class="fa-solid fa-circle-check mr-1"></i> ${jenis}: Dapat diajukan tanpa melampirkan Surat Keterangan Dokter (SKD).`;
+    } else if (jenis === "Sakit Dengan SKD") {
+      skdLabel.innerText = "Wajib Upload Foto Surat Keterangan Dokter (SKD) *";
+      if (!fileInput.files || !fileInput.files[0]) {
+        valid = false;
+        pesan = `<i class="fa-solid fa-file-medical mr-1"></i> Wajib mengunggah foto <b>Surat Keterangan Dokter (SKD)</b> untuk melanjutkan!`;
+      } else {
+        pesan = `<i class="fa-solid fa-circle-check mr-1"></i> File SKD sudah dilampirkan dan siap dikirim.`;
+      }
+    }
+
+    banner.innerHTML = pesan;
+    banner.className = valid
+      ? "bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl text-[10px] font-semibold"
+      : "bg-red-50 border border-red-200 text-red-800 p-2.5 rounded-xl text-[10px] font-semibold";
+
+    btn.disabled = !valid;
+    btn.className = valid
+      ? "w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer"
+      : "w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md";
+  }
+
+  async function submitIzin() {
+    if (!activeUser) { showToast('Pilih Akun terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    const jenis = document.getElementById('izinJenis').value;
+    const mulai = document.getElementById('izinMulai').value;
+    const selesai = document.getElementById('izinSelesai').value;
+    const alasan = document.getElementById('izinAlasan').value.trim();
+    const fileInput = document.getElementById('izinFile');
+
+    if (!mulai || !selesai || !alasan) {
+      showToast('Lengkapi tanggal mulai, selesai, dan alasan!', 'error');
+      return;
+    }
+
+    if (jenis === "Cuti Tahunan") {
+      const mulaiDate = new Date(mulai + "T00:00:00");
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+      if (diffDays < 14) {
+        showToast('Gagal! Cuti wajib diajukan minimal 14 hari sebelum hari H!', 'error');
+        return;
+      }
+    }
+
+    if (jenis === "Sakit Dengan SKD" && (!fileInput.files || !fileInput.files[0])) {
+      showToast('Wajib melampirkan foto SKD!', 'error');
+      return;
+    }
+
+    const sendPayload = async (buktiBase64) => {
+      await kirimKeServer({
+        action: "ajukan_izin",
+        nip: activeUser.nip,
+        nama: activeUser.nama,
+        role: activeUser.role,
+        lokasi: activeUser.lokasi,
+        jenisIzin: jenis,
+        tglMulai: mulai,
+        tglSelesai: selesai,
+        alasan: alasan,
+        buktiBase64: buktiBase64
+      }, "Pengajuan berhasil dikirim ke SPV!");
+      document.getElementById('izinAlasan').value = '';
+      document.getElementById('izinFile').value = '';
+      validasiSyaratIzin();
+      setTimeout(syncServerData, 1500);
+    };
+
+    if (fileInput.files && fileInput.files[0]) {
+      compressFileToBase64(fileInput.files[0], base64 => sendPayload(base64));
+    } else {
+      await sendPayload("");
+    }
+  }
+
+  // =========================================================================
+  // RENDER ANTREAN APPROVAL BERJENJANG (SPV -> ADMIN OPS -> MANAGER)
+  // =========================================================================
+  function renderApprovalQueue() {
+    const container = document.getElementById('approvalQueueContainer');
+    if (!container) return;
+    const roleTitle = document.getElementById('approvalHeaderRole');
+    if (activeUser) roleTitle.innerText = `Panel Approval (${activeUser.role})`;
+
+    if (dbIzinList.length === 0) {
+      container.innerHTML = '<p class="text-[11px] text-slate-400 text-center py-4">Belum ada pengajuan izin/cuti.</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    dbIzinList.forEach(item => {
+      let canApprove = false;
+      if (activeUser) {
+        if (activeUser.role === 'SPV' && item.appSpv === 'PENDING') canApprove = true;
+        if (activeUser.role === 'Admin Operasional' && item.appAdmin === 'PENDING') canApprove = true;
+        if (activeUser.role === 'Manager' && item.appMgr === 'PENDING') canApprove = true;
+      }
+
+      const actionButtons = canApprove ? `
+        <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-100">
+          <button onclick="prosesApproval('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+            <i class="fa-solid fa-check mr-1"></i>APPROVE (${activeUser.role})
+          </button>
+          <button onclick="prosesApproval('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+            <i class="fa-solid fa-xmark mr-1"></i>REJECT
+          </button>
+        </div>` : '';
+
+      container.innerHTML += `
+        <div class="p-3 border border-slate-200 rounded-xl bg-slate-50/60 space-y-1.5 text-xs">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-black text-slate-800">${item.nama}</span>
+              <span class="text-[10px] text-slate-500">(${item.nip})</span>
+            </div>
+            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${item.jenisIzin}</span>
+          </div>
+          <p class="text-[10px] text-slate-600"><i class="fa-regular fa-calendar mr-1"></i>${item.tglMulai} s/d ${item.tglSelesai}</p>
+          <p class="text-[10px] text-slate-700 bg-white p-2 rounded-lg border border-slate-100"><b>Alasan:</b> ${item.alasan}</p>
+          <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] text-center">
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">1. SPV</span>
+              <span class="font-bold text-slate-700">${item.appSpv}</span>
+            </div>
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">2. ADMIN OPS</span>
+              <span class="font-bold text-slate-700">${item.appAdmin}</span>
+            </div>
+            <div class="bg-white p-1.5 rounded border border-slate-200">
+              <span class="block text-slate-400 font-bold">3. MANAGER</span>
+              <span class="font-bold text-slate-700">${item.appMgr}</span>
+            </div>
+          </div>
+          ${actionButtons}
+        </div>`;
+    });
+  }
+
+  function renderRiwayatIzinUser() {
+    const container = document.getElementById('riwayatIzinUserContainer');
+    if (!container) return;
+    const list = activeUser ? dbIzinList.filter(i => i.nip === activeUser.nip) : dbIzinList.slice(0, 5);
+    if (list.length === 0) {
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan.</p>';
+      return;
+    }
+    container.innerHTML = list.map(item => `
+      <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex justify-between items-center">
+        <div>
+          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} <span class="text-[9px] font-normal text-slate-500">(${item.tglMulai})</span></p>
+          <p class="text-[9px] text-slate-500">SPV: ${item.appSpv} | Admin: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
+        </div>
+        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border border-slate-200">${item.statusAkhir}</span>
+      </div>
+    `).join('');
+  }
+
+  async function prosesApproval(idPengajuan, keputusan) {
+    if (!activeUser) return;
+    await kirimKeServer({
+      action: "approval_izin",
+      idPengajuan: idPengajuan,
+      roleApprover: activeUser.role,
+      keputusan: keputusan
+    }, `Pengajuan berhasil di-${keputusan}!`);
+    setTimeout(syncServerData, 1200);
+  }
+
+  // =========================================================================
+  // FITUR ADMIN DB (TAMBAH, EDIT, HAPUS KARYAWAN) KHUSUS ADMIN OPERASIONAL
+  // =========================================================================
+  function renderAdminDbList() {
+    const container = document.getElementById('adminDatabaseList');
+    if (!container) return;
+    document.getElementById('totalKaryawanText').innerText = `Total: ${dbKaryawan.length} Personil GPMS`;
+    container.innerHTML = '';
+
+    dbKaryawan.forEach(user => {
+      container.innerHTML += `
+        <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50/70">
+          <div>
+            <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; ${user.lokasi}</p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center text-xs" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center text-xs" title="Hapus">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>`;
+    });
+  }
+
+  function siapkanEditKaryawan(id) {
+    const emp = dbKaryawan.find(u => String(u.id) === String(id));
+    if (!emp) return;
+    document.getElementById('empEditId').value = emp.id;
+    document.getElementById('empNip').value = emp.nip;
+    document.getElementById('empNama').value = emp.nama;
+    document.getElementById('empRole').value = emp.role;
+    document.getElementById('empLokasi').value = emp.lokasi;
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500 mr-1"></i> Edit Data: ${emp.nama}`;
+    document.getElementById('btnSaveEmp').innerText = "UPDATE DATA KARYAWAN";
+    document.getElementById('btnCancelEditEmp').classList.remove('hidden');
+  }
+
+  function batalEditKaryawan() {
+    document.getElementById('empEditId').value = '';
+    document.getElementById('empNip').value = '';
+    document.getElementById('empNama').value = '';
+    document.getElementById('empRole').value = 'Operator';
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru`;
+    document.getElementById('btnSaveEmp').innerText = "SIMPAN KARYAWAN";
+    document.getElementById('btnCancelEditEmp').classList.add('hidden');
+  }
+
+  async function simpanDataKaryawan() {
+    if (!activeUser || activeUser.role !== 'Admin Operasional') {
+      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
+      return;
+    }
+    const editId = document.getElementById('empEditId').value;
+    const nip = document.getElementById('empNip').value.trim();
+    const nama = document.getElementById('empNama').value.trim();
+    const role = document.getElementById('empRole').value;
+    const lokasi = document.getElementById('empLokasi').value.trim();
+
+    if (!nip || !nama || !lokasi) {
+      showToast('Lengkapi NIP, Nama, dan Area Kerja!', 'error');
+      return;
+    }
+
+    const subAction = editId ? "edit" : "add";
+    await kirimKeServer({
+      action: "crud_karyawan",
+      subAction: subAction,
+      empId: editId || ("EMP_" + Date.now()),
+      empNip: nip,
+      empNama: nama,
+      empRole: role,
+      empLokasi: lokasi
+    }, editId ? "Data karyawan diperbarui!" : "Karyawan baru ditambahkan!");
+
+    batalEditKaryawan();
+    setTimeout(syncServerData, 1200);
+  }
+
+  async function hapusKaryawan(id, nama) {
+    if (!activeUser || activeUser.role !== 'Admin Operasional') {
+      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
+      return;
+    }
+    if (!confirm(`Hapus karyawan ${nama} dari database GPMS?`)) return;
+    await kirimKeServer({
+      action: "crud_karyawan",
+      subAction: "delete",
+      empId: id
+    }, `Karyawan ${nama} dihapus!`);
+    setTimeout(syncServerData, 1200);
+  }
+
+  // =========================================================================
+  // ABSENSI, GPS & TASK 3 FOTO
+  // =========================================================================
   function setJenisAbsen(jenis) {
     jenisAbsen = jenis;
     const isMasuk = jenis === 'masuk';
@@ -501,9 +847,6 @@
     document.getElementById('mainAbsenSublabel').innerHTML = `${jenisAbsen.toUpperCase()}<br>${currentShift.toUpperCase()}`;
   }
 
-  // =========================================================================
-  // 2. GPS ASLI (HAVERSINE) & SIMULASI
-  // =========================================================================
   function hitungJarakMeter(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -515,10 +858,7 @@
   }
 
   function detectRealGps() {
-    if (!navigator.geolocation) {
-      showToast("Browser tidak mendukung GPS", "error");
-      return;
-    }
+    if (!navigator.geolocation) { showToast("Browser tidak mendukung GPS", "error"); return; }
     showToast("Mendeteksi titik GPS...", "success");
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude;
@@ -527,9 +867,7 @@
       currentDistanceMeters = hitungJarakMeter(lat, lng, PROJECT_LOCATION.lat, PROJECT_LOCATION.lng);
       document.getElementById('gpsCoordText').innerText = `Posisi: ${currentCoordStr} (Jarak: ${currentDistanceMeters}m)`;
       setQuickGps(currentDistanceMeters <= PROJECT_LOCATION.maxRadiusMeters);
-    }, () => {
-      showToast("Gagal mengambil GPS, pastikan izin lokasi aktif", "error");
-    }, { enableHighAccuracy: true });
+    }, () => showToast("Gagal mengambil GPS, aktifkan izin lokasi", "error"), { enableHighAccuracy: true });
   }
 
   function setQuickGps(isInside) {
@@ -554,19 +892,9 @@
     absenBtn.classList.toggle('grayscale', !isInside);
   }
 
-  // =========================================================================
-  // 3. KAMERA SELFIE, KOMPRESI CANVAS & KIRIM KE CODE.GS
-  // =========================================================================
   async function triggerAbsenAction() {
-    if (!activeUser) {
-      showToast('Pilih Man Power terlebih dahulu!', 'error');
-      toggleUserDropdown();
-      return;
-    }
-    if (isGpsLocked) {
-      showToast('Gagal! Posisi di luar radius lokasi.', 'error');
-      return;
-    }
+    if (!activeUser) { showToast('Pilih Akun terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    if (isGpsLocked) { showToast('Gagal! Posisi di luar radius lokasi.', 'error'); return; }
     document.getElementById('cameraModal').classList.remove('hidden');
     document.getElementById('cameraLoading').classList.remove('hidden');
     try {
@@ -581,17 +909,13 @@
 
   function closeCamera() {
     document.getElementById('cameraModal').classList.add('hidden');
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(t => t.stop());
-      cameraStream = null;
-    }
+    if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
   }
 
   async function captureAndSubmit() {
     const video = document.getElementById('cameraVideo');
     const canvas = document.getElementById('captureCanvas');
-    canvas.width = 480;
-    canvas.height = 640;
+    canvas.width = 480; canvas.height = 640;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
     closeCamera();
@@ -601,22 +925,12 @@
     else document.getElementById('clockOutSummary').innerText = timeNow;
 
     await kirimKeServer({
-      action: "absen",
-      nip: activeUser.nip,
-      nama: activeUser.nama,
-      role: activeUser.role,
-      lokasi: activeUser.lokasi,
-      shift: currentShift,
-      jenisAbsen: jenisAbsen,
-      koordinat: currentCoordStr,
-      jarak: currentDistanceMeters,
-      fotoBase64: fotoBase64
+      action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
+      lokasi: activeUser.lokasi, shift: currentShift, jenisAbsen: jenisAbsen,
+      koordinat: currentCoordStr, jarak: currentDistanceMeters, fotoBase64: fotoBase64
     }, `Absen ${jenisAbsen.toUpperCase()} (${currentShift}) Tercatat!`);
   }
 
-  // =========================================================================
-  // 4. LAPORAN KERJA WAJIB 3 FOTO & PENGAJUAN IZIN
-  // =========================================================================
   function compressFileToBase64(file, callback) {
     const reader = new FileReader();
     reader.onload = e => {
@@ -624,8 +938,7 @@
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const scale = Math.min(600 / img.width, 600 / img.height, 1);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
+        canvas.width = img.width * scale; canvas.height = img.height * scale;
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
         callback(canvas.toDataURL('image/jpeg', 0.7));
       };
@@ -656,66 +969,22 @@
   }
 
   async function submitTaskReport() {
-    if (!activeUser) { showToast('Pilih Man Power terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    if (!activeUser) { showToast('Pilih Akun terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
     const desc = document.getElementById('taskDesc').value.trim();
     if (!desc) { showToast('Isi deskripsi pekerjaan!', 'error'); return; }
-
     await kirimKeServer({
-      action: "task_report",
-      nip: activeUser.nip,
-      nama: activeUser.nama,
-      lokasi: activeUser.lokasi,
-      shift: currentShift,
-      area: document.getElementById('taskArea').value,
-      deskripsi: desc,
-      fotoBefore: taskPhotos.before,
-      fotoDuring: taskPhotos.during,
-      fotoAfter: taskPhotos.after
+      action: "task_report", nip: activeUser.nip, nama: activeUser.nama, lokasi: activeUser.lokasi,
+      shift: currentShift, area: document.getElementById('taskArea').value, deskripsi: desc,
+      fotoBefore: taskPhotos.before, fotoDuring: taskPhotos.during, fotoAfter: taskPhotos.after
     }, "Laporan 3 Foto Berhasil Terkirim!");
-
     taskPhotos = { before: null, during: null, after: null };
     ['before', 'during', 'after'].forEach(s => document.getElementById(`preview-${s}`).classList.add('hidden'));
     document.getElementById('taskDesc').value = '';
     checkTaskLock();
   }
 
-  async function submitIzin() {
-    if (!activeUser) { showToast('Pilih Man Power terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
-    const mulai = document.getElementById('izinMulai').value;
-    const selesai = document.getElementById('izinSelesai').value;
-    const alasan = document.getElementById('izinAlasan').value.trim();
-    if (!mulai || !selesai || !alasan) { showToast('Lengkapi tanggal dan alasan izin!', 'error'); return; }
-
-    const fileInput = document.getElementById('izinFile');
-    const sendPayload = async (buktiBase64) => {
-      await kirimKeServer({
-        action: "ajukan_izin",
-        nip: activeUser.nip,
-        nama: activeUser.nama,
-        role: activeUser.role,
-        lokasi: activeUser.lokasi,
-        jenisIzin: document.getElementById('izinJenis').value,
-        tglMulai: mulai,
-        tglSelesai: selesai,
-        alasan: alasan,
-        buktiBase64: buktiBase64
-      }, "Pengajuan Izin Tercatat di Sheet!");
-      document.getElementById('izinAlasan').value = '';
-    };
-
-    if (fileInput.files && fileInput.files[0]) {
-      compressFileToBase64(fileInput.files[0], base64 => sendPayload(base64));
-    } else {
-      await sendPayload("");
-    }
-  }
-
   async function kirimKeServer(payload, pesanSukses) {
-    if (!SCRIPT_URL || SCRIPT_URL.includes("TEMPEL_URL")) {
-      showToast(pesanSukses + " (Mode Lokal)", "success");
-      return;
-    }
-    showToast("Mengirim data ke Google Sheet...", "success");
+    showToast("Memproses data ke server...", "success");
     try {
       await fetch(SCRIPT_URL, {
         method: "POST",
