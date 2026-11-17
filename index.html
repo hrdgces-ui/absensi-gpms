@@ -78,7 +78,7 @@
   </div>
 </div>
 
-<!-- MODAL PREVIEW PDF SEBELUM DOWNLOAD (KHUSUS SPV & ADMIN OPERASIONAL) -->
+<!-- MODAL PREVIEW PDF SEBELUM DOWNLOAD (DILENGKAPI LIVE PDF VIEWER & TABEL) -->
 <div id="pdfPreviewModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col p-3 max-w-md mx-auto">
   <div class="bg-slate-900 text-white px-4 py-3 rounded-t-2xl border border-slate-700 flex items-center justify-between shrink-0">
     <div class="truncate pr-2">
@@ -90,9 +90,22 @@
     </button>
   </div>
 
+  <!-- Pilihan Mode Tampilan Pratinjau -->
+  <div class="bg-slate-800 px-3 py-1.5 border-x border-slate-700 flex gap-1.5 shrink-0">
+    <button onclick="switchPreviewMode('pdf')" id="btnModePdf" class="flex-1 py-1.5 rounded-lg text-[10px] font-bold bg-emerald-600 text-white cursor-pointer">
+      <i class="fa-solid fa-file-pdf mr-1"></i>Layar PDF Asli
+    </button>
+    <button onclick="switchPreviewMode('drive')" id="btnModeDrive" class="flex-1 py-1.5 rounded-lg text-[10px] font-bold bg-slate-700 text-slate-300 cursor-pointer">
+      <i class="fa-brands fa-google-drive mr-1"></i>Layar Drive
+    </button>
+    <button onclick="switchPreviewMode('html')" id="btnModeHtml" class="flex-1 py-1.5 rounded-lg text-[10px] font-bold bg-slate-700 text-slate-300 cursor-pointer">
+      <i class="fa-solid fa-table mr-1"></i>Layar Tabel
+    </button>
+  </div>
+
   <!-- Area Scroll Pratinjau Isi Dokumen -->
-  <div class="flex-1 bg-white overflow-y-auto p-3 border-x border-slate-700">
-    <div id="pdfPreviewHtmlContainer" class="text-xs overflow-x-auto"></div>
+  <div class="flex-1 bg-white overflow-y-auto p-2 border-x border-slate-700 flex flex-col">
+    <div id="pdfPreviewHtmlContainer" class="text-xs overflow-x-auto flex-1 h-full"></div>
   </div>
 
   <!-- Tombol Aksi di Bawah Jendela Preview -->
@@ -359,7 +372,6 @@
           <span id="stModeBadge" class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded">Input Baru</span>
         </div>
 
-        <!-- Menyimpan ID Serah Terima saat Mode Edit Aktif -->
         <input type="hidden" id="stEditId" value="">
 
         <div class="grid grid-cols-3 gap-2">
@@ -498,7 +510,6 @@
 
     <!-- SUB-MODUL 4: KHUSUS SPV & ADMIN OPERASIONAL (EDIT REKAP ABSEN, STATUS MP, & PREVIEW PDF) -->
     <div id="taskSubPane-statusmp" class="hidden space-y-3">
-      <!-- Kartu Preview & Download PDF Laporan Bulanan GPMS -->
       <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 shadow-lg space-y-3 border border-slate-700">
         <div class="flex items-center justify-between">
           <div>
@@ -783,7 +794,6 @@
     <i class="fa-solid fa-calendar-plus text-lg"></i>
     <span class="text-[9px] font-bold">Cuti/Izin</span>
   </button>
-  <!-- Hanya muncul untuk SPV & Admin Operasional -->
   <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
     <i class="fa-solid fa-clock-rotate-left text-lg"></i>
     <span class="text-[9px] font-bold">Rekap/PDF</span>
@@ -861,7 +871,8 @@
   let dbAbsenList = [];
   let dbIzinList = [];
   let dbSerahTerimaList = [];
-  let cachedPdfResult = null; // Menyimpan hasil PDF yang sedang di-preview
+  let cachedPdfResult = null;
+  let cachedPdfBlobUrl = null;
   let activeUser = null;
   let pendingPinUser = null;
   let pendingApprovalAction = null;
@@ -892,14 +903,64 @@
       now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  // Hak Akses Status, Rekap Absen, & PDF: HANYA SPV dan Admin Operasional
   function bolehAksesRekapDanPdf() {
     return activeUser && (activeUser.role === 'SPV' || activeUser.role === 'Admin Operasional');
   }
 
   // =========================================================================
-  // 1. MODE PREVIEW PDF SEBELUM DOWNLOAD (KHUSUS SPV & ADMIN OPERASIONAL)
+  // 1. MODE PREVIEW PDF LANGSUNG (LIVE PDF BLOB + GOOGLE DRIVE PREVIEW + TABEL)
   // =========================================================================
+  function base64ToPdfBlobUrl_(b64Data) {
+    try {
+      const byteCharacters = atob(b64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      return URL.createObjectURL(blob);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function getDriveEmbedPreviewUrl_(driveViewUrl) {
+    if (!driveViewUrl) return null;
+    const match = String(driveViewUrl).match(/[-\w]{25,}/);
+    return match ? `https://drive.google.com/file/d/${match[0]}/preview` : null;
+  }
+
+  function switchPreviewMode(mode) {
+    if (!cachedPdfResult) return;
+    const container = document.getElementById('pdfPreviewHtmlContainer');
+    const modes = ['pdf', 'drive', 'html'];
+    modes.forEach(m => {
+      const btn = document.getElementById('btnMode' + m.charAt(0).toUpperCase() + m.slice(1));
+      if (btn) {
+        btn.className = (m === mode)
+          ? "flex-1 py-1.5 rounded-lg text-[10px] font-bold bg-emerald-600 text-white cursor-pointer"
+          : "flex-1 py-1.5 rounded-lg text-[10px] font-bold bg-slate-700 text-slate-300 cursor-pointer";
+      }
+    });
+
+    if (mode === 'pdf' && cachedPdfBlobUrl) {
+      container.innerHTML = `<iframe src="${cachedPdfBlobUrl}" class="w-full h-[72vh] border-0 rounded-lg bg-slate-100"></iframe>`;
+    } else if (mode === 'drive' && cachedPdfResult.pdfUrl) {
+      const embedUrl = getDriveEmbedPreviewUrl_(cachedPdfResult.pdfUrl);
+      container.innerHTML = embedUrl
+        ? `<iframe src="${embedUrl}" class="w-full h-[72vh] border-0 rounded-lg bg-slate-100"></iframe>`
+        : `<p class="text-center p-4 text-slate-500">Link Drive tidak tersedia.</p>`;
+    } else if (mode === 'html' && cachedPdfResult.htmlPreview) {
+      container.innerHTML = `<div class="p-2">${cachedPdfResult.htmlPreview}</div>`;
+    } else if (cachedPdfBlobUrl) {
+      container.innerHTML = `<iframe src="${cachedPdfBlobUrl}" class="w-full h-[72vh] border-0 rounded-lg bg-slate-100"></iframe>`;
+    } else if (cachedPdfResult.pdfUrl) {
+      const embedUrl = getDriveEmbedPreviewUrl_(cachedPdfResult.pdfUrl);
+      container.innerHTML = `<iframe src="${embedUrl}" class="w-full h-[72vh] border-0 rounded-lg bg-slate-100"></iframe>`;
+    }
+  }
+
   async function previewPdfDariAplikasi(jenisPdf) {
     if (!bolehAksesRekapDanPdf()) {
       showToast('Akses ditolak! Hanya SPV & Admin Operasional yang dapat membuka Rekap & PDF.', 'error');
@@ -926,11 +987,22 @@
       const result = await response.json();
       if (result && result.status === "success") {
         cachedPdfResult = result;
+        if (cachedPdfBlobUrl) URL.revokeObjectURL(cachedPdfBlobUrl);
+        cachedPdfBlobUrl = result.pdfBase64 ? base64ToPdfBlobUrl_(result.pdfBase64) : null;
+
         document.getElementById('pdfPreviewModalSubtitle').innerText = result.fileName || labelPdf;
-        document.getElementById('pdfPreviewHtmlContainer').innerHTML = result.htmlPreview || '<p class="text-center p-4">Pratinjau siap diunduh.</p>';
         document.getElementById('btnOpenDrivePdfModal').href = result.pdfUrl || "#";
         document.getElementById('pdfPreviewModal').classList.remove('hidden');
-        showToast('Preview siap! Silakan periksa sebelum download.', 'success');
+
+        // Tampilkan langsung lembaran PDF asli di dalam kotak putih
+        if (cachedPdfBlobUrl) {
+          switchPreviewMode('pdf');
+        } else if (result.htmlPreview) {
+          switchPreviewMode('html');
+        } else {
+          switchPreviewMode('drive');
+        }
+        showToast('Preview PDF berhasil ditampilkan!', 'success');
       } else {
         showToast(result.message || "Gagal menyiapkan preview PDF", "error");
       }
@@ -948,9 +1020,9 @@
       showToast('File PDF belum tersedia.', 'error');
       return;
     }
-    const linkSource = `data:application/pdf;base64,${cachedPdfResult.pdfBase64}`;
+    const hrefUrl = cachedPdfBlobUrl || `data:application/pdf;base64,${cachedPdfResult.pdfBase64}`;
     const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
+    downloadLink.href = hrefUrl;
     downloadLink.download = cachedPdfResult.fileName || "Laporan_GPMS.pdf";
     document.body.appendChild(downloadLink);
     downloadLink.click();
@@ -1057,7 +1129,6 @@
   }
 
   function parseTiketString_(str) {
-    // Format: "10 lbr (001 s/d 010)"
     const res = { lbr: "", awal: "", akhir: "" };
     if (!str || str === "-") return res;
     const matchLbr = String(str).match(/^(\d+)\s*lbr/i);
@@ -1116,7 +1187,6 @@
     document.getElementById('stPenerima').value = item.petugasMenerima !== "-" ? item.petugasMenerima : "";
     document.getElementById('stSpv').value = item.mengetahuiSpv || "Ahmad Sobari";
 
-    // Ubah tampilan form ke Mode Edit
     document.getElementById('stFormHeaderTitle').innerText = `Edit Serah Terima (${item.hariTanggal})`;
     document.getElementById('stModeBadge').innerText = "MODE EDIT";
     document.getElementById('stModeBadge').className = "bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded";
@@ -1388,7 +1458,6 @@
       ? 'Skema Cuti SPV: <b>Admin Operasional &rarr; Manager</b>'
       : 'Skema Cuti Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
 
-    // 1. Hak Akses Status, Rekap Absen, & Generate PDF: HANYA SPV & Admin Operasional
     const isSpvOrAdmin = bolehAksesRekapDanPdf();
     document.getElementById('nav-riwayat').classList.toggle('hidden', !isSpvOrAdmin);
     document.getElementById('subBtn-statusmp').classList.toggle('hidden', !isSpvOrAdmin);
@@ -1396,16 +1465,13 @@
       ? "grid grid-cols-4 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center"
       : "grid grid-cols-3 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center";
 
-    // Jika sedang di sub-tab statusmp lalu ganti akun ke Operator, kembalikan ke sub-tab patroli
     if (!isSpvOrAdmin && !document.getElementById('taskSubPane-statusmp').classList.contains('hidden')) {
       switchTaskSubTab('patroli');
     }
 
-    // 2. Hak Akses Tab Approval: SPV, Admin Operasional, & Manager
     const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
     document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
 
-    // 3. Hak Akses Tab Admin DB: HANYA Admin Operasional
     const isAdminOps = activeUser.role === 'Admin Operasional';
     document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
 
