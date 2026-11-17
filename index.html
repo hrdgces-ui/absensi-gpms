@@ -78,6 +78,36 @@
   </div>
 </div>
 
+<!-- MODAL PREVIEW PDF SEBELUM DOWNLOAD (KHUSUS SPV & ADMIN OPERASIONAL) -->
+<div id="pdfPreviewModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col p-3 max-w-md mx-auto">
+  <div class="bg-slate-900 text-white px-4 py-3 rounded-t-2xl border border-slate-700 flex items-center justify-between shrink-0">
+    <div class="truncate pr-2">
+      <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Mode Preview Dokumen PDF</h3>
+      <p class="text-[10px] text-slate-300 truncate" id="pdfPreviewModalSubtitle">Periksa isi laporan sebelum mengunduh</p>
+    </div>
+    <button onclick="closePdfPreviewModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- Area Scroll Pratinjau Isi Dokumen -->
+  <div class="flex-1 bg-white overflow-y-auto p-3 border-x border-slate-700">
+    <div id="pdfPreviewHtmlContainer" class="text-xs overflow-x-auto"></div>
+  </div>
+
+  <!-- Tombol Aksi di Bawah Jendela Preview -->
+  <div class="bg-slate-900 p-3 rounded-b-2xl border border-slate-700 grid grid-cols-2 gap-2 shrink-0">
+    <button onclick="downloadCachedPdf()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center space-x-1.5 shadow-md cursor-pointer">
+      <i class="fa-solid fa-download"></i>
+      <span>Download PDF</span>
+    </button>
+    <a id="btnOpenDrivePdfModal" href="#" target="_blank" class="py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center space-x-1.5 shadow-md">
+      <i class="fa-brands fa-google-drive"></i>
+      <span>Buka di Drive</span>
+    </a>
+  </div>
+</div>
+
 <main class="flex-1 overflow-y-auto p-4 space-y-4">
 
   <!-- ================= 1. BERANDA ABSENSI PANE ================= -->
@@ -169,18 +199,18 @@
     </div>
   </div>
 
-  <!-- ================= 2. TASK REPORTING KHUSUS GPMS (4 MODUL + GENERATE PDF) ================= -->
+  <!-- ================= 2. TASK REPORTING KHUSUS GPMS ================= -->
   <div id="tabContent-laporan" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Task Reporting & Laporan PDF GPMS</h3>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Task Reporting Operasional GPMS</h3>
         <p class="text-[10px] text-slate-300">Patroli 1 Foto Live &bull; Ceklis Kendaraan &bull; Serah Terima Shift</p>
       </div>
-      <i class="fa-solid fa-file-pdf text-xl text-red-400"></i>
+      <i class="fa-solid fa-clipboard-list text-xl text-emerald-400"></i>
     </div>
 
-    <!-- Navigasi 4 Sub-Modul Task Reporting GPMS -->
-    <div class="grid grid-cols-4 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center">
+    <!-- Navigasi Sub-Modul Task Reporting (Tab 4 Hanya Muncul untuk SPV & Admin Operasional) -->
+    <div id="taskSubNavGrid" class="grid grid-cols-3 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center">
       <button onclick="switchTaskSubTab('patroli')" id="subBtn-patroli" class="py-2 px-1 rounded-xl bg-slate-900 text-emerald-400 shadow-sm transition cursor-pointer">
         <i class="fa-solid fa-camera block text-sm mb-0.5"></i>1. Patroli
       </button>
@@ -190,8 +220,8 @@
       <button onclick="switchTaskSubTab('serahterima')" id="subBtn-serahterima" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
         <i class="fa-solid fa-handshake block text-sm mb-0.5"></i>3. Shift Pos
       </button>
-      <button onclick="switchTaskSubTab('statusmp')" id="subBtn-statusmp" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
-        <i class="fa-solid fa-file-pdf block text-sm mb-0.5"></i>4. Status & PDF
+      <button onclick="switchTaskSubTab('statusmp')" id="subBtn-statusmp" class="hidden py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
+        <i class="fa-solid fa-file-pdf block text-sm mb-0.5"></i>4. Rekap & PDF
       </button>
     </div>
 
@@ -318,168 +348,224 @@
       </button>
     </div>
 
-    <!-- SUB-MODUL 3: FORM SERAH TERIMA SHIFT (No. Doc: 03.03.03104-RO) -->
-    <div id="taskSubPane-serahterima" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
-      <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
-        <div>
-          <h4 class="text-xs font-black text-slate-800 uppercase">Form Serah Terima Shift</h4>
-          <p class="text-[9px] text-slate-500">No. Doc: 03.03.03104-RO</p>
-        </div>
-        <span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded">Pos Parkir</span>
-      </div>
-
-      <div class="grid grid-cols-3 gap-2">
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">Tanggal</label>
-          <input type="date" id="stTanggal" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50">
-        </div>
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">Lokasi Tugas</label>
-          <select id="stLokasiPos" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
-            <option value="Pos Masuk Mobil">Pos Masuk Mobil</option>
-            <option value="Pos Masuk Motor">Pos Masuk Motor</option>
-            <option value="Pos Keluar Mobil">Pos Keluar Mobil</option>
-            <option value="Pos Keluar Motor">Pos Keluar Motor</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">Shift Tugas</label>
-          <select id="stShiftTugas" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
-            <option value="Pagi">Pagi</option>
-            <option value="Siang">Siang</option>
-            <option value="Malam">Malam</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
-        <div class="flex justify-between items-center">
-          <span class="text-[10px] font-black text-slate-700 uppercase">1. Uang Modal Kembalian</span>
-          <span id="stTotalModalText" class="text-xs font-black text-emerald-700">Total: Rp 0</span>
-        </div>
-        <div class="grid grid-cols-2 gap-1.5 text-[10px]">
-          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
-            <span class="font-bold">Rp 500 (pcs)</span>
-            <input type="number" id="stK500" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
-          </div>
-          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
-            <span class="font-bold">Rp 2.000 (lbr)</span>
-            <input type="number" id="stK2000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
-          </div>
-          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
-            <span class="font-bold">Rp 5.000 (lbr)</span>
-            <input type="number" id="stK5000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
-          </div>
-          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
-            <span class="font-bold">Rp 10.000 (lbr)</span>
-            <input type="number" id="stK10000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
-          </div>
-          <div class="col-span-2 flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
-            <span class="font-bold">Rp 50.000 (lbr)</span>
-            <input type="number" id="stK50000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-20 border border-slate-200 rounded p-1 text-right font-mono">
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
-        <span class="text-[10px] font-black text-slate-700 uppercase block">2. Tiket / Karcis Manual</span>
-        <div class="grid grid-cols-3 gap-1.5 text-[10px]">
-          <input type="number" id="stCasualLbr" placeholder="Casual (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-          <input type="text" id="stCasualSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-          <input type="text" id="stCasualSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-        </div>
-        <div class="grid grid-cols-3 gap-1.5 text-[10px]">
-          <input type="number" id="stGratisLbr" placeholder="Gratis (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-          <input type="text" id="stGratisSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-          <input type="text" id="stGratisSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-        </div>
-      </div>
-
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
-        <span class="text-[10px] font-black text-slate-700 uppercase block">3. Signed Tarif & Kondisi Pos Parkir</span>
-        <div class="grid grid-cols-2 gap-2 text-[10px]">
+    <!-- SUB-MODUL 3: FORM SERAH TERIMA SHIFT (BISA DIEDIT & DISESUAIKAN DI HARI BERIKUTNYA) -->
+    <div id="taskSubPane-serahterima" class="hidden space-y-3">
+      <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3" id="stFormCard">
+        <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
           <div>
-            <label class="font-bold text-slate-500 block mb-0.5">Signed Tarif</label>
-            <select id="stSignedTarif" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
-              <option value="Baik / Bersih">Baik & Bersih</option>
-              <option value="Baik / Kotor">Baik & Kotor</option>
-              <option value="Rusak">Rusak</option>
+            <h4 class="text-xs font-black text-slate-800 uppercase" id="stFormHeaderTitle">Form Serah Terima Shift</h4>
+            <p class="text-[9px] text-slate-500" id="stFormHeaderSubtitle">No. Doc: 03.03.03104-RO &bull; Bisa Diedit di Hari Berikutnya</p>
+          </div>
+          <span id="stModeBadge" class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded">Input Baru</span>
+        </div>
+
+        <!-- Menyimpan ID Serah Terima saat Mode Edit Aktif -->
+        <input type="hidden" id="stEditId" value="">
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Tanggal</label>
+            <input type="date" id="stTanggal" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50">
+          </div>
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Lokasi Tugas</label>
+            <select id="stLokasiPos" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
+              <option value="Pos Masuk Mobil">Pos Masuk Mobil</option>
+              <option value="Pos Masuk Motor">Pos Masuk Motor</option>
+              <option value="Pos Keluar Mobil">Pos Keluar Mobil</option>
+              <option value="Pos Keluar Motor">Pos Keluar Motor</option>
             </select>
           </div>
           <div>
-            <label class="font-bold text-slate-500 block mb-0.5">Pos Parkir</label>
-            <select id="stKondisiPos" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
-              <option value="Baik / Bersih">Baik & Bersih</option>
-              <option value="Baik / Kotor">Baik & Kotor</option>
-              <option value="Rusak">Rusak</option>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Shift Tugas</label>
+            <select id="stShiftTugas" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
+              <option value="Pagi">Pagi</option>
+              <option value="Siang">Siang</option>
+              <option value="Malam">Malam</option>
             </select>
           </div>
         </div>
-        <input type="text" id="stCatatanPos" placeholder="Catatan Pos Parkir..." class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-white">
+
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-black text-slate-700 uppercase">1. Uang Modal Kembalian</span>
+            <span id="stTotalModalText" class="text-xs font-black text-emerald-700">Total: Rp 0</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+            <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+              <span class="font-bold">Rp 500 (pcs)</span>
+              <input type="number" id="stK500" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+            </div>
+            <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+              <span class="font-bold">Rp 2.000 (lbr)</span>
+              <input type="number" id="stK2000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+            </div>
+            <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+              <span class="font-bold">Rp 5.000 (lbr)</span>
+              <input type="number" id="stK5000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+            </div>
+            <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+              <span class="font-bold">Rp 10.000 (lbr)</span>
+              <input type="number" id="stK10000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+            </div>
+            <div class="col-span-2 flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+              <span class="font-bold">Rp 50.000 (lbr)</span>
+              <input type="number" id="stK50000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-20 border border-slate-200 rounded p-1 text-right font-mono">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+          <span class="text-[10px] font-black text-slate-700 uppercase block">2. Tiket / Karcis Manual</span>
+          <div class="grid grid-cols-3 gap-1.5 text-[10px]">
+            <input type="number" id="stCasualLbr" placeholder="Casual (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+            <input type="text" id="stCasualSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+            <input type="text" id="stCasualSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 text-[10px]">
+            <input type="number" id="stGratisLbr" placeholder="Gratis (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+            <input type="text" id="stGratisSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+            <input type="text" id="stGratisSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+          <span class="text-[10px] font-black text-slate-700 uppercase block">3. Signed Tarif & Kondisi Pos Parkir</span>
+          <div class="grid grid-cols-2 gap-2 text-[10px]">
+            <div>
+              <label class="font-bold text-slate-500 block mb-0.5">Signed Tarif</label>
+              <select id="stSignedTarif" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
+                <option value="Baik / Bersih">Baik & Bersih</option>
+                <option value="Baik / Kotor">Baik & Kotor</option>
+                <option value="Rusak">Rusak</option>
+              </select>
+            </div>
+            <div>
+              <label class="font-bold text-slate-500 block mb-0.5">Pos Parkir</label>
+              <select id="stKondisiPos" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
+                <option value="Baik / Bersih">Baik & Bersih</option>
+                <option value="Baik / Kotor">Baik & Kotor</option>
+                <option value="Rusak">Rusak</option>
+              </select>
+            </div>
+          </div>
+          <input type="text" id="stCatatanPos" placeholder="Catatan Pos Parkir..." class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-white">
+        </div>
+
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+          <span class="text-[10px] font-black text-slate-700 uppercase block">4. Peralatan / Perlengkapan Kerja (9 Alat)</span>
+          <div id="stEquipmentContainer" class="space-y-1.5"></div>
+          <textarea id="stMasalahLain" rows="2" placeholder="Catatan / Masalah Lain-lain..." class="w-full border border-slate-200 rounded-lg p-2 text-[10px] bg-white mt-1"></textarea>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1.5">
+          <div>
+            <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menyerahkan</label>
+            <input type="text" id="stPenyerah" placeholder="Petugas 1" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
+          </div>
+          <div>
+            <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menerima</label>
+            <input type="text" id="stPenerima" placeholder="Petugas 2" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
+          </div>
+          <div>
+            <label class="text-[8px] font-bold text-slate-500 uppercase">Mengetahui (SPV)</label>
+            <input type="text" id="stSpv" value="Ahmad Sobari" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50 font-bold">
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="btnSubmitSerahTerima" onclick="submitSerahTerimaShift()" class="flex-1 py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer">
+            SIMPAN FORM SERAH TERIMA SHIFT
+          </button>
+          <button id="btnCancelEditSt" onclick="batalEditSerahTerima()" class="hidden px-4 py-3 rounded-xl font-bold text-xs bg-slate-200 text-slate-700 cursor-pointer">
+            BATAL
+          </button>
+        </div>
       </div>
 
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
-        <span class="text-[10px] font-black text-slate-700 uppercase block">4. Peralatan / Perlengkapan Kerja (9 Alat)</span>
-        <div id="stEquipmentContainer" class="space-y-1.5"></div>
-        <textarea id="stMasalahLain" rows="2" placeholder="Catatan / Masalah Lain-lain..." class="w-full border border-slate-200 rounded-lg p-2 text-[10px] bg-white mt-1"></textarea>
+      <!-- Riwayat Serah Terima Shift yang Sudah Disubmit (Bisa Diedit Kapan Saja / Hari Berikutnya) -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <div>
+            <h4 class="text-xs font-black text-slate-800 uppercase"><i class="fa-solid fa-pen-to-square text-amber-500 mr-1"></i>Riwayat Serah Terima Shift (Bisa Diedit)</h4>
+            <p class="text-[9px] text-slate-500">Klik tombol Edit untuk menyesuaikan data shift kemarin / sebelumnya</p>
+          </div>
+          <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+        </div>
+        <div id="riwayatSerahTerimaContainer" class="space-y-2 text-xs"></div>
       </div>
-
-      <div class="grid grid-cols-3 gap-1.5">
-        <div>
-          <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menyerahkan</label>
-          <input type="text" id="stPenyerah" placeholder="Petugas 1" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
-        </div>
-        <div>
-          <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menerima</label>
-          <input type="text" id="stPenerima" placeholder="Petugas 2" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
-        </div>
-        <div>
-          <label class="text-[8px] font-bold text-slate-500 uppercase">Mengetahui (SPV)</label>
-          <input type="text" id="stSpv" value="Ahmad Sobari" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50 font-bold">
-        </div>
-      </div>
-
-      <button onclick="submitSerahTerimaShift()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer">
-        SIMPAN FORM SERAH TERIMA SHIFT
-      </button>
     </div>
 
-    <!-- SUB-MODUL 4: DATA KARYAWAN GPMS & TOMBOL GENERATE PDF LAPORAN BULANAN -->
+    <!-- SUB-MODUL 4: KHUSUS SPV & ADMIN OPERASIONAL (EDIT REKAP ABSEN, STATUS MP, & PREVIEW PDF) -->
     <div id="taskSubPane-statusmp" class="hidden space-y-3">
-      <!-- Kartu Cetak / Download PDF Laporan Bulanan GPMS -->
+      <!-- Kartu Preview & Download PDF Laporan Bulanan GPMS -->
       <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 shadow-lg space-y-3 border border-slate-700">
         <div class="flex items-center justify-between">
           <div>
-            <h4 class="text-xs font-black uppercase tracking-wider text-emerald-400">Generate & Download PDF GPMS</h4>
-            <p class="text-[10px] text-slate-300 mt-0.5">Otomatis Menyusun Laporan & Arsip ke Google Drive</p>
+            <h4 class="text-xs font-black uppercase tracking-wider text-emerald-400">Preview & Generate PDF (SPV & Admin)</h4>
+            <p class="text-[10px] text-slate-300 mt-0.5">Menampilkan Pratinjau Dokumen Sebelum Download</p>
           </div>
           <div class="w-10 h-10 rounded-xl bg-red-500/20 border border-red-400/30 flex items-center justify-center text-red-400 text-lg">
-            <i class="fa-solid fa-file-pdf"></i>
+            <i class="fa-solid fa-eye"></i>
           </div>
         </div>
 
         <div class="space-y-2 pt-1">
-          <button id="btnGenPdfOperasional" onclick="generatePdfDariAplikasi('laporan_operasional')" class="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
-            <span class="flex items-center"><i class="fa-solid fa-file-export mr-2 text-sm"></i>1. PDF Laporan Bulanan Operasional (4 Modul)</span>
-            <i class="fa-solid fa-download"></i>
+          <button onclick="previewPdfDariAplikasi('laporan_operasional')" class="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
+            <span class="flex items-center"><i class="fa-solid fa-eye mr-2 text-sm"></i>1. Preview PDF Laporan Bulanan (4 Modul)</span>
+            <i class="fa-solid fa-chevron-right"></i>
           </button>
 
-          <button id="btnGenPdfRekapAbsen" onclick="generatePdfDariAplikasi('rekap_absensi')" class="w-full py-3 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
-            <span class="flex items-center"><i class="fa-solid fa-calendar-check mr-2 text-sm"></i>2. PDF Tabel Rekap Absensi (Periode 19-20)</span>
-            <i class="fa-solid fa-download"></i>
+          <button onclick="previewPdfDariAplikasi('rekap_absensi')" class="w-full py-3 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
+            <span class="flex items-center"><i class="fa-solid fa-table mr-2 text-sm"></i>2. Preview PDF Rekap Absensi (Periode 19-20)</span>
+            <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
+      </div>
 
-        <!-- Kotak Link Hasil PDF jika sudah selesai dibuat -->
-        <div id="pdfResultBox" class="hidden bg-slate-800/90 border border-emerald-500/40 rounded-xl p-2.5 text-[10px] flex items-center justify-between">
-          <div class="truncate pr-2">
-            <span class="text-emerald-400 font-bold block">PDF Berhasil Dibuat!</span>
-            <span id="pdfResultFileName" class="text-slate-300 truncate block">Laporan_GPMS.pdf</span>
+      <!-- Form Edit Status & Rekap Absen Karyawan (Khusus SPV & Admin Operasional) -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2.5">
+        <div class="border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-black text-slate-800 uppercase"><i class="fa-solid fa-calendar-pen text-blue-600 mr-1"></i>Edit Rekap Absen & Status Karyawan</h4>
+          <p class="text-[9px] text-slate-500">Akses Khusus SPV & Admin Operasional untuk Mengatur Kode Rekap (H, 0, L, C, I, S, DC, BC, A)</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Pilih Personel</label>
+            <select id="editRekapNip" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold"></select>
           </div>
-          <a id="pdfResultDriveLink" href="#" target="_blank" class="bg-emerald-500 text-slate-900 font-black px-2.5 py-1.5 rounded-lg shrink-0">
-            Buka PDF
-          </a>
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Tanggal Rekap</label>
+            <input type="date" id="editRekapTanggal" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+          </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Kode Status Kehadiran</label>
+            <select id="editRekapKode" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold text-emerald-800">
+              <option value="H">H - Hadir</option>
+              <option value="0">0 - Off / Libur</option>
+              <option value="L">L - Lembur</option>
+              <option value="BC">BC - Back Up</option>
+              <option value="C">C - Cuti</option>
+              <option value="I">I - Izin</option>
+              <option value="S">S - Sakit Tanpa SKD</option>
+              <option value="DC">DC - Sakit Dengan SKD</option>
+              <option value="A">A - Alfa</option>
+              <option value="KOSONG">Kosongkan Sel</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase">Target HK (Kolom E)</label>
+            <input type="number" id="editRekapTargetE" value="27" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold">
+          </div>
+        </div>
+
+        <button onclick="simpanEditRekapAbsen()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-400 font-bold text-xs shadow-sm cursor-pointer">
+          <i class="fa-solid fa-floppy-disk mr-1"></i>SIMPAN PERUBAHAN KE REKAP ABSENSI
+        </button>
       </div>
 
       <!-- Daftar Status Karyawan GPMS -->
@@ -561,27 +647,27 @@
     </div>
   </div>
 
-  <!-- ================= 4. RIWAYAT ABSEN PANE (KHUSUS SPV, ADMIN, MANAGER) ================= -->
+  <!-- ================= 4. RIWAYAT ABSEN & PREVIEW PDF PANE (KHUSUS SPV & ADMIN OPERASIONAL) ================= -->
   <div id="tabContent-riwayat" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-500">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Riwayat & Cetak PDF</h3>
-        <p class="text-[10px] text-slate-300">Akses Khusus SPV, Admin Operasional & Manager</p>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Rekap & Preview PDF</h3>
+        <p class="text-[10px] text-slate-300">Akses Khusus SPV & Admin Operasional</p>
       </div>
       <button onclick="syncServerData(true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold">
         <i class="fa-solid fa-rotate"></i>
       </button>
     </div>
 
-    <!-- Tombol Cepat Generate PDF di Tab Riwayat -->
+    <!-- Tombol Preview PDF di Tab Riwayat -->
     <div class="grid grid-cols-2 gap-2">
-      <button onclick="generatePdfDariAplikasi('rekap_absensi')" class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
-        <i class="fa-solid fa-file-pdf text-sm"></i>
-        <span>PDF Rekap Absen (19-20)</span>
+      <button onclick="previewPdfDariAplikasi('rekap_absensi')" class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+        <i class="fa-solid fa-eye text-sm"></i>
+        <span>Preview Rekap (19-20)</span>
       </button>
-      <button onclick="generatePdfDariAplikasi('laporan_operasional')" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
-        <i class="fa-solid fa-file-pdf text-sm"></i>
-        <span>PDF Laporan Bulanan</span>
+      <button onclick="previewPdfDariAplikasi('laporan_operasional')" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+        <i class="fa-solid fa-eye text-sm"></i>
+        <span>Preview Lap. Bulanan</span>
       </button>
     </div>
 
@@ -697,9 +783,10 @@
     <i class="fa-solid fa-calendar-plus text-lg"></i>
     <span class="text-[9px] font-bold">Cuti/Izin</span>
   </button>
+  <!-- Hanya muncul untuk SPV & Admin Operasional -->
   <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
     <i class="fa-solid fa-clock-rotate-left text-lg"></i>
-    <span class="text-[9px] font-bold">Riwayat</span>
+    <span class="text-[9px] font-bold">Rekap/PDF</span>
   </button>
   <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
     <i class="fa-solid fa-file-circle-check text-lg"></i>
@@ -773,6 +860,8 @@
 
   let dbAbsenList = [];
   let dbIzinList = [];
+  let dbSerahTerimaList = [];
+  let cachedPdfResult = null; // Menyimpan hasil PDF yang sedang di-preview
   let activeUser = null;
   let pendingPinUser = null;
   let pendingApprovalAction = null;
@@ -803,18 +892,22 @@
       now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
+  // Hak Akses Status, Rekap Absen, & PDF: HANYA SPV dan Admin Operasional
+  function bolehAksesRekapDanPdf() {
+    return activeUser && (activeUser.role === 'SPV' || activeUser.role === 'Admin Operasional');
+  }
+
   // =========================================================================
-  // FUNGSI GENERATE & DOWNLOAD PDF LANGSUNG DARI APLIKASI
+  // 1. MODE PREVIEW PDF SEBELUM DOWNLOAD (KHUSUS SPV & ADMIN OPERASIONAL)
   // =========================================================================
-  async function generatePdfDariAplikasi(jenisPdf) {
-    if (!activeUser) {
-      showToast('Silakan login dengan PIN terlebih dahulu!', 'error');
-      toggleUserDropdown();
+  async function previewPdfDariAplikasi(jenisPdf) {
+    if (!bolehAksesRekapDanPdf()) {
+      showToast('Akses ditolak! Hanya SPV & Admin Operasional yang dapat membuka Rekap & PDF.', 'error');
       return;
     }
 
     const labelPdf = jenisPdf === 'rekap_absensi' ? 'PDF Rekap Absensi (19-20)' : 'PDF Laporan Bulanan Operasional';
-    showToast(`Sedang menyusun ${labelPdf}... Mohon tunggu`, 'success');
+    showToast(`Menyiapkan Preview ${labelPdf}...`, 'success');
 
     try {
       const response = await fetch(SCRIPT_URL, {
@@ -825,37 +918,90 @@
           action: "generate_pdf_gpms",
           jenisPdf: jenisPdf,
           nip: activeUser.nip,
-          nama: activeUser.nama
+          nama: activeUser.nama,
+          role: activeUser.role
         })
       });
 
       const result = await response.json();
-      if (result && result.status === "success" && result.pdfBase64) {
-        // Trigger unduhan langsung file PDF ke HP / Laptop
-        const linkSource = `data:application/pdf;base64,${result.pdfBase64}`;
-        const downloadLink = document.createElement("a");
-        downloadLink.href = linkSource;
-        downloadLink.download = result.fileName || "Laporan_GPMS.pdf";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-        // Tampilkan juga tombol buka via Google Drive
-        const box = document.getElementById('pdfResultBox');
-        if (box) {
-          box.classList.remove('hidden');
-          document.getElementById('pdfResultFileName').innerText = result.fileName;
-          document.getElementById('pdfResultDriveLink').href = result.pdfUrl || "#";
-        }
-        showToast(`${labelPdf} berhasil diunduh!`, 'success');
+      if (result && result.status === "success") {
+        cachedPdfResult = result;
+        document.getElementById('pdfPreviewModalSubtitle').innerText = result.fileName || labelPdf;
+        document.getElementById('pdfPreviewHtmlContainer').innerHTML = result.htmlPreview || '<p class="text-center p-4">Pratinjau siap diunduh.</p>';
+        document.getElementById('btnOpenDrivePdfModal').href = result.pdfUrl || "#";
+        document.getElementById('pdfPreviewModal').classList.remove('hidden');
+        showToast('Preview siap! Silakan periksa sebelum download.', 'success');
       } else {
-        showToast(result.message || "Gagal membuat PDF", "error");
+        showToast(result.message || "Gagal menyiapkan preview PDF", "error");
       }
     } catch (e) {
-      showToast("Gagal mengunduh PDF. Pastikan Deploy New Version sudah dilakukan.", "error");
+      showToast("Gagal memuat preview PDF. Pastikan Deploy New Version sudah dilakukan.", "error");
     }
   }
 
+  function closePdfPreviewModal() {
+    document.getElementById('pdfPreviewModal').classList.add('hidden');
+  }
+
+  function downloadCachedPdf() {
+    if (!cachedPdfResult || !cachedPdfResult.pdfBase64) {
+      showToast('File PDF belum tersedia.', 'error');
+      return;
+    }
+    const linkSource = `data:application/pdf;base64,${cachedPdfResult.pdfBase64}`;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = cachedPdfResult.fileName || "Laporan_GPMS.pdf";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    showToast('File PDF berhasil diunduh ke perangkat Anda!', 'success');
+  }
+
+  // =========================================================================
+  // 2. FITUR EDIT REKAP ABSEN & STATUS KARYAWAN (KHUSUS SPV & ADMIN)
+  // =========================================================================
+  function renderDropdownEditRekap() {
+    const sel = document.getElementById('editRekapNip');
+    if (!sel) return;
+    const personel = dbKaryawan.filter(u => u.role === 'SPV' || u.role === 'Operator');
+    sel.innerHTML = personel.map(p => `<option value="${p.nip}">${p.nama} (${p.role})</option>`).join('');
+    const tglInput = document.getElementById('editRekapTanggal');
+    if (tglInput && !tglInput.value) {
+      tglInput.value = new Date().toISOString().split('T')[0];
+    }
+  }
+
+  async function simpanEditRekapAbsen() {
+    if (!bolehAksesRekapDanPdf()) {
+      showToast('Akses ditolak! Khusus SPV & Admin Operasional.', 'error');
+      return;
+    }
+    const targetNip = document.getElementById('editRekapNip').value;
+    const targetTanggal = document.getElementById('editRekapTanggal').value;
+    const kodeStatus = document.getElementById('editRekapKode').value;
+    const targetE = document.getElementById('editRekapTargetE').value;
+
+    if (!targetNip || !targetTanggal) {
+      showToast('Pilih personel dan tanggal rekap terlebih dahulu!', 'error');
+      return;
+    }
+
+    await kirimKeServer({
+      action: "edit_rekap_absen",
+      nip: activeUser.nip,
+      nama: activeUser.nama,
+      role: activeUser.role,
+      targetNip: targetNip,
+      targetTanggal: targetTanggal,
+      kodeStatus: kodeStatus,
+      targetE: targetE
+    }, `Status rekap (${kodeStatus}) berhasil disimpan ke Sheet Rekap_Absensi!`);
+  }
+
+  // =========================================================================
+  // 3. FORM SERAH TERIMA SHIFT & FITUR EDIT DI HARI BERIKUTNYA
+  // =========================================================================
   function initTaskReportingForms() {
     const todayIso = new Date().toISOString().split('T')[0];
     document.getElementById('ceklisTanggal').value = todayIso;
@@ -881,15 +1027,153 @@
     `).join('');
   }
 
+  function renderRiwayatSerahTerima() {
+    const container = document.getElementById('riwayatSerahTerimaContainer');
+    if (!container) return;
+
+    if (!dbSerahTerimaList || dbSerahTerimaList.length === 0) {
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-3">Belum ada form serah terima shift yang disubmit.</p>';
+      return;
+    }
+
+    container.innerHTML = dbSerahTerimaList.map(item => `
+      <div class="p-3 border border-slate-200 rounded-xl bg-slate-50 space-y-1.5">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="font-black text-slate-800 text-xs">${item.lokasiPos}</span>
+            <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-2 py-0.5 rounded ml-1">Shift ${item.shiftTugas}</span>
+            <p class="text-[10px] text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>Tanggal: <b>${item.hariTanggal}</b> &bull; Modal: <b>Rp ${Number(item.totalModal || 0).toLocaleString('id-ID')}</b></p>
+          </div>
+          <button onclick="muatFormEditSerahTerima('${item.idSt}')" class="bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold shadow-sm shrink-0 cursor-pointer">
+            <i class="fa-solid fa-pen-to-square mr-1"></i>Edit / Sesuaikan
+          </button>
+        </div>
+        <p class="text-[10px] text-slate-600 bg-white p-1.5 rounded border border-slate-100">
+          <b>Penyerah:</b> ${item.petugasMenyerahkan} &rarr; <b>Penerima:</b> ${item.petugasMenerima} | <b>Catatan:</b> ${item.masalahLain || '-'}
+        </p>
+        <p class="text-[8px] text-slate-400 italic">${item.terakhirDiedit || ''}</p>
+      </div>
+    `).join('');
+  }
+
+  function parseTiketString_(str) {
+    // Format: "10 lbr (001 s/d 010)"
+    const res = { lbr: "", awal: "", akhir: "" };
+    if (!str || str === "-") return res;
+    const matchLbr = String(str).match(/^(\d+)\s*lbr/i);
+    if (matchLbr) res.lbr = matchLbr[1];
+    const matchSeri = String(str).match(/\((.*?)\s*s\/d\s*(.*?)\)/i);
+    if (matchSeri) {
+      res.awal = matchSeri[1] !== "-" ? matchSeri[1] : "";
+      res.akhir = matchSeri[2] !== "-" ? matchSeri[2] : "";
+    }
+    return res;
+  }
+
+  function muatFormEditSerahTerima(idSt) {
+    const item = dbSerahTerimaList.find(s => String(s.idSt) === String(idSt));
+    if (!item) return;
+
+    document.getElementById('stEditId').value = item.idSt;
+    document.getElementById('stTanggal').value = item.hariTanggal;
+    document.getElementById('stLokasiPos').value = item.lokasiPos;
+    document.getElementById('stShiftTugas').value = item.shiftTugas;
+
+    document.getElementById('stK500').value = item.k500 || 0;
+    document.getElementById('stK2000').value = item.k2000 || 0;
+    document.getElementById('stK5000').value = item.k5000 || 0;
+    document.getElementById('stK10000').value = item.k10000 || 0;
+    document.getElementById('stK50000').value = item.k50000 || 0;
+    hitungModalSerahTerima();
+
+    const cas = parseTiketString_(item.tiketCasual);
+    document.getElementById('stCasualLbr').value = cas.lbr;
+    document.getElementById('stCasualSeriAwal').value = cas.awal;
+    document.getElementById('stCasualSeriAkhir').value = cas.akhir;
+
+    const grt = parseTiketString_(item.tiketGratis);
+    document.getElementById('stGratisLbr').value = grt.lbr;
+    document.getElementById('stGratisSeriAwal').value = grt.awal;
+    document.getElementById('stGratisSeriAkhir').value = grt.akhir;
+
+    document.getElementById('stSignedTarif').value = item.signedTarif || "Baik / Bersih";
+    document.getElementById('stKondisiPos').value = item.kondisiPos || "Baik / Bersih";
+    document.getElementById('stCatatanPos').value = item.catatanPos !== "-" ? item.catatanPos : "";
+
+    if (item.peralatan) {
+      DAFTAR_ALAT_POS.forEach(alat => {
+        const raw = item.peralatan[alat.key] || "Baik / Bersih";
+        const parts = raw.split("/").map(s => s.trim());
+        const elK = document.getElementById(`eqKondisi_${alat.key}`);
+        const elB = document.getElementById(`eqBersih_${alat.key}`);
+        if (elK && parts[0]) elK.value = parts[0];
+        if (elB && parts[1]) elB.value = parts[1];
+      });
+    }
+
+    document.getElementById('stMasalahLain').value = item.masalahLain !== "-" ? item.masalahLain : "";
+    document.getElementById('stPenyerah').value = item.petugasMenyerahkan || "";
+    document.getElementById('stPenerima').value = item.petugasMenerima !== "-" ? item.petugasMenerima : "";
+    document.getElementById('stSpv').value = item.mengetahuiSpv || "Ahmad Sobari";
+
+    // Ubah tampilan form ke Mode Edit
+    document.getElementById('stFormHeaderTitle').innerText = `Edit Serah Terima (${item.hariTanggal})`;
+    document.getElementById('stModeBadge').innerText = "MODE EDIT";
+    document.getElementById('stModeBadge').className = "bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded";
+    document.getElementById('btnSubmitSerahTerima').innerText = "UPDATE / SIMPAN PENYESUAIAN SHIFT";
+    document.getElementById('btnSubmitSerahTerima').className = "flex-1 py-3 rounded-xl font-bold text-xs text-white bg-amber-600 hover:bg-amber-700 transition shadow-md cursor-pointer";
+    document.getElementById('btnCancelEditSt').classList.remove('hidden');
+
+    document.getElementById('stFormCard').scrollIntoView({ behavior: 'smooth' });
+    showToast(`Data Shift ${item.hariTanggal} dimuat untuk diedit!`, 'success');
+  }
+
+  function batalEditSerahTerima() {
+    document.getElementById('stEditId').value = '';
+    document.getElementById('stFormHeaderTitle').innerText = "Form Serah Terima Shift";
+    document.getElementById('stModeBadge').innerText = "Input Baru";
+    document.getElementById('stModeBadge').className = "bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded";
+    document.getElementById('btnSubmitSerahTerima').innerText = "SIMPAN FORM SERAH TERIMA SHIFT";
+    document.getElementById('btnSubmitSerahTerima').className = "flex-1 py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer";
+    document.getElementById('btnCancelEditSt').classList.add('hidden');
+
+    document.getElementById('stK500').value = 0;
+    document.getElementById('stK2000').value = 0;
+    document.getElementById('stK5000').value = 0;
+    document.getElementById('stK10000').value = 0;
+    document.getElementById('stK50000').value = 0;
+    hitungModalSerahTerima();
+    document.getElementById('stCasualLbr').value = '';
+    document.getElementById('stCasualSeriAwal').value = '';
+    document.getElementById('stCasualSeriAkhir').value = '';
+    document.getElementById('stGratisLbr').value = '';
+    document.getElementById('stGratisSeriAwal').value = '';
+    document.getElementById('stGratisSeriAkhir').value = '';
+    document.getElementById('stCatatanPos').value = '';
+    document.getElementById('stMasalahLain').value = '';
+  }
+
   function switchTaskSubTab(subId) {
+    if (subId === 'statusmp' && !bolehAksesRekapDanPdf()) {
+      showToast('Akses ditolak! Menu Rekap & PDF hanya untuk SPV dan Admin Operasional.', 'error');
+      return;
+    }
     ['patroli', 'ceklis', 'serahterima', 'statusmp'].forEach(id => {
       document.getElementById(`taskSubPane-${id}`).classList.toggle('hidden', id !== subId);
       const btn = document.getElementById(`subBtn-${id}`);
-      btn.className = (id === subId)
-        ? "py-2 px-1 rounded-xl bg-slate-900 text-emerald-400 shadow-sm transition cursor-pointer"
-        : "py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer";
+      if (btn && !btn.classList.contains('hidden')) {
+        btn.className = (id === subId)
+          ? "py-2 px-1 rounded-xl bg-slate-900 text-emerald-400 shadow-sm transition cursor-pointer"
+          : "py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer";
+      }
     });
-    if (subId === 'statusmp') renderStatusKaryawanGPMS();
+    if (subId === 'statusmp') {
+      renderDropdownEditRekap();
+      renderStatusKaryawanGPMS();
+    }
+    if (subId === 'serahterima') {
+      renderRiwayatSerahTerima();
+    }
   }
 
   function tambahBarisPlatCeklis() {
@@ -928,6 +1212,7 @@
       localStorage.setItem('gpms_karyawan', JSON.stringify(dbKaryawan));
       localStorage.setItem('gpms_absen', JSON.stringify(dbAbsenList));
       localStorage.setItem('gpms_izin', JSON.stringify(dbIzinList));
+      localStorage.setItem('gpms_serahterima', JSON.stringify(dbSerahTerimaList));
     } catch (e) {}
   }
 
@@ -936,9 +1221,11 @@
       const k = localStorage.getItem('gpms_karyawan');
       const a = localStorage.getItem('gpms_absen');
       const i = localStorage.getItem('gpms_izin');
+      const s = localStorage.getItem('gpms_serahterima');
       if (k) dbKaryawan = JSON.parse(k);
       if (a) dbAbsenList = JSON.parse(a);
       if (i) dbIzinList = JSON.parse(i);
+      if (s) dbSerahTerimaList = JSON.parse(s);
     } catch (e) {}
   }
 
@@ -956,6 +1243,7 @@
     }
     if (Array.isArray(data.absenList)) dbAbsenList = data.absenList;
     if (Array.isArray(data.izinList)) dbIzinList = data.izinList;
+    if (Array.isArray(data.serahTerimaList)) dbSerahTerimaList = data.serahTerimaList;
     simpanCacheLokal();
     renderSemuaTampilan();
   }
@@ -981,6 +1269,8 @@
     renderApprovalQueue();
     renderRiwayatIzinUser();
     renderStatusKaryawanGPMS();
+    renderRiwayatSerahTerima();
+    renderDropdownEditRekap();
   }
 
   function toggleUserDropdown() {
@@ -1098,12 +1388,33 @@
       ? 'Skema Cuti SPV: <b>Admin Operasional &rarr; Manager</b>'
       : 'Skema Cuti Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
 
+    // 1. Hak Akses Status, Rekap Absen, & Generate PDF: HANYA SPV & Admin Operasional
+    const isSpvOrAdmin = bolehAksesRekapDanPdf();
+    document.getElementById('nav-riwayat').classList.toggle('hidden', !isSpvOrAdmin);
+    document.getElementById('subBtn-statusmp').classList.toggle('hidden', !isSpvOrAdmin);
+    document.getElementById('taskSubNavGrid').className = isSpvOrAdmin
+      ? "grid grid-cols-4 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center"
+      : "grid grid-cols-3 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center";
+
+    // Jika sedang di sub-tab statusmp lalu ganti akun ke Operator, kembalikan ke sub-tab patroli
+    if (!isSpvOrAdmin && !document.getElementById('taskSubPane-statusmp').classList.contains('hidden')) {
+      switchTaskSubTab('patroli');
+    }
+
+    // 2. Hak Akses Tab Approval: SPV, Admin Operasional, & Manager
     const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
-    document.getElementById('nav-riwayat').classList.toggle('hidden', !isApprover);
     document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
 
+    // 3. Hak Akses Tab Admin DB: HANYA Admin Operasional
     const isAdminOps = activeUser.role === 'Admin Operasional';
     document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
+
+    if (!isSpvOrAdmin && !document.getElementById('tabContent-riwayat').classList.contains('hidden')) {
+      switchTab('beranda');
+    }
+    if (!isAdminOps && !document.getElementById('tabContent-admin').classList.contains('hidden')) {
+      switchTab('beranda');
+    }
 
     renderSemuaTampilan();
     syncServerData(false);
@@ -1115,7 +1426,11 @@
       toggleUserDropdown();
       return;
     }
-    if ((tabId === 'riwayat' || tabId === 'tim') && (!activeUser || !['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role))) {
+    if (tabId === 'riwayat' && !bolehAksesRekapDanPdf()) {
+      showToast('Akses ditolak! Rekap Absen & PDF khusus SPV dan Admin Operasional.', 'error');
+      return;
+    }
+    if (tabId === 'tim' && (!activeUser || !['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role))) {
       showToast('Akses khusus SPV, Admin Operasional, & Manager!', 'error');
       return;
     }
@@ -1284,6 +1599,7 @@
 
   async function submitSerahTerimaShift() {
     if (!activeUser) { showToast('Login PIN terlebih dahulu!', 'error'); return; }
+    const editId = document.getElementById('stEditId').value.trim();
     const totalModal = hitungModalSerahTerima();
     const peralatan = {};
     DAFTAR_ALAT_POS.forEach(item => {
@@ -1297,6 +1613,8 @@
 
     await kirimKeServer({
       action: "serah_terima_shift",
+      editId: editId,
+      editorNama: activeUser.nama,
       hariTanggal: document.getElementById('stTanggal').value,
       lokasiPos: document.getElementById('stLokasiPos').value,
       shiftTugas: document.getElementById('stShiftTugas').value,
@@ -1316,7 +1634,9 @@
       petugasMenyerahkan: document.getElementById('stPenyerah').value.trim() || activeUser.nama,
       petugasMenerima: document.getElementById('stPenerima').value.trim() || "-",
       mengetahuiSpv: document.getElementById('stSpv').value.trim() || "Ahmad Sobari"
-    }, "Form Serah Terima Shift Berhasil Disimpan!");
+    }, editId ? "Perubahan Serah Terima Shift Berhasil Diperbarui!" : "Form Serah Terima Shift Berhasil Disimpan!");
+
+    batalEditSerahTerima();
   }
 
   function renderStatusKaryawanGPMS() {
@@ -1716,6 +2036,8 @@
       if (result && result.status === "success") {
         terapkanDataDariServer(result);
         showToast(result.message || pesanSukses, "success");
+      } else if (result && result.status === "error") {
+        showToast(result.message || "Akses ditolak", "error");
       } else {
         showToast(pesanSukses, "success");
         syncServerData(false);
