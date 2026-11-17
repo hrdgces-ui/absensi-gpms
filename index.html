@@ -118,7 +118,6 @@
       </div>
     </div>
 
-    <!-- Jam Digital & Ringkasan Clock In/Out Hari Ini -->
     <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center">
       <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest" id="liveDateText">Memuat Tanggal...</p>
       <div class="text-3xl font-black text-white tracking-wider my-1 font-mono" id="liveClockText">00:00:00 <span class="text-xs text-blue-400 font-sans">WIB</span></div>
@@ -134,7 +133,6 @@
       </div>
     </div>
 
-    <!-- Jadwal Shift -->
     <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-card-soft space-y-2">
       <span class="text-xs font-bold text-slate-800 flex items-center">
         <i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1.5"></i> Jadwal Kerja (Pilih Salah Satu):
@@ -155,7 +153,6 @@
       </div>
     </div>
 
-    <!-- Tombol Tap Absen -->
     <div class="py-2 flex flex-col items-center justify-center space-y-4">
       <div class="flex bg-slate-200/70 p-1.5 rounded-xl w-60 z-10 relative shadow-inner">
         <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition">MASUK</button>
@@ -172,54 +169,298 @@
     </div>
   </div>
 
-  <!-- ================= 2. TASK REPORT (WAJIB 3 FOTO) ================= -->
+  <!-- ================= 2. TASK REPORTING KHUSUS GPMS (4 MODUL) ================= -->
   <div id="tabContent-laporan" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Laporan Pekerjaan Harian</h3>
-        <p class="text-[10px] text-slate-300">Wajib Unggah 3 Foto (Before, Progress, After)</p>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Task Reporting & Laporan GPMS</h3>
+        <p class="text-[10px] text-slate-300">Patroli 1 Foto Live &bull; Ceklis Kendaraan &bull; Serah Terima Shift</p>
       </div>
-      <i class="fa-solid fa-camera-retro text-xl text-emerald-400"></i>
+      <i class="fa-solid fa-clipboard-list text-xl text-emerald-400"></i>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+    <!-- Navigasi 4 Sub-Modul Task Reporting GPMS -->
+    <div class="grid grid-cols-4 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl text-[9px] font-extrabold text-center">
+      <button onclick="switchTaskSubTab('patroli')" id="subBtn-patroli" class="py-2 px-1 rounded-xl bg-slate-900 text-emerald-400 shadow-sm transition cursor-pointer">
+        <i class="fa-solid fa-camera block text-sm mb-0.5"></i>1. Patroli
+      </button>
+      <button onclick="switchTaskSubTab('ceklis')" id="subBtn-ceklis" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
+        <i class="fa-solid fa-car-side block text-sm mb-0.5"></i>2. Ceklis Plat
+      </button>
+      <button onclick="switchTaskSubTab('serahterima')" id="subBtn-serahterima" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
+        <i class="fa-solid fa-handshake block text-sm mb-0.5"></i>3. Shift Pos
+      </button>
+      <button onclick="switchTaskSubTab('statusmp')" id="subBtn-statusmp" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
+        <i class="fa-solid fa-users block text-sm mb-0.5"></i>4. Status MP
+      </button>
+    </div>
+
+    <!-- SUB-MODUL 1: PATROLI 13 TITIK LOKASI (1 FOTO KAMERA LIVE - TANPA AKSES ALBUM) -->
+    <div id="taskSubPane-patroli" class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <div>
+          <h4 class="text-xs font-black text-slate-800 uppercase">Patroli Lokasi Parkir (1 Foto)</h4>
+          <p class="text-[9px] text-red-600 font-bold"><i class="fa-solid fa-ban mr-1"></i>Akses Galeri/Album Ditutup (Wajib Kamera Langsung)</p>
+        </div>
+        <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-1 rounded-lg">13 Titik</span>
+      </div>
+
       <div>
-        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Area / Pos Kerja</label>
-        <select id="taskArea" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-semibold">
-          <option value="Pos Masuk Utama">Pos Masuk Utama</option>
-          <option value="Pos Keluar">Pos Keluar</option>
-          <option value="Area Parkir Motor">Area Parkir Motor</option>
-          <option value="Area Parkir Mobil">Area Parkir Mobil</option>
-          <option value="Lobby & Drop Off">Lobby & Drop Off</option>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Pilih Titik Lokasi Patroli (13 Lokasi)</label>
+        <select id="patroliTitik" onchange="updatePatroliGpsInfo()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold text-slate-800">
+          <option value="Area Parkir Barat">1. Area Parkir Barat</option>
+          <option value="Area Parkir Timur">2. Area Parkir Timur</option>
+          <option value="Area Parkir Motor Pengunjung">3. Area Parkir Motor Pengunjung</option>
+          <option value="Area Parkir Motor Karyawan">4. Area Parkir Motor Karyawan</option>
+          <option value="Area Parkir Dokter">5. Area Parkir Dokter</option>
+          <option value="Area Parkir Mobil Depan Mushola">6. Area Parkir Mobil Depan Mushola</option>
+          <option value="Area Parkir Paralel Samping IGD">7. Area Parkir Paralel Samping IGD</option>
+          <option value="Area Parkir Kendaraan Operasional RS. Harum Sisma Medika">8. Area Parkir Kendaraan Operasional RS. Harum Sisma Medika</option>
+          <option value="Area Parkir Kendaraan Operasional PT. SGBS">9. Area Parkir Kendaraan Operasional PT. SGBS</option>
+          <option value="Akses Masuk Pintu Masuk Utama (Timur)">10. Akses Masuk Pintu Masuk Utama (Timur)</option>
+          <option value="Akses Masuk Pintu Barat">11. Akses Masuk Pintu Barat</option>
+          <option value="Akses Pintu Keluar">12. Akses Pintu Keluar</option>
+          <option value="Area Parkir Paralel Depan IGD">13. Area Parkir Paralel Depan IGD</option>
         </select>
       </div>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between">
+        <div>
+          <span class="text-[9px] font-bold text-slate-400 uppercase block">Titik Koordinat GPS Patroli Saat Ini</span>
+          <span id="patroliCoordDisplay" class="text-xs font-mono font-bold text-slate-800">-6.24220, 106.89730</span>
+        </div>
+        <button type="button" onclick="refreshPatroliGps()" class="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1.5 rounded-lg text-[10px] font-bold">
+          <i class="fa-solid fa-location-crosshairs mr-1"></i>Update GPS
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Kondisi Area</label>
+          <select id="patroliKondisi" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-semibold">
+            <option value="Aman & Tertib">Aman & Tertib</option>
+            <option value="Padat Terkendali">Padat Terkendali</option>
+            <option value="Perlu Penertiban">Perlu Penertiban</option>
+            <option value="Ada Kendala / Temuan">Ada Kendala / Temuan</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Catatan Patroli</label>
+          <input type="text" id="patroliCatatan" placeholder="Ketik catatan..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+      </div>
+
+      <!-- Kotak 1 Foto Patroli (Hanya Buka Kamera Live, Tanpa Input File Galeri) -->
       <div>
-        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Deskripsi Pekerjaan</label>
-        <input type="text" id="taskDesc" placeholder="Contoh: Penataan barikade & pengecekan palang..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50">
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Foto Lokasi Patroli (1 Foto Kamera Langsung)</label>
+        <div onclick="openLiveCamera('patroli')" class="border-2 border-dashed border-emerald-400 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer bg-emerald-50/40 hover:bg-emerald-50 text-center relative overflow-hidden h-44">
+          <img id="preview-patroli-single" class="hidden absolute inset-0 w-full h-full object-cover">
+          <div class="z-10 bg-slate-900/80 text-white px-3 py-2 rounded-xl flex items-center space-x-2 shadow-md">
+            <i class="fa-solid fa-camera text-emerald-400 text-base"></i>
+            <span class="text-[10px] font-bold uppercase tracking-wider" id="btnLabelFotoPatroli">AMBIL FOTO KAMERA LANGSUNG</span>
+          </div>
+          <p class="text-[9px] text-slate-500 mt-2 font-medium">Otomatis merekam Timestamp & Koordinat GPS di foto</p>
+        </div>
       </div>
-      <div class="grid grid-cols-3 gap-2 pt-1">
-        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
-          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'before')">
-          <img id="preview-before" class="hidden absolute inset-0 w-full h-full object-cover">
-          <i class="fa-solid fa-camera text-slate-400 text-lg mb-1"></i>
-          <span class="text-[9px] font-bold text-slate-600">1. BEFORE</span>
-        </label>
-        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
-          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'during')">
-          <img id="preview-during" class="hidden absolute inset-0 w-full h-full object-cover">
-          <i class="fa-solid fa-spinner text-slate-400 text-lg mb-1"></i>
-          <span class="text-[9px] font-bold text-slate-600">2. PROGRESS</span>
-        </label>
-        <label class="border-2 border-dashed border-slate-300 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 bg-slate-50 text-center relative overflow-hidden h-24">
-          <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleTaskPhoto(this, 'after')">
-          <img id="preview-after" class="hidden absolute inset-0 w-full h-full object-cover">
-          <i class="fa-solid fa-check-double text-slate-400 text-lg mb-1"></i>
-          <span class="text-[9px] font-bold text-slate-600">3. AFTER</span>
-        </label>
-      </div>
-      <button id="btnSubmitTask" onclick="submitTaskReport()" disabled class="w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md">
-        LENGKAPI 3 FOTO UNTUK KIRIM
+
+      <button id="btnSubmitPatroli" onclick="submitPatroliGPMS()" disabled class="w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md">
+        AMBIL 1 FOTO PATROLI UNTUK KIRIM
       </button>
+    </div>
+
+    <!-- SUB-MODUL 2: FORM CEKLIS KENDARAAN (SESUAI PDF FORM CEKLIST KENDARAAN) -->
+    <div id="taskSubPane-ceklis" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+        <div>
+          <h4 class="text-xs font-black text-slate-800 uppercase">Form Ceklist Kendaraan</h4>
+          <p class="text-[9px] text-slate-500">Pendataan Plat Nomor & Keterangan Kendaraan</p>
+        </div>
+        <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-2 py-0.5 rounded">GPMS Form</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Hari / Tanggal</label>
+          <input type="date" id="ceklisTanggal" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Jenis Kendaraan</label>
+          <select id="ceklisJenis" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold">
+            <option value="Mobil">Mobil</option>
+            <option value="Motor">Motor</option>
+            <option value="Kendaraan Operasional RS / SGBS">Operasional RS / SGBS</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Input Tambah Baris Plat Nomor -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-bold text-slate-700 uppercase">Daftar Plat Nomor & Keterangan</span>
+          <button type="button" onclick="tambahBarisPlatCeklis()" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold">
+            <i class="fa-solid fa-plus mr-1"></i>Tambah Baris
+          </button>
+        </div>
+        <div id="ceklisPlatContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Petugas Shift (Penyerah)</label>
+          <input type="text" id="ceklisPenyerah" placeholder="Nama Petugas 1" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Petugas Shift (Penerima)</label>
+          <input type="text" id="ceklisPenerima" placeholder="Nama Petugas 2" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        </div>
+      </div>
+
+      <button onclick="submitCeklisKendaraan()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer">
+        SIMPAN FORM CEKLIST KENDARAAN
+      </button>
+    </div>
+
+    <!-- SUB-MODUL 3: FORM SERAH TERIMA SHIFT (No. Doc: 03.03.03104-RO) -->
+    <div id="taskSubPane-serahterima" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+        <div>
+          <h4 class="text-xs font-black text-slate-800 uppercase">Form Serah Terima Shift</h4>
+          <p class="text-[9px] text-slate-500">No. Doc: 03.03.03104-RO</p>
+        </div>
+        <span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded">Pos Parkir</span>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Tanggal</label>
+          <input type="date" id="stTanggal" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Lokasi Tugas</label>
+          <select id="stLokasiPos" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
+            <option value="Pos Masuk Mobil">Pos Masuk Mobil</option>
+            <option value="Pos Masuk Motor">Pos Masuk Motor</option>
+            <option value="Pos Keluar Mobil">Pos Keluar Mobil</option>
+            <option value="Pos Keluar Motor">Pos Keluar Motor</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase">Shift Tugas</label>
+          <select id="stShiftTugas" class="w-full border border-slate-200 rounded-xl p-2 text-[11px] bg-slate-50 font-bold">
+            <option value="Pagi">Pagi</option>
+            <option value="Siang">Siang</option>
+            <option value="Malam">Malam</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 1. Uang Modal Kembalian -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-black text-slate-700 uppercase">1. Uang Modal Kembalian</span>
+          <span id="stTotalModalText" class="text-xs font-black text-emerald-700">Total: Rp 0</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+            <span class="font-bold">Rp 500 (pcs)</span>
+            <input type="number" id="stK500" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+          </div>
+          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+            <span class="font-bold">Rp 2.000 (lbr)</span>
+            <input type="number" id="stK2000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+          </div>
+          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+            <span class="font-bold">Rp 5.000 (lbr)</span>
+            <input type="number" id="stK5000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+          </div>
+          <div class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+            <span class="font-bold">Rp 10.000 (lbr)</span>
+            <input type="number" id="stK10000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-14 border border-slate-200 rounded p-1 text-right font-mono">
+          </div>
+          <div class="col-span-2 flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-200">
+            <span class="font-bold">Rp 50.000 (lbr)</span>
+            <input type="number" id="stK50000" value="0" min="0" oninput="hitungModalSerahTerima()" class="w-20 border border-slate-200 rounded p-1 text-right font-mono">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Tiket / Karcis Manual -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+        <span class="text-[10px] font-black text-slate-700 uppercase block">2. Tiket / Karcis Manual</span>
+        <div class="grid grid-cols-3 gap-1.5 text-[10px]">
+          <input type="number" id="stCasualLbr" placeholder="Casual (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          <input type="text" id="stCasualSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          <input type="text" id="stCasualSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+        </div>
+        <div class="grid grid-cols-3 gap-1.5 text-[10px]">
+          <input type="number" id="stGratisLbr" placeholder="Gratis (lbr)" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          <input type="text" id="stGratisSeriAwal" placeholder="Seri Awal" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+          <input type="text" id="stGratisSeriAkhir" placeholder="s/d Akhir" class="border border-slate-200 rounded-lg p-1.5 bg-white">
+        </div>
+      </div>
+
+      <!-- 3. Signed Tarif & Pos Parkir -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+        <span class="text-[10px] font-black text-slate-700 uppercase block">3. Signed Tarif & Kondisi Pos Parkir</span>
+        <div class="grid grid-cols-2 gap-2 text-[10px]">
+          <div>
+            <label class="font-bold text-slate-500 block mb-0.5">Signed Tarif</label>
+            <select id="stSignedTarif" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
+              <option value="Baik / Bersih">Baik & Bersih</option>
+              <option value="Baik / Kotor">Baik & Kotor</option>
+              <option value="Rusak">Rusak</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-500 block mb-0.5">Pos Parkir</label>
+            <select id="stKondisiPos" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white font-semibold">
+              <option value="Baik / Bersih">Baik & Bersih</option>
+              <option value="Baik / Kotor">Baik & Kotor</option>
+              <option value="Rusak">Rusak</option>
+            </select>
+          </div>
+        </div>
+        <input type="text" id="stCatatanPos" placeholder="Catatan Pos Parkir..." class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-white">
+      </div>
+
+      <!-- 4. Peralatan / Perlengkapan Kerja (9 Item) -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+        <span class="text-[10px] font-black text-slate-700 uppercase block">4. Peralatan / Perlengkapan Kerja (9 Alat)</span>
+        <div id="stEquipmentContainer" class="space-y-1.5"></div>
+        <textarea id="stMasalahLain" rows="2" placeholder="Catatan / Masalah Lain-lain..." class="w-full border border-slate-200 rounded-lg p-2 text-[10px] bg-white mt-1"></textarea>
+      </div>
+
+      <!-- Petugas Yang Menyerahkan, Menerima & Mengetahui SPV -->
+      <div class="grid grid-cols-3 gap-1.5">
+        <div>
+          <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menyerahkan</label>
+          <input type="text" id="stPenyerah" placeholder="Petugas 1" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menerima</label>
+          <input type="text" id="stPenerima" placeholder="Petugas 2" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50">
+        </div>
+        <div>
+          <label class="text-[8px] font-bold text-slate-500 uppercase">Mengetahui (SPV)</label>
+          <input type="text" id="stSpv" value="Ahmad Sobari" class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-slate-50 font-bold">
+        </div>
+      </div>
+
+      <button onclick="submitSerahTerimaShift()" class="w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer">
+        SIMPAN FORM SERAH TERIMA SHIFT
+      </button>
+    </div>
+
+    <!-- SUB-MODUL 4: DATA KARYAWAN GPMS LENGKAP DENGAN STATUS & FORMAT LAPORAN BULANAN -->
+    <div id="taskSubPane-statusmp" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+      <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+        <div>
+          <h4 class="text-xs font-black text-slate-800 uppercase">Data Karyawan GPMS & Status</h4>
+          <p class="text-[9px] text-slate-500">Status Kehadiran, Cuti/Izin & Susunan Laporan Bulanan</p>
+        </div>
+        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+      </div>
+      <div id="statusKaryawanGpmsList" class="space-y-2 text-xs"></div>
     </div>
   </div>
 
@@ -279,7 +520,6 @@
       </button>
     </div>
 
-    <!-- Riwayat Pengajuan Cuti/Izin -->
     <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2.5">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
         <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1"></i> Riwayat & Status Pengajuan Anda</h4>
@@ -406,14 +646,13 @@
     <span class="text-[9px] font-bold">Absen</span>
   </button>
   <button onclick="switchTab('laporan')" id="nav-laporan" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
-    <i class="fa-solid fa-camera text-lg"></i>
-    <span class="text-[9px] font-bold">Task 3 Foto</span>
+    <i class="fa-solid fa-clipboard-check text-lg"></i>
+    <span class="text-[9px] font-bold">Task GPMS</span>
   </button>
   <button onclick="switchTab('izin')" id="nav-izin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
     <i class="fa-solid fa-calendar-plus text-lg"></i>
     <span class="text-[9px] font-bold">Cuti/Izin</span>
   </button>
-  <!-- Tombol Riwayat Absen: Hanya tampil untuk SPV, Admin Operasional, dan Manager -->
   <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
     <i class="fa-solid fa-clock-rotate-left text-lg"></i>
     <span class="text-[9px] font-bold">Riwayat</span>
@@ -434,13 +673,13 @@
   <span id="toastMessage">Pesan Notifikasi</span>
 </div>
 
-<!-- Modal Kamera Selfie -->
+<!-- Modal Kamera Live (Digunakan untuk Absensi Selfie & Patroli Kamera Belakang Tanpa Galeri) -->
 <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
   <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col">
     <div class="p-4 bg-slate-900 text-white flex justify-between items-center border-b border-slate-700">
       <div class="flex items-center space-x-2">
-        <i class="fa-solid fa-camera-rotate text-emerald-400"></i>
-        <h3 class="text-sm font-bold tracking-wide">Foto Lokasi Absensi</h3>
+        <i class="fa-solid fa-camera text-emerald-400"></i>
+        <h3 class="text-sm font-bold tracking-wide" id="cameraModalTitle">Kamera Langsung GPMS</h3>
       </div>
       <button onclick="closeCamera()" class="text-slate-400 hover:text-white bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center">
         <i class="fa-solid fa-xmark text-sm"></i>
@@ -451,13 +690,14 @@
       <canvas id="captureCanvas" class="hidden"></canvas>
       <div id="cameraLoading" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-900 z-0">
         <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
-        <p class="text-[10px] font-bold animate-pulse text-slate-300 uppercase tracking-widest">Menyiapkan Kamera...</p>
+        <p class="text-[10px] font-bold animate-pulse text-slate-300 uppercase tracking-widest">Menyiapkan Kamera Live...</p>
       </div>
     </div>
-    <div class="p-5 bg-white flex flex-col items-center">
-      <button onclick="captureAndSubmit()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer">
+    <div class="p-4 bg-white flex flex-col items-center space-y-1">
+      <button onclick="captureCameraFrame()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-glow-emerald flex items-center justify-center text-white transition-transform active:scale-90 cursor-pointer">
         <i class="fa-solid fa-camera text-2xl"></i>
       </button>
+      <span class="text-[9px] font-bold text-slate-400 uppercase">Akses Galeri Ditutup &bull; Foto Langsung</span>
     </div>
   </div>
 </div>
@@ -466,11 +706,24 @@
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzf2rfgRp3urlJmou_bpJz_dz01n0t1m3tsliWO-_nNF9BVK2S-VeF8Kl3uDjSfa9N/exec";
   const PROJECT_LOCATION = { name: "RS. Harum Sisma Medika", lat: -6.2422, lng: 106.8973, maxRadiusMeters: 150 };
 
+  // Daftar 9 Peralatan Pos sesuai Form Serah Terima Shift (No. Doc: 03.03.03104-RO)
+  const DAFTAR_ALAT_POS = [
+    { key: "Monitor", label: "Monitor" },
+    { key: "CPU", label: "CPU" },
+    { key: "Keyboard", label: "Keyboard" },
+    { key: "Mouse", label: "Mouse" },
+    { key: "Printer", label: "Printer" },
+    { key: "FeeDisplay", label: "Fee Display" },
+    { key: "UPS", label: "UPS" },
+    { key: "TiketDispenser", label: "Tiket Dispenser" },
+    { key: "Barriergate", label: "Barriergate" }
+  ];
+
   let dbKaryawan = [
     { id: "EMP_1", nip: "New 01", nama: "Ahmad Sobari", role: "SPV", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "sobariahmad344@gmail.com" },
-    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
-    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
-    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
+    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "ahmadfiirdaus21@gmail.com" },
+    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "candracell515@gmail.com" },
+    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "ziadahrirahhmadi@gmail.com" },
     { id: "EMP_5", nip: "ADM 01", nama: "Ali Eka Wahyudi", role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin", email: "admin@gces.co.id" },
     { id: "EMP_6", nip: "MGR 01", nama: "Bima", role: "Manager", lokasi: "RS. Harum Sisma Medika", pin: "manager", email: "bima@gces.co.id" }
   ];
@@ -483,15 +736,17 @@
   let currentShift = 'Shift 1';
   let jenisAbsen = 'masuk';
   let isGpsLocked = false;
-  let currentCoordStr = "-6.2422, 106.8973";
+  let currentCoordStr = "-6.24220, 106.89730";
   let currentDistanceMeters = 10;
   let cameraStream = null;
-  let taskPhotos = { before: null, during: null, after: null };
+  let cameraMode = 'absen'; // 'absen' atau 'patroli'
+  let patroliPhotoBase64 = null;
 
   window.onload = () => {
     muatCacheLokal();
     updateClock();
     setInterval(updateClock, 1000);
+    initTaskReportingForms();
     renderSemuaTampilan();
     validasiSyaratIzin();
     syncServerData(false);
@@ -503,6 +758,70 @@
       now.toLocaleTimeString('id-ID', { hour12: false }) + ' <span class="text-xs text-blue-400 font-sans">WIB</span>';
     document.getElementById('liveDateText').innerText = 
       now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  // Inisialisasi Form Ceklis Kendaraan & 9 Peralatan Serah Terima Shift
+  function initTaskReportingForms() {
+    const todayIso = new Date().toISOString().split('T')[0];
+    document.getElementById('ceklisTanggal').value = todayIso;
+    document.getElementById('stTanggal').value = todayIso;
+
+    // Buat 3 baris awal untuk Ceklis Plat Nomor
+    const platContainer = document.getElementById('ceklisPlatContainer');
+    platContainer.innerHTML = '';
+    for (let i = 0; i < 3; i++) tambahBarisPlatCeklis();
+
+    // Buat daftar 9 Peralatan Kerja Pos Parkir
+    const eqContainer = document.getElementById('stEquipmentContainer');
+    eqContainer.innerHTML = DAFTAR_ALAT_POS.map(item => `
+      <div class="grid grid-cols-12 gap-1 items-center bg-white p-1.5 rounded-lg border border-slate-200 text-[10px]">
+        <span class="col-span-4 font-bold text-slate-700 truncate">${item.label}</span>
+        <select id="eqKondisi_${item.key}" class="col-span-4 border border-slate-200 rounded p-1 bg-slate-50 font-semibold text-emerald-700">
+          <option value="Baik">☑ Baik</option>
+          <option value="Rusak">☐ Rusak</option>
+        </select>
+        <select id="eqBersih_${item.key}" class="col-span-4 border border-slate-200 rounded p-1 bg-slate-50 font-semibold text-blue-700">
+          <option value="Bersih">☑ Bersih</option>
+          <option value="Kotor">☐ Kotor</option>
+        </select>
+      </div>
+    `).join('');
+  }
+
+  function switchTaskSubTab(subId) {
+    ['patroli', 'ceklis', 'serahterima', 'statusmp'].forEach(id => {
+      document.getElementById(`taskSubPane-${id}`).classList.toggle('hidden', id !== subId);
+      const btn = document.getElementById(`subBtn-${id}`);
+      btn.className = (id === subId)
+        ? "py-2 px-1 rounded-xl bg-slate-900 text-emerald-400 shadow-sm transition cursor-pointer"
+        : "py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer";
+    });
+    if (subId === 'statusmp') renderStatusKaryawanGPMS();
+  }
+
+  function tambahBarisPlatCeklis() {
+    const container = document.getElementById('ceklisPlatContainer');
+    const idx = container.children.length + 1;
+    const div = document.createElement('div');
+    div.className = "grid grid-cols-12 gap-1.5 items-center";
+    div.innerHTML = `
+      <span class="col-span-1 text-[10px] font-bold text-slate-400 text-center">${idx}.</span>
+      <input type="text" placeholder="No. Plat (B 1234 XX)" class="ceklis-plat-input col-span-5 border border-slate-200 rounded-lg p-1.5 text-[11px] bg-white uppercase font-bold">
+      <input type="text" placeholder="Keterangan..." class="ceklis-ket-input col-span-5 border border-slate-200 rounded-lg p-1.5 text-[11px] bg-white">
+      <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-red-400 hover:text-red-600 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+    `;
+    container.appendChild(div);
+  }
+
+  function hitungModalSerahTerima() {
+    const k500   = (Number(document.getElementById('stK500').value) || 0) * 500;
+    const k2000  = (Number(document.getElementById('stK2000').value) || 0) * 2000;
+    const k5000  = (Number(document.getElementById('stK5000').value) || 0) * 5000;
+    const k10000 = (Number(document.getElementById('stK10000').value) || 0) * 10000;
+    const k50000 = (Number(document.getElementById('stK50000').value) || 0) * 50000;
+    const total  = k500 + k2000 + k5000 + k10000 + k50000;
+    document.getElementById('stTotalModalText').innerText = "Total: Rp " + total.toLocaleString('id-ID');
+    return total;
   }
 
   function getFallbackPin(role) {
@@ -551,10 +870,7 @@
   async function syncServerData(tampilNotif = false) {
     if (tampilNotif) showToast("Menyinkronkan data dengan Google Sheet...", "success");
     try {
-      const res = await fetch(`${SCRIPT_URL}?action=sync&t=${Date.now()}`, {
-        method: "GET",
-        redirect: "follow"
-      });
+      const res = await fetch(`${SCRIPT_URL}?action=sync&t=${Date.now()}`, { method: "GET", redirect: "follow" });
       const data = await res.json();
       if (data && data.status === "success") {
         terapkanDataDariServer(data);
@@ -571,6 +887,7 @@
     renderRiwayatAbsen();
     renderApprovalQueue();
     renderRiwayatIzinUser();
+    renderStatusKaryawanGPMS();
   }
 
   function toggleUserDropdown() {
@@ -679,32 +996,21 @@
     document.getElementById('headerLockIcon').className = "fa-solid fa-unlock-keyhole text-[10px] text-emerald-400 shrink-0";
     showToast(`Login Berhasil: ${activeUser.nama} (${activeUser.role})`, 'success');
 
-    // Isi otomatis email pengaju di form Cuti/Izin
     document.getElementById('izinEmailPengaju').value = activeUser.email || '';
+    document.getElementById('ceklisPenyerah').value = activeUser.nama;
+    document.getElementById('stPenyerah').value = activeUser.nama;
 
-    // Tampilkan info skema alur Cuti berdasarkan jabatan yang login
     const subtext = document.getElementById('alurApprovalSubtext');
-    if (activeUser.role === 'SPV') {
-      subtext.innerHTML = 'Skema Cuti SPV: <b>Admin Operasional &rarr; Manager</b>';
-    } else {
-      subtext.innerHTML = 'Skema Cuti Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
-    }
+    subtext.innerHTML = activeUser.role === 'SPV'
+      ? 'Skema Cuti SPV: <b>Admin Operasional &rarr; Manager</b>'
+      : 'Skema Cuti Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
 
-    // Hak Akses Tombol Riwayat Absen & Tombol Approval: HANYA SPV, Admin Operasional, dan Manager
     const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
     document.getElementById('nav-riwayat').classList.toggle('hidden', !isApprover);
     document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
 
-    // Hak Akses Tombol Admin DB: HANYA Admin Operasional
     const isAdminOps = activeUser.role === 'Admin Operasional';
     document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
-
-    if (!isApprover && (!document.getElementById('tabContent-riwayat').classList.contains('hidden') || !document.getElementById('tabContent-tim').classList.contains('hidden'))) {
-      switchTab('beranda');
-    }
-    if (!isAdminOps && !document.getElementById('tabContent-admin').classList.contains('hidden')) {
-      switchTab('beranda');
-    }
 
     renderSemuaTampilan();
     syncServerData(false);
@@ -739,15 +1045,265 @@
   }
 
   // =========================================================================
-  // RENDER RIWAYAT ABSENSI (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER)
+  // KAMERA LIVE TUNGGAL (ABSENSI SELFIE & PATROLI KAMERA BELAKANG TANPA GALERI)
   // =========================================================================
+  async function openLiveCamera(mode) {
+    if (!activeUser) {
+      showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error');
+      toggleUserDropdown();
+      return;
+    }
+    cameraMode = mode;
+    const isPatroli = (mode === 'patroli');
+    document.getElementById('cameraModalTitle').innerText = isPatroli
+      ? "Kamera Live Patroli (Tanpa Galeri)"
+      : "Foto Selfie Lokasi Absensi";
+
+    document.getElementById('cameraModal').classList.remove('hidden');
+    document.getElementById('cameraLoading').classList.remove('hidden');
+
+    if (isPatroli) refreshPatroliGps();
+
+    try {
+      const facing = isPatroli ? { ideal: 'environment' } : 'user';
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing } });
+      const video = document.getElementById('cameraVideo');
+      video.srcObject = cameraStream;
+      video.onloadedmetadata = () => document.getElementById('cameraLoading').classList.add('hidden');
+    } catch (err) {
+      document.getElementById('cameraLoading').innerHTML = '<p class="text-xs text-red-500 font-bold p-4 text-center">Kamera tidak dapat diakses. Pastikan izin kamera aktif.</p>';
+    }
+  }
+
+  function closeCamera() {
+    document.getElementById('cameraModal').classList.add('hidden');
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(t => t.stop());
+      cameraStream = null;
+    }
+  }
+
+  async function captureCameraFrame() {
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = 540;
+    canvas.height = 720;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Tambahkan Watermark Timestamp & Koordinat GPS langsung di atas foto agar anti-curang
+    const nowStr = new Date().toLocaleString('id-ID');
+    const titik = document.getElementById('patroliTitik') ? document.getElementById('patroliTitik').value : PROJECT_LOCATION.name;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+    ctx.fillRect(0, canvas.height - 78, canvas.width, 78);
+    ctx.fillStyle = "#34d399";
+    ctx.font = "bold 14px Inter, sans-serif";
+    ctx.fillText(cameraMode === 'patroli' ? `PATROLI GPMS: ${titik}` : `ABSENSI GPMS: ${activeUser.nama}`, 14, canvas.height - 52);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "12px monospace";
+    ctx.fillText(`Waktu: ${nowStr} WIB`, 14, canvas.height - 32);
+    ctx.fillText(`GPS  : ${currentCoordStr} | Petugas: ${activeUser.nama}`, 14, canvas.height - 12);
+
+    const base64Data = canvas.toDataURL('image/jpeg', 0.75);
+    closeCamera();
+
+    if (cameraMode === 'patroli') {
+      patroliPhotoBase64 = base64Data;
+      const preview = document.getElementById('preview-patroli-single');
+      preview.src = base64Data;
+      preview.classList.remove('hidden');
+      document.getElementById('btnLabelFotoPatroli').innerText = "FOTO ULANG KAMERA LANGSUNG";
+      const btn = document.getElementById('btnSubmitPatroli');
+      btn.disabled = false;
+      btn.className = "w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer";
+      btn.innerText = "KIRIM LAPORAN PATROLI SEKARANG";
+      showToast("Foto Patroli Live berhasil dikunci!", "success");
+    } else {
+      await prosesSubmitAbsen(base64Data);
+    }
+  }
+
+  // =========================================================================
+  // PENGIRIMAN 4 MODUL TASK REPORTING GPMS
+  // =========================================================================
+  function refreshPatroliGps() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(pos => {
+      currentCoordStr = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+      const el = document.getElementById('patroliCoordDisplay');
+      if (el) el.innerText = currentCoordStr;
+    }, () => {}, { enableHighAccuracy: true });
+  }
+
+  function updatePatroliGpsInfo() {
+    refreshPatroliGps();
+  }
+
+  async function submitPatroliGPMS() {
+    if (!activeUser) { showToast('Login PIN terlebih dahulu!', 'error'); return; }
+    if (!patroliPhotoBase64) { showToast('Wajib mengambil 1 foto kamera langsung!', 'error'); return; }
+
+    const titik = document.getElementById('patroliTitik').value;
+    await kirimKeServer({
+      action: "patroli_gpms",
+      nip: activeUser.nip,
+      nama: activeUser.nama,
+      role: activeUser.role,
+      shift: currentShift,
+      titikLokasi: titik,
+      koordinat: currentCoordStr,
+      kondisiArea: document.getElementById('patroliKondisi').value,
+      catatan: document.getElementById('patroliCatatan').value.trim(),
+      fotoPatroli: patroliPhotoBase64
+    }, `Laporan Patroli (${titik}) Terkirim!`);
+
+    patroliPhotoBase64 = null;
+    document.getElementById('preview-patroli-single').classList.add('hidden');
+    document.getElementById('patroliCatatan').value = '';
+    document.getElementById('btnLabelFotoPatroli').innerText = "AMBIL FOTO KAMERA LANGSUNG";
+    const btn = document.getElementById('btnSubmitPatroli');
+    btn.disabled = true;
+    btn.className = "w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md";
+    btn.innerText = "AMBIL 1 FOTO PATROLI UNTUK KIRIM";
+  }
+
+  async function submitCeklisKendaraan() {
+    if (!activeUser) { showToast('Login PIN terlebih dahulu!', 'error'); return; }
+    const platInputs = document.querySelectorAll('.ceklis-plat-input');
+    const ketInputs  = document.querySelectorAll('.ceklis-ket-input');
+    const daftarPlat = [];
+
+    platInputs.forEach((el, idx) => {
+      const p = el.value.trim().toUpperCase();
+      if (p) daftarPlat.push({ plat: p, ket: ketInputs[idx].value.trim() || "-" });
+    });
+
+    if (daftarPlat.length === 0) {
+      showToast('Isi minimal 1 Nomor Plat Kendaraan!', 'error');
+      return;
+    }
+
+    await kirimKeServer({
+      action: "ceklis_kendaraan",
+      hariTanggal: document.getElementById('ceklisTanggal').value,
+      shift: currentShift,
+      jenisKendaraan: document.getElementById('ceklisJenis').value,
+      daftarPlat: daftarPlat,
+      petugasPenyerah: document.getElementById('ceklisPenyerah').value.trim() || activeUser.nama,
+      petugasPenerima: document.getElementById('ceklisPenerima').value.trim() || "-"
+    }, `Ceklis ${daftarPlat.length} Kendaraan Berhasil Disimpan!`);
+
+    initTaskReportingForms();
+  }
+
+  async function submitSerahTerimaShift() {
+    if (!activeUser) { showToast('Login PIN terlebih dahulu!', 'error'); return; }
+    const totalModal = hitungModalSerahTerima();
+    const peralatan = {};
+    DAFTAR_ALAT_POS.forEach(item => {
+      const k = document.getElementById(`eqKondisi_${item.key}`).value;
+      const b = document.getElementById(`eqBersih_${item.key}`).value;
+      peralatan[item.key] = `${k} / ${b}`;
+    });
+
+    const casualInfo = `${document.getElementById('stCasualLbr').value || 0} lbr (${document.getElementById('stCasualSeriAwal').value || '-'} s/d ${document.getElementById('stCasualSeriAkhir').value || '-'})`;
+    const gratisInfo = `${document.getElementById('stGratisLbr').value || 0} lbr (${document.getElementById('stGratisSeriAwal').value || '-'} s/d ${document.getElementById('stGratisSeriAkhir').value || '-'})`;
+
+    await kirimKeServer({
+      action: "serah_terima_shift",
+      hariTanggal: document.getElementById('stTanggal').value,
+      lokasiPos: document.getElementById('stLokasiPos').value,
+      shiftTugas: document.getElementById('stShiftTugas').value,
+      k500: document.getElementById('stK500').value,
+      k2000: document.getElementById('stK2000').value,
+      k5000: document.getElementById('stK5000').value,
+      k10000: document.getElementById('stK10000').value,
+      k50000: document.getElementById('stK50000').value,
+      totalModal: totalModal,
+      tiketCasual: casualInfo,
+      tiketGratis: gratisInfo,
+      signedTarif: document.getElementById('stSignedTarif').value,
+      kondisiPos: document.getElementById('stKondisiPos').value,
+      catatanPos: document.getElementById('stCatatanPos').value.trim(),
+      peralatan: peralatan,
+      masalahLain: document.getElementById('stMasalahLain').value.trim(),
+      petugasMenyerahkan: document.getElementById('stPenyerah').value.trim() || activeUser.nama,
+      petugasMenerima: document.getElementById('stPenerima').value.trim() || "-",
+      mengetahuiSpv: document.getElementById('stSpv').value.trim() || "Ahmad Sobari"
+    }, "Form Serah Terima Shift Berhasil Disimpan!");
+  }
+
+  function renderStatusKaryawanGPMS() {
+    const container = document.getElementById('statusKaryawanGpmsList');
+    if (!container) return;
+
+    container.innerHTML = dbKaryawan.map(emp => {
+      const absenHariIni = dbAbsenList.find(a => String(a.nip) === String(emp.nip) && a.isToday);
+      const izinAktif = dbIzinList.find(i => String(i.nip) === String(emp.nip) && String(i.statusAkhir).includes("APPROVED"));
+
+      let statusBadge = '<span class="bg-slate-100 text-slate-600 px-2 py-1 rounded-lg text-[9px] font-bold">BELUM CLOCK IN</span>';
+      if (absenHariIni) {
+        statusBadge = absenHariIni.clockOut !== "-"
+          ? `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-lg text-[9px] font-bold">SELESAI SHIFT (${absenHariIni.clockOut.slice(0,5)})</span>`
+          : `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg text-[9px] font-bold">BERTUGAS (IN ${absenHariIni.clockIn.slice(0,5)})</span>`;
+      } else if (izinAktif) {
+        statusBadge = `<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-lg text-[9px] font-bold">${izinAktif.jenisIzin.toUpperCase()}</span>`;
+      }
+
+      return `
+        <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex items-center justify-between">
+          <div>
+            <p class="font-bold text-xs text-slate-800">${emp.nama} ${getRoleBadge(emp.role)}</p>
+            <p class="text-[10px] text-slate-500">NIP: ${emp.nip} &bull; ${emp.lokasi}</p>
+          </div>
+          ${statusBadge}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =========================================================================
+  // ABSENSI, RIWAYAT ABSEN, CUTI/IZIN, & ADMIN DB
+  // =========================================================================
+  function triggerAbsenAction() {
+    if (!activeUser) { showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
+    if (isGpsLocked) { showToast('Gagal! Posisi di luar radius lokasi.', 'error'); return; }
+    openLiveCamera('absen');
+  }
+
+  async function prosesSubmitAbsen(fotoBase64) {
+    const now = new Date();
+    const timeNow = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const tglNow = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+
+    if (jenisAbsen === 'masuk') {
+      document.getElementById('clockInSummary').innerText = timeNow.slice(0, 5);
+      dbAbsenList.unshift({
+        no: dbAbsenList.length + 1, timestamp: `${tglNow} ${timeNow}`, tanggal: tglNow, isToday: true,
+        nama: activeUser.nama, nip: activeUser.nip, clockIn: timeNow, clockOut: "-",
+        role: activeUser.role, lokasi: activeUser.lokasi, shift: currentShift, totalJam: "-"
+      });
+    } else {
+      document.getElementById('clockOutSummary').innerText = timeNow.slice(0, 5);
+      const existing = dbAbsenList.find(a => a.nip === activeUser.nip && a.clockOut === "-");
+      if (existing) existing.clockOut = timeNow;
+    }
+    simpanCacheLokal();
+    renderRiwayatAbsen();
+
+    await kirimKeServer({
+      action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
+      lokasi: activeUser.lokasi, shift: currentShift, jenisAbsen: jenisAbsen,
+      koordinat: currentCoordStr, jarak: currentDistanceMeters, fotoBase64: fotoBase64
+    }, `Absen ${jenisAbsen.toUpperCase()} (${currentShift}) Tercatat!`);
+  }
+
   function renderRiwayatAbsen() {
     const container = document.getElementById('riwayatAbsenContainer');
     const countEl = document.getElementById('countRiwayatAbsenText');
     const inEl = document.getElementById('clockInSummary');
     const outEl = document.getElementById('clockOutSummary');
 
-    // Update ringkasan jam masuk/pulang hari ini untuk user yang sedang login
     if (activeUser) {
       const listUser = dbAbsenList.filter(a => String(a.nip) === String(activeUser.nip));
       const absenHariIni = listUser.find(a => a.isToday) || listUser[0];
@@ -762,9 +1318,8 @@
 
     if (!container) return;
     if (countEl) countEl.innerText = `${dbAbsenList.length} Log Tercatat`;
-
     if (dbAbsenList.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-4">Belum ada riwayat absensi tercatat di Google Sheet.</p>';
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-4">Belum ada riwayat absensi tercatat.</p>';
       return;
     }
 
@@ -772,9 +1327,7 @@
       <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex items-center justify-between">
         <div>
           <p class="font-bold text-[11px] text-slate-800">${item.nama} ${getRoleBadge(item.role)}</p>
-          <p class="text-[9px] text-slate-500 mt-0.5">
-            <i class="fa-regular fa-calendar mr-1"></i>${item.tanggal} &bull; ${item.shift} &bull; Total: <b>${item.totalJam}</b>
-          </p>
+          <p class="text-[9px] text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${item.tanggal} &bull; ${item.shift} &bull; Total: <b>${item.totalJam}</b></p>
         </div>
         <div class="text-right text-[10px] font-mono shrink-0 ml-2">
           <span class="block text-emerald-600 font-bold">IN : ${item.clockIn !== '-' ? item.clockIn.slice(0,5) : '-'}</span>
@@ -784,9 +1337,6 @@
     `).join('');
   }
 
-  // =========================================================================
-  // VALIDASI & PENGAJUAN CUTI (OPERATOR VS SPV) + EMAIL NOTIFIKASI BALIK
-  // =========================================================================
   function hitungSelisihHariCuti(tglMulaiStr) {
     if (!tglMulaiStr) return null;
     const parts = tglMulaiStr.split("-").map(Number);
@@ -858,56 +1408,13 @@
       return;
     }
 
-    if (jenis === "Cuti Tahunan") {
-      const diffDays = hitungSelisihHariCuti(mulai);
-      if (diffDays < 14) {
-        showToast('Gagal! Cuti wajib diajukan minimal 14 hari sebelum hari H!', 'error');
-        return;
-      }
-    }
-
-    if (jenis === "Sakit Dengan SKD" && (!fileInput.files || !fileInput.files[0])) {
-      showToast('Wajib melampirkan foto SKD!', 'error');
-      return;
-    }
-
     const isSpv = activeUser.role === 'SPV';
-    const tempItem = {
-      idPengajuan: "IZIN_" + Date.now(),
-      timestamp: new Date().toLocaleDateString('id-ID'),
-      nip: activeUser.nip,
-      nama: activeUser.nama,
-      role: activeUser.role,
-      lokasi: activeUser.lokasi,
-      jenisIzin: jenis,
-      tglMulai: mulai,
-      tglSelesai: selesai,
-      alasan: alasan,
-      appSpv: isSpv ? "- (PENGAJU SPV)" : "PENDING",
-      appAdmin: isSpv ? "PENDING" : "MENUNGGU SPV",
-      appMgr: "MENUNGGU ADMIN",
-      statusAkhir: isSpv ? "MENUNGGU ADMIN OPS" : "MENUNGGU SPV",
-      emailPengaju: emailPengaju
-    };
-    dbIzinList.unshift(tempItem);
-    simpanCacheLokal();
-    renderRiwayatIzinUser();
-    renderApprovalQueue();
-
     const targetNotif = isSpv ? "Admin Operasional" : "SPV";
     const sendPayload = async (buktiBase64) => {
       await kirimKeServer({
-        action: "ajukan_izin",
-        nip: activeUser.nip,
-        nama: activeUser.nama,
-        role: activeUser.role,
-        email: emailPengaju,
-        lokasi: activeUser.lokasi,
-        jenisIzin: jenis,
-        tglMulai: mulai,
-        tglSelesai: selesai,
-        alasan: alasan,
-        buktiBase64: buktiBase64
+        action: "ajukan_izin", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
+        email: emailPengaju, lokasi: activeUser.lokasi, jenisIzin: jenis,
+        tglMulai: mulai, tglSelesai: selesai, alasan: alasan, buktiBase64: buktiBase64
       }, `Pengajuan berhasil dikirim ke ${targetNotif}!`);
       document.getElementById('izinAlasan').value = '';
       document.getElementById('izinFile').value = '';
@@ -924,14 +1431,10 @@
   function renderApprovalQueue() {
     const container = document.getElementById('approvalQueueContainer');
     if (!container) return;
-    const roleTitle = document.getElementById('approvalHeaderRole');
-    if (activeUser) roleTitle.innerText = `Panel Approval (${activeUser.role})`;
-
     if (dbIzinList.length === 0) {
       container.innerHTML = '<p class="text-[11px] text-slate-400 text-center py-4">Belum ada pengajuan izin/cuti.</p>';
       return;
     }
-
     container.innerHTML = '';
     dbIzinList.forEach(item => {
       let canApprove = false;
@@ -940,49 +1443,23 @@
         if (activeUser.role === 'Admin Operasional' && item.appAdmin === 'PENDING') canApprove = true;
         if (activeUser.role === 'Manager' && item.appMgr === 'PENDING') canApprove = true;
       }
-
       const actionButtons = canApprove ? `
         <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-100">
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm cursor-pointer">
-            <i class="fa-solid fa-key mr-1"></i>APPROVE (${activeUser.role})
-          </button>
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm cursor-pointer">
-            <i class="fa-solid fa-xmark mr-1"></i>REJECT
-          </button>
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">APPROVE</button>
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">REJECT</button>
         </div>` : '';
-
-      const skemaLabel = item.role === 'SPV'
-        ? '<span class="text-[9px] text-amber-700 font-bold">Alur SPV: Admin Ops &rarr; Manager</span>'
-        : '<span class="text-[9px] text-slate-500 font-medium">Alur Operator: SPV &rarr; Admin Ops &rarr; Manager</span>';
 
       container.innerHTML += `
         <div class="p-3 border border-slate-200 rounded-xl bg-slate-50/60 space-y-1.5 text-xs">
           <div class="flex justify-between items-start">
-            <div>
-              <span class="font-black text-slate-800">${item.nama}</span>
-              ${getRoleBadge(item.role)}
-              <span class="text-[10px] text-slate-500 block">NIP: ${item.nip} ${item.emailPengaju ? '&bull; ' + item.emailPengaju : ''}</span>
-            </div>
+            <div><span class="font-black text-slate-800">${item.nama}</span> ${getRoleBadge(item.role)}</div>
             <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${item.jenisIzin}</span>
           </div>
-          <div class="flex justify-between items-center text-[10px] text-slate-600">
-            <span><i class="fa-regular fa-calendar mr-1"></i>${item.tglMulai} s/d ${item.tglSelesai}</span>
-            ${skemaLabel}
-          </div>
-          <p class="text-[10px] text-slate-700 bg-white p-2 rounded-lg border border-slate-100"><b>Alasan:</b> ${item.alasan}</p>
+          <p class="text-[10px] text-slate-600">${item.tglMulai} s/d ${item.tglSelesai} &bull; ${item.alasan}</p>
           <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] text-center">
-            <div class="bg-white p-1.5 rounded border border-slate-200">
-              <span class="block text-slate-400 font-bold">1. SPV</span>
-              <span class="font-bold text-slate-700">${item.appSpv}</span>
-            </div>
-            <div class="bg-white p-1.5 rounded border border-slate-200">
-              <span class="block text-slate-400 font-bold">2. ADMIN OPS</span>
-              <span class="font-bold text-slate-700">${item.appAdmin}</span>
-            </div>
-            <div class="bg-white p-1.5 rounded border border-slate-200">
-              <span class="block text-slate-400 font-bold">3. MANAGER</span>
-              <span class="font-bold text-slate-700">${item.appMgr}</span>
-            </div>
+            <div class="bg-white p-1.5 rounded border"><b>1. SPV:</b> ${item.appSpv}</div>
+            <div class="bg-white p-1.5 rounded border"><b>2. ADMIN:</b> ${item.appAdmin}</div>
+            <div class="bg-white p-1.5 rounded border"><b>3. MGR:</b> ${item.appMgr}</div>
           </div>
           ${actionButtons}
         </div>`;
@@ -992,50 +1469,37 @@
   function renderRiwayatIzinUser() {
     const container = document.getElementById('riwayatIzinUserContainer');
     if (!container) return;
-    const list = activeUser ? dbIzinList.filter(i => String(i.nip) === String(activeUser.nip)) : dbIzinList.slice(0, 6);
+    const list = activeUser ? dbIzinList.filter(i => String(i.nip) === String(activeUser.nip)) : dbIzinList.slice(0, 5);
     if (list.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan cuti/izin.</p>';
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan.</p>';
       return;
     }
     container.innerHTML = list.map(item => `
       <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex justify-between items-center">
         <div>
-          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} <span class="text-[9px] font-normal text-slate-500">(${item.tglMulai} s/d ${item.tglSelesai})</span></p>
-          <p class="text-[9px] text-slate-500">SPV: <b>${item.appSpv}</b> | Admin: <b>${item.appAdmin}</b> | Mgr: <b>${item.appMgr}</b></p>
+          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} (${item.tglMulai})</p>
+          <p class="text-[9px] text-slate-500">SPV: ${item.appSpv} | Admin: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
         </div>
-        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border border-slate-200 shrink-0 ml-2">${item.statusAkhir}</span>
+        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border">${item.statusAkhir}</span>
       </div>
     `).join('');
   }
 
-  // =========================================================================
-  // ADMIN DB MAN POWER + PIN + EMAIL
-  // =========================================================================
   function renderAdminDbList() {
     const container = document.getElementById('adminDatabaseList');
     if (!container) return;
-    document.getElementById('totalKaryawanText').innerText = `Total: ${dbKaryawan.length} Personil GPMS`;
-    container.innerHTML = '';
-
-    dbKaryawan.forEach(user => {
-      const emailInfo = user.email ? user.email : '<span class="text-amber-600 italic">Email belum diisi</span>';
-      container.innerHTML += `
-        <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50/70">
-          <div>
-            <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
-            <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; PIN: <span class="font-bold text-emerald-700">${user.pin || getFallbackPin(user.role)}</span></p>
-            <p class="text-[9px] text-slate-500"><i class="fa-regular fa-envelope mr-1"></i>${emailInfo}</p>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0 ml-2">
-            <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center text-xs cursor-pointer">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center text-xs cursor-pointer">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>`;
-    });
+    container.innerHTML = dbKaryawan.map(user => `
+      <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50/70">
+        <div>
+          <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
+          <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; PIN: <b>${user.pin}</b> &bull; ${user.email || '-'}</p>
+        </div>
+        <div class="flex gap-1.5">
+          <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xs"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
   }
 
   function siapkanEditKaryawan(id) {
@@ -1045,10 +1509,9 @@
     document.getElementById('empNip').value = emp.nip;
     document.getElementById('empNama').value = emp.nama;
     document.getElementById('empRole').value = emp.role;
-    document.getElementById('empPin').value = emp.pin || getFallbackPin(emp.role);
+    document.getElementById('empPin').value = emp.pin;
     document.getElementById('empEmail').value = emp.email || '';
     document.getElementById('empLokasi').value = emp.lokasi;
-    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500 mr-1"></i> Edit Man Power: ${emp.nama}`;
     document.getElementById('btnSaveEmp').innerText = "UPDATE MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.remove('hidden');
   }
@@ -1059,71 +1522,39 @@
     document.getElementById('empNama').value = '';
     document.getElementById('empPin').value = '';
     document.getElementById('empEmail').value = '';
-    document.getElementById('empRole').value = 'Operator';
-    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Man Power Baru`;
     document.getElementById('btnSaveEmp').innerText = "SIMPAN MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.add('hidden');
   }
 
   async function simpanDataKaryawan() {
-    if (!activeUser || activeUser.role !== 'Admin Operasional') {
-      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
-      return;
-    }
     const editId = document.getElementById('empEditId').value;
-    const nip = document.getElementById('empNip').value.trim();
-    const nama = document.getElementById('empNama').value.trim();
-    const role = document.getElementById('empRole').value;
-    const pin = document.getElementById('empPin').value.trim() || getFallbackPin(role);
-    const email = document.getElementById('empEmail').value.trim();
-    const lokasi = document.getElementById('empLokasi').value.trim();
-
-    if (!nip || !nama || !lokasi) {
-      showToast('Lengkapi NIP, Nama, dan Area Kerja!', 'error');
-      return;
-    }
-
-    const subAction = editId ? "edit" : "add";
     await kirimKeServer({
-      action: "crud_karyawan",
-      subAction: subAction,
+      action: "crud_karyawan", subAction: editId ? "edit" : "add",
       empId: editId || ("EMP_" + Date.now()),
-      empNip: nip,
-      empNama: nama,
-      empRole: role,
-      empLokasi: lokasi,
-      empPin: pin,
-      empEmail: email
-    }, editId ? "Data Man Power, PIN & Email diperbarui!" : "Man Power baru ditambahkan!");
-
+      empNip: document.getElementById('empNip').value.trim(),
+      empNama: document.getElementById('empNama').value.trim(),
+      empRole: document.getElementById('empRole').value,
+      empPin: document.getElementById('empPin').value.trim(),
+      empEmail: document.getElementById('empEmail').value.trim(),
+      empLokasi: document.getElementById('empLokasi').value.trim()
+    }, "Data Man Power berhasil disimpan!");
     batalEditKaryawan();
   }
 
   async function hapusKaryawan(id, nama) {
-    if (!activeUser || activeUser.role !== 'Admin Operasional') {
-      showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
-      return;
-    }
-    if (!confirm(`Hapus ${nama} dari database Man Power GPMS?`)) return;
-    await kirimKeServer({
-      action: "crud_karyawan",
-      subAction: "delete",
-      empId: id
-    }, `Man Power ${nama} dihapus!`);
+    if (!confirm(`Hapus ${nama}?`)) return;
+    await kirimKeServer({ action: "crud_karyawan", subAction: "delete", empId: id }, `Man Power ${nama} dihapus!`);
   }
 
-  // =========================================================================
-  // ABSENSI, GPS & KAMERA
-  // =========================================================================
   function setJenisAbsen(jenis) {
     jenisAbsen = jenis;
     const isMasuk = jenis === 'masuk';
     document.getElementById('btnJenisMasuk').className = isMasuk
-      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition"
-      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer";
+      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm"
+      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 cursor-pointer";
     document.getElementById('btnJenisPulang').className = !isMasuk
-      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition"
-      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer";
+      ? "flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm"
+      : "flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 cursor-pointer";
     document.getElementById('mainAbsenLabel').innerText = isMasuk ? "TAP ABSEN MASUK" : "TAP ABSEN PULANG";
     updateAbsenSublabel();
   }
@@ -1155,8 +1586,7 @@
   }
 
   function detectRealGps() {
-    if (!navigator.geolocation) { showToast("Browser tidak mendukung GPS", "error"); return; }
-    showToast("Mendeteksi titik GPS...", "success");
+    if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
@@ -1164,92 +1594,15 @@
       currentDistanceMeters = hitungJarakMeter(lat, lng, PROJECT_LOCATION.lat, PROJECT_LOCATION.lng);
       document.getElementById('gpsCoordText').innerText = `Posisi: ${currentCoordStr} (Jarak: ${currentDistanceMeters}m)`;
       setQuickGps(currentDistanceMeters <= PROJECT_LOCATION.maxRadiusMeters);
-    }, () => showToast("Gagal mengambil GPS, aktifkan izin lokasi", "error"), { enableHighAccuracy: true });
+    }, () => showToast("Aktifkan izin GPS", "error"), { enableHighAccuracy: true });
   }
 
   function setQuickGps(isInside) {
-    const statusCard = document.getElementById('gpsStatusCard');
-    const alertCard = document.getElementById('gpsLockedAlert');
-    const iconBg = document.getElementById('gpsIconBg');
-    const title = document.getElementById('gpsStatusTitle');
-    const absenBtn = document.getElementById('mainAbsenBtn');
-
     isGpsLocked = !isInside;
-    alertCard.classList.toggle('hidden', isInside);
-    statusCard.className = isInside
-      ? "bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft"
-      : "bg-red-50 border border-red-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft";
-    iconBg.className = isInside
-      ? "w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm"
-      : "w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center text-lg shadow-sm";
-    title.innerText = isInside ? 'DI LOKASI PROJECT' : 'LUAR AREA PROJECT';
-    title.className = isInside ? "text-xs font-bold text-emerald-900" : "text-xs font-bold text-red-900";
+    document.getElementById('gpsLockedAlert').classList.toggle('hidden', isInside);
+    const absenBtn = document.getElementById('mainAbsenBtn');
     absenBtn.disabled = !isInside;
     absenBtn.classList.toggle('opacity-50', !isInside);
-    absenBtn.classList.toggle('grayscale', !isInside);
-  }
-
-  async function triggerAbsenAction() {
-    if (!activeUser) { showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
-    if (isGpsLocked) { showToast('Gagal! Posisi di luar radius lokasi.', 'error'); return; }
-    document.getElementById('cameraModal').classList.remove('hidden');
-    document.getElementById('cameraLoading').classList.remove('hidden');
-    try {
-      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-      const video = document.getElementById('cameraVideo');
-      video.srcObject = cameraStream;
-      video.onloadedmetadata = () => document.getElementById('cameraLoading').classList.add('hidden');
-    } catch (err) {
-      document.getElementById('cameraLoading').innerHTML = '<p class="text-xs text-red-500 font-bold p-4 text-center">Kamera tidak dapat diakses.</p>';
-    }
-  }
-
-  function closeCamera() {
-    document.getElementById('cameraModal').classList.add('hidden');
-    if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
-  }
-
-  async function captureAndSubmit() {
-    const video = document.getElementById('cameraVideo');
-    const canvas = document.getElementById('captureCanvas');
-    canvas.width = 480; canvas.height = 640;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-    closeCamera();
-
-    const now = new Date();
-    const timeNow = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    const tglNow = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
-
-    if (jenisAbsen === 'masuk') {
-      document.getElementById('clockInSummary').innerText = timeNow.slice(0, 5);
-      dbAbsenList.unshift({
-        no: dbAbsenList.length + 1,
-        timestamp: `${tglNow} ${timeNow}`,
-        tanggal: tglNow,
-        isToday: true,
-        nama: activeUser.nama,
-        nip: activeUser.nip,
-        clockIn: timeNow,
-        clockOut: "-",
-        role: activeUser.role,
-        lokasi: activeUser.lokasi,
-        shift: currentShift,
-        totalJam: "-"
-      });
-    } else {
-      document.getElementById('clockOutSummary').innerText = timeNow.slice(0, 5);
-      const existing = dbAbsenList.find(a => a.nip === activeUser.nip && a.clockOut === "-");
-      if (existing) existing.clockOut = timeNow;
-    }
-    simpanCacheLokal();
-    renderRiwayatAbsen();
-
-    await kirimKeServer({
-      action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
-      lokasi: activeUser.lokasi, shift: currentShift, jenisAbsen: jenisAbsen,
-      koordinat: currentCoordStr, jarak: currentDistanceMeters, fotoBase64: fotoBase64
-    }, `Absen ${jenisAbsen.toUpperCase()} (${currentShift}) Tercatat!`);
   }
 
   function compressFileToBase64(file, callback) {
@@ -1268,48 +1621,11 @@
     reader.readAsDataURL(file);
   }
 
-  function handleTaskPhoto(input, slot) {
-    if (!input.files || !input.files[0]) return;
-    compressFileToBase64(input.files[0], base64 => {
-      taskPhotos[slot] = base64;
-      const preview = document.getElementById(`preview-${slot}`);
-      preview.src = base64;
-      preview.classList.remove('hidden');
-      checkTaskLock();
-    });
-  }
-
-  function checkTaskLock() {
-    const btn = document.getElementById('btnSubmitTask');
-    const ready = taskPhotos.before && taskPhotos.during && taskPhotos.after;
-    btn.disabled = !ready;
-    btn.className = ready
-      ? "w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md cursor-pointer"
-      : "w-full py-3 rounded-xl font-bold text-xs text-white bg-slate-300 cursor-not-allowed transition shadow-md";
-    btn.innerText = ready ? "KIRIM LAPORAN 3 FOTO SEKARANG" : "LENGKAPI 3 FOTO UNTUK KIRIM";
-  }
-
-  async function submitTaskReport() {
-    if (!activeUser) { showToast('Login dengan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
-    const desc = document.getElementById('taskDesc').value.trim();
-    if (!desc) { showToast('Isi deskripsi pekerjaan!', 'error'); return; }
-    await kirimKeServer({
-      action: "task_report", nip: activeUser.nip, nama: activeUser.nama, lokasi: activeUser.lokasi,
-      shift: currentShift, area: document.getElementById('taskArea').value, deskripsi: desc,
-      fotoBefore: taskPhotos.before, fotoDuring: taskPhotos.during, fotoAfter: taskPhotos.after
-    }, "Laporan 3 Foto Berhasil Terkirim!");
-    taskPhotos = { before: null, during: null, after: null };
-    ['before', 'during', 'after'].forEach(s => document.getElementById(`preview-${s}`).classList.add('hidden'));
-    document.getElementById('taskDesc').value = '';
-    checkTaskLock();
-  }
-
   async function kirimKeServer(payload, pesanSukses) {
     showToast("Menyimpan data ke Google Sheet...", "success");
     try {
       const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        redirect: "follow",
+        method: "POST", redirect: "follow",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload)
       });
@@ -1317,8 +1633,6 @@
       if (result && result.status === "success") {
         terapkanDataDariServer(result);
         showToast(result.message || pesanSukses, "success");
-      } else if (result && result.status === "error") {
-        showToast(result.message || "Gagal memproses permintaan", "error");
       } else {
         showToast(pesanSukses, "success");
         syncServerData(false);
