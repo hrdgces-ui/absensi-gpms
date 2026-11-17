@@ -169,14 +169,14 @@
     </div>
   </div>
 
-  <!-- ================= 2. TASK REPORTING KHUSUS GPMS (4 MODUL) ================= -->
+  <!-- ================= 2. TASK REPORTING KHUSUS GPMS (4 MODUL + GENERATE PDF) ================= -->
   <div id="tabContent-laporan" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Task Reporting & Laporan GPMS</h3>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Task Reporting & Laporan PDF GPMS</h3>
         <p class="text-[10px] text-slate-300">Patroli 1 Foto Live &bull; Ceklis Kendaraan &bull; Serah Terima Shift</p>
       </div>
-      <i class="fa-solid fa-clipboard-list text-xl text-emerald-400"></i>
+      <i class="fa-solid fa-file-pdf text-xl text-red-400"></i>
     </div>
 
     <!-- Navigasi 4 Sub-Modul Task Reporting GPMS -->
@@ -191,7 +191,7 @@
         <i class="fa-solid fa-handshake block text-sm mb-0.5"></i>3. Shift Pos
       </button>
       <button onclick="switchTaskSubTab('statusmp')" id="subBtn-statusmp" class="py-2 px-1 rounded-xl text-slate-600 hover:bg-white/60 transition cursor-pointer">
-        <i class="fa-solid fa-users block text-sm mb-0.5"></i>4. Status MP
+        <i class="fa-solid fa-file-pdf block text-sm mb-0.5"></i>4. Status & PDF
       </button>
     </div>
 
@@ -250,7 +250,6 @@
         </div>
       </div>
 
-      <!-- Kotak 1 Foto Patroli (Hanya Buka Kamera Live, Tanpa Input File Galeri) -->
       <div>
         <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Foto Lokasi Patroli (1 Foto Kamera Langsung)</label>
         <div onclick="openLiveCamera('patroli')" class="border-2 border-dashed border-emerald-400 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer bg-emerald-50/40 hover:bg-emerald-50 text-center relative overflow-hidden h-44">
@@ -268,7 +267,7 @@
       </button>
     </div>
 
-    <!-- SUB-MODUL 2: FORM CEKLIS KENDARAAN (SESUAI PDF FORM CEKLIST KENDARAAN) -->
+    <!-- SUB-MODUL 2: FORM CEKLIS KENDARAAN -->
     <div id="taskSubPane-ceklis" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
       <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
         <div>
@@ -293,7 +292,6 @@
         </div>
       </div>
 
-      <!-- Input Tambah Baris Plat Nomor -->
       <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
         <div class="flex justify-between items-center">
           <span class="text-[10px] font-bold text-slate-700 uppercase">Daftar Plat Nomor & Keterangan</span>
@@ -354,7 +352,6 @@
         </div>
       </div>
 
-      <!-- 1. Uang Modal Kembalian -->
       <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
         <div class="flex justify-between items-center">
           <span class="text-[10px] font-black text-slate-700 uppercase">1. Uang Modal Kembalian</span>
@@ -384,7 +381,6 @@
         </div>
       </div>
 
-      <!-- 2. Tiket / Karcis Manual -->
       <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
         <span class="text-[10px] font-black text-slate-700 uppercase block">2. Tiket / Karcis Manual</span>
         <div class="grid grid-cols-3 gap-1.5 text-[10px]">
@@ -399,7 +395,6 @@
         </div>
       </div>
 
-      <!-- 3. Signed Tarif & Pos Parkir -->
       <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
         <span class="text-[10px] font-black text-slate-700 uppercase block">3. Signed Tarif & Kondisi Pos Parkir</span>
         <div class="grid grid-cols-2 gap-2 text-[10px]">
@@ -423,14 +418,12 @@
         <input type="text" id="stCatatanPos" placeholder="Catatan Pos Parkir..." class="w-full border border-slate-200 rounded-lg p-1.5 text-[10px] bg-white">
       </div>
 
-      <!-- 4. Peralatan / Perlengkapan Kerja (9 Item) -->
       <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
         <span class="text-[10px] font-black text-slate-700 uppercase block">4. Peralatan / Perlengkapan Kerja (9 Alat)</span>
         <div id="stEquipmentContainer" class="space-y-1.5"></div>
         <textarea id="stMasalahLain" rows="2" placeholder="Catatan / Masalah Lain-lain..." class="w-full border border-slate-200 rounded-lg p-2 text-[10px] bg-white mt-1"></textarea>
       </div>
 
-      <!-- Petugas Yang Menyerahkan, Menerima & Mengetahui SPV -->
       <div class="grid grid-cols-3 gap-1.5">
         <div>
           <label class="text-[8px] font-bold text-slate-500 uppercase">Yang Menyerahkan</label>
@@ -451,16 +444,55 @@
       </button>
     </div>
 
-    <!-- SUB-MODUL 4: DATA KARYAWAN GPMS LENGKAP DENGAN STATUS & FORMAT LAPORAN BULANAN -->
-    <div id="taskSubPane-statusmp" class="hidden bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
-      <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
-        <div>
-          <h4 class="text-xs font-black text-slate-800 uppercase">Data Karyawan GPMS & Status</h4>
-          <p class="text-[9px] text-slate-500">Status Kehadiran, Cuti/Izin & Susunan Laporan Bulanan</p>
+    <!-- SUB-MODUL 4: DATA KARYAWAN GPMS & TOMBOL GENERATE PDF LAPORAN BULANAN -->
+    <div id="taskSubPane-statusmp" class="hidden space-y-3">
+      <!-- Kartu Cetak / Download PDF Laporan Bulanan GPMS -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 shadow-lg space-y-3 border border-slate-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="text-xs font-black uppercase tracking-wider text-emerald-400">Generate & Download PDF GPMS</h4>
+            <p class="text-[10px] text-slate-300 mt-0.5">Otomatis Menyusun Laporan & Arsip ke Google Drive</p>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-red-500/20 border border-red-400/30 flex items-center justify-center text-red-400 text-lg">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
         </div>
-        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+
+        <div class="space-y-2 pt-1">
+          <button id="btnGenPdfOperasional" onclick="generatePdfDariAplikasi('laporan_operasional')" class="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
+            <span class="flex items-center"><i class="fa-solid fa-file-export mr-2 text-sm"></i>1. PDF Laporan Bulanan Operasional (4 Modul)</span>
+            <i class="fa-solid fa-download"></i>
+          </button>
+
+          <button id="btnGenPdfRekapAbsen" onclick="generatePdfDariAplikasi('rekap_absensi')" class="w-full py-3 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-between shadow-md transition cursor-pointer">
+            <span class="flex items-center"><i class="fa-solid fa-calendar-check mr-2 text-sm"></i>2. PDF Tabel Rekap Absensi (Periode 19-20)</span>
+            <i class="fa-solid fa-download"></i>
+          </button>
+        </div>
+
+        <!-- Kotak Link Hasil PDF jika sudah selesai dibuat -->
+        <div id="pdfResultBox" class="hidden bg-slate-800/90 border border-emerald-500/40 rounded-xl p-2.5 text-[10px] flex items-center justify-between">
+          <div class="truncate pr-2">
+            <span class="text-emerald-400 font-bold block">PDF Berhasil Dibuat!</span>
+            <span id="pdfResultFileName" class="text-slate-300 truncate block">Laporan_GPMS.pdf</span>
+          </div>
+          <a id="pdfResultDriveLink" href="#" target="_blank" class="bg-emerald-500 text-slate-900 font-black px-2.5 py-1.5 rounded-lg shrink-0">
+            Buka PDF
+          </a>
+        </div>
       </div>
-      <div id="statusKaryawanGpmsList" class="space-y-2 text-xs"></div>
+
+      <!-- Daftar Status Karyawan GPMS -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-3">
+        <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+          <div>
+            <h4 class="text-xs font-black text-slate-800 uppercase">Data Karyawan GPMS & Status</h4>
+            <p class="text-[9px] text-slate-500">Status Kehadiran Harian & Cuti/Izin Aktif</p>
+          </div>
+          <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+        </div>
+        <div id="statusKaryawanGpmsList" class="space-y-2 text-xs"></div>
+      </div>
     </div>
   </div>
 
@@ -533,11 +565,23 @@
   <div id="tabContent-riwayat" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-500">
       <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Riwayat Absensi</h3>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Riwayat & Cetak PDF</h3>
         <p class="text-[10px] text-slate-300">Akses Khusus SPV, Admin Operasional & Manager</p>
       </div>
       <button onclick="syncServerData(true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold">
         <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+
+    <!-- Tombol Cepat Generate PDF di Tab Riwayat -->
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="generatePdfDariAplikasi('rekap_absensi')" class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+        <i class="fa-solid fa-file-pdf text-sm"></i>
+        <span>PDF Rekap Absen (19-20)</span>
+      </button>
+      <button onclick="generatePdfDariAplikasi('laporan_operasional')" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+        <i class="fa-solid fa-file-pdf text-sm"></i>
+        <span>PDF Laporan Bulanan</span>
       </button>
     </div>
 
@@ -673,7 +717,7 @@
   <span id="toastMessage">Pesan Notifikasi</span>
 </div>
 
-<!-- Modal Kamera Live (Digunakan untuk Absensi Selfie & Patroli Kamera Belakang Tanpa Galeri) -->
+<!-- Modal Kamera Live -->
 <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
   <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col">
     <div class="p-4 bg-slate-900 text-white flex justify-between items-center border-b border-slate-700">
@@ -706,7 +750,6 @@
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzf2rfgRp3urlJmou_bpJz_dz01n0t1m3tsliWO-_nNF9BVK2S-VeF8Kl3uDjSfa9N/exec";
   const PROJECT_LOCATION = { name: "RS. Harum Sisma Medika", lat: -6.2422, lng: 106.8973, maxRadiusMeters: 150 };
 
-  // Daftar 9 Peralatan Pos sesuai Form Serah Terima Shift (No. Doc: 03.03.03104-RO)
   const DAFTAR_ALAT_POS = [
     { key: "Monitor", label: "Monitor" },
     { key: "CPU", label: "CPU" },
@@ -739,7 +782,7 @@
   let currentCoordStr = "-6.24220, 106.89730";
   let currentDistanceMeters = 10;
   let cameraStream = null;
-  let cameraMode = 'absen'; // 'absen' atau 'patroli'
+  let cameraMode = 'absen';
   let patroliPhotoBase64 = null;
 
   window.onload = () => {
@@ -760,18 +803,68 @@
       now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  // Inisialisasi Form Ceklis Kendaraan & 9 Peralatan Serah Terima Shift
+  // =========================================================================
+  // FUNGSI GENERATE & DOWNLOAD PDF LANGSUNG DARI APLIKASI
+  // =========================================================================
+  async function generatePdfDariAplikasi(jenisPdf) {
+    if (!activeUser) {
+      showToast('Silakan login dengan PIN terlebih dahulu!', 'error');
+      toggleUserDropdown();
+      return;
+    }
+
+    const labelPdf = jenisPdf === 'rekap_absensi' ? 'PDF Rekap Absensi (19-20)' : 'PDF Laporan Bulanan Operasional';
+    showToast(`Sedang menyusun ${labelPdf}... Mohon tunggu`, 'success');
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        redirect: "follow",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "generate_pdf_gpms",
+          jenisPdf: jenisPdf,
+          nip: activeUser.nip,
+          nama: activeUser.nama
+        })
+      });
+
+      const result = await response.json();
+      if (result && result.status === "success" && result.pdfBase64) {
+        // Trigger unduhan langsung file PDF ke HP / Laptop
+        const linkSource = `data:application/pdf;base64,${result.pdfBase64}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = result.fileName || "Laporan_GPMS.pdf";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        // Tampilkan juga tombol buka via Google Drive
+        const box = document.getElementById('pdfResultBox');
+        if (box) {
+          box.classList.remove('hidden');
+          document.getElementById('pdfResultFileName').innerText = result.fileName;
+          document.getElementById('pdfResultDriveLink').href = result.pdfUrl || "#";
+        }
+        showToast(`${labelPdf} berhasil diunduh!`, 'success');
+      } else {
+        showToast(result.message || "Gagal membuat PDF", "error");
+      }
+    } catch (e) {
+      showToast("Gagal mengunduh PDF. Pastikan Deploy New Version sudah dilakukan.", "error");
+    }
+  }
+
   function initTaskReportingForms() {
     const todayIso = new Date().toISOString().split('T')[0];
     document.getElementById('ceklisTanggal').value = todayIso;
     document.getElementById('stTanggal').value = todayIso;
 
-    // Buat 3 baris awal untuk Ceklis Plat Nomor
     const platContainer = document.getElementById('ceklisPlatContainer');
     platContainer.innerHTML = '';
     for (let i = 0; i < 3; i++) tambahBarisPlatCeklis();
 
-    // Buat daftar 9 Peralatan Kerja Pos Parkir
     const eqContainer = document.getElementById('stEquipmentContainer');
     eqContainer.innerHTML = DAFTAR_ALAT_POS.map(item => `
       <div class="grid grid-cols-12 gap-1 items-center bg-white p-1.5 rounded-lg border border-slate-200 text-[10px]">
@@ -1044,9 +1137,6 @@
     }
   }
 
-  // =========================================================================
-  // KAMERA LIVE TUNGGAL (ABSENSI SELFIE & PATROLI KAMERA BELAKANG TANPA GALERI)
-  // =========================================================================
   async function openLiveCamera(mode) {
     if (!activeUser) {
       showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error');
@@ -1091,7 +1181,6 @@
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Tambahkan Watermark Timestamp & Koordinat GPS langsung di atas foto agar anti-curang
     const nowStr = new Date().toLocaleString('id-ID');
     const titik = document.getElementById('patroliTitik') ? document.getElementById('patroliTitik').value : PROJECT_LOCATION.name;
     ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
@@ -1123,9 +1212,6 @@
     }
   }
 
-  // =========================================================================
-  // PENGIRIMAN 4 MODUL TASK REPORTING GPMS
-  // =========================================================================
   function refreshPatroliGps() {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(pos => {
@@ -1262,9 +1348,6 @@
     }).join('');
   }
 
-  // =========================================================================
-  // ABSENSI, RIWAYAT ABSEN, CUTI/IZIN, & ADMIN DB
-  // =========================================================================
   function triggerAbsenAction() {
     if (!activeUser) { showToast('Pilih Akun & masukkan PIN terlebih dahulu!', 'error'); toggleUserDropdown(); return; }
     if (isGpsLocked) { showToast('Gagal! Posisi di luar radius lokasi.', 'error'); return; }
