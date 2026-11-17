@@ -3,18 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- Pengaturan Pintasan Layar Utama HP (Logo GPMS & Nama Singkat) -->
-  <title>GPMS V1.0</title>
-  <meta name="application-name" content="GPMS V1.0">
-  <meta name="apple-mobile-web-app-title" content="GPMS V1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#0f172a">
-  <link rel="icon" type="image/jpeg" href="GPMS.jpeg">
-  <link rel="apple-touch-icon" href="GPMS.jpeg">
-  <link rel="shortcut icon" type="image/jpeg" href="GPMS.jpeg">
-
+  <title>GIANT PARKING MANAGEMENT SYSTEM V1.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -33,11 +22,11 @@
 </head>
 <body class="bg-slate-100 text-slate-800 flex flex-col h-[100dvh] max-w-md mx-auto relative overflow-hidden select-none">
 
-<!-- HEADER: LOGO GPMS & GIANT PARKING MANAGEMENT SYSTEM V1.0 (2 BARIS) -->
+<!-- HEADER -->
 <header class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-lg border-b border-slate-700 shrink-0">
   <div class="flex items-center space-x-3 w-full">
     <div class="w-16 h-11 rounded-xl bg-black flex items-center justify-center shadow-md overflow-hidden shrink-0 border border-slate-700 p-0.5">
-      <img src="GPMS.jpeg" alt="GPMS" class="w-full h-full object-contain">
+      <img src="GPMS.jpeg" alt="GPMS" class="w-full h-full object-contain" onerror="this.style.display='none'">
     </div>
     <div class="flex flex-col justify-center">
       <h1 class="text-[12px] font-black text-emerald-400 uppercase tracking-wider leading-tight">GIANT PARKING</h1>
@@ -66,7 +55,7 @@
   <div class="overflow-y-auto space-y-2 text-xs pb-1 pr-1" id="userListContainer"></div>
 </div>
 
-<!-- MODAL VERIFIKASI PIN (LOGIN & APPROVAL) -->
+<!-- MODAL VERIFIKASI PIN -->
 <div id="pinModal" class="hidden fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl border border-slate-200 p-5 space-y-4 text-center">
     <div class="w-12 h-12 rounded-2xl bg-slate-900 text-emerald-400 mx-auto flex items-center justify-center text-xl shadow-md">
@@ -91,7 +80,7 @@
 
 <main class="flex-1 overflow-y-auto p-4 space-y-4">
 
-  <!-- 1. BERANDA ABSENSI -->
+  <!-- ================= 1. BERANDA ABSENSI PANE ================= -->
   <div id="tabContent-beranda" class="space-y-3.5 tab-content-pane">
     <div id="gpsStatusCard" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-card-soft transition-all">
       <div class="flex items-center space-x-3">
@@ -129,21 +118,23 @@
       </div>
     </div>
 
+    <!-- Jam Digital & Ringkasan Clock In/Out Hari Ini -->
     <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-lg text-center">
       <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest" id="liveDateText">Memuat Tanggal...</p>
       <div class="text-3xl font-black text-white tracking-wider my-1 font-mono" id="liveClockText">00:00:00 <span class="text-xs text-blue-400 font-sans">WIB</span></div>
       <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-left">
         <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
-          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK IN</span>
-          <span id="clockInSummary" class="text-sm font-black text-slate-300">-- : --</span>
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK IN HARI INI</span>
+          <span id="clockInSummary" class="text-sm font-black text-emerald-400">-- : --</span>
         </div>
         <div class="bg-slate-800/70 p-2 rounded-xl border border-slate-700/50 flex flex-col items-center">
-          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK OUT</span>
-          <span id="clockOutSummary" class="text-sm font-black text-slate-300">-- : --</span>
+          <span class="text-[9px] text-slate-400 font-medium block mb-0.5">CLOCK OUT HARI INI</span>
+          <span id="clockOutSummary" class="text-sm font-black text-amber-400">-- : --</span>
         </div>
       </div>
     </div>
 
+    <!-- Jadwal Shift -->
     <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-card-soft space-y-2">
       <span class="text-xs font-bold text-slate-800 flex items-center">
         <i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1.5"></i> Jadwal Kerja (Pilih Salah Satu):
@@ -164,7 +155,8 @@
       </div>
     </div>
 
-    <div class="py-3 flex flex-col items-center justify-center space-y-4">
+    <!-- Tombol Tap Absen -->
+    <div class="py-2 flex flex-col items-center justify-center space-y-4">
       <div class="flex bg-slate-200/70 p-1.5 rounded-xl w-60 z-10 relative shadow-inner">
         <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="flex-1 text-[11px] font-bold py-2 rounded-lg bg-white text-emerald-600 shadow-sm transition">MASUK</button>
         <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="flex-1 text-[11px] font-bold py-2 rounded-lg text-slate-500 transition cursor-pointer">PULANG</button>
@@ -180,7 +172,7 @@
     </div>
   </div>
 
-  <!-- 2. TASK REPORT (WAJIB 3 FOTO) -->
+  <!-- ================= 2. TASK REPORT (WAJIB 3 FOTO) ================= -->
   <div id="tabContent-laporan" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
@@ -231,12 +223,12 @@
     </div>
   </div>
 
-  <!-- 3. CUTI (H-14), IZIN, & SAKIT -->
+  <!-- ================= 3. CUTI (H-14), IZIN, & SAKIT ================= -->
   <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between">
       <div>
         <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Form Cuti, Izin & Sakit</h3>
-        <p class="text-[10px] text-slate-300">Alur: SPV &rarr; Admin Ops &rarr; Manager (Auto-Bypass &gt;2 Hari)</p>
+        <p class="text-[10px] text-slate-300" id="alurApprovalSubtext">Operator: SPV &rarr; Admin Ops &rarr; Manager</p>
       </div>
       <i class="fa-solid fa-envelope-open-text text-xl text-blue-400"></i>
     </div>
@@ -263,8 +255,13 @@
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tgl Selesai</label>
-          <input type="date" id="izinSelesai" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+          <input type="date" id="izinSelesai" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
         </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Email Penerima Notifikasi Balik (ACC)</label>
+        <input type="email" id="izinEmailPengaju" placeholder="Masukkan email aktif Anda..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50">
       </div>
 
       <div>
@@ -282,23 +279,47 @@
       </button>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2">
+    <!-- Riwayat Pengajuan Cuti/Izin -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2.5">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1"></i> Status Pengajuan Terakhir</h4>
-        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left text-blue-600 mr-1"></i> Riwayat & Status Pengajuan Anda</h4>
+        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold hover:underline"><i class="fa-solid fa-rotate"></i> Refresh</button>
       </div>
       <div id="riwayatIzinUserContainer" class="space-y-2 text-xs"></div>
     </div>
   </div>
 
-  <!-- 4. PANEL APPROVAL (SPV, ADMIN OPS, MANAGER) -->
+  <!-- ================= 4. RIWAYAT ABSEN PANE (KHUSUS SPV, ADMIN, MANAGER) ================= -->
+  <div id="tabContent-riwayat" class="space-y-3.5 tab-content-pane hidden">
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-500">
+      <div>
+        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Riwayat Absensi</h3>
+        <p class="text-[10px] text-slate-300">Akses Khusus SPV, Admin Operasional & Manager</p>
+      </div>
+      <button onclick="syncServerData(true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-card-soft space-y-2.5">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+        <h4 class="text-xs font-bold text-slate-800">
+          <i class="fa-solid fa-clipboard-user text-emerald-600 mr-1.5"></i> Log Kehadiran Man Power
+        </h4>
+        <span class="text-[10px] text-slate-400 font-semibold" id="countRiwayatAbsenText">0 Data</span>
+      </div>
+      <div id="riwayatAbsenContainer" class="space-y-2 text-xs"></div>
+    </div>
+  </div>
+
+  <!-- ================= 5. PANEL APPROVAL (SPV, ADMIN OPS, MANAGER) ================= -->
   <div id="tabContent-tim" class="space-y-4 tab-content-pane hidden">
     <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-lg flex items-center justify-between">
       <div>
         <h3 class="text-sm font-black uppercase tracking-widest text-amber-400" id="approvalHeaderRole">Panel Approval</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Wajib Verifikasi PIN &bull; Auto-Bypass &gt;2 Hari</p>
+        <p class="text-[10px] text-slate-300 mt-0.5">Notifikasi Email Otomatis ke Pengaju Saat Di-ACC</p>
       </div>
-      <button onclick="syncServerData()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold">
+      <button onclick="syncServerData(true)" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold">
         <i class="fa-solid fa-rotate"></i>
       </button>
     </div>
@@ -311,18 +332,18 @@
     </div>
   </div>
 
-  <!-- 5. ADMIN DB PANE (KHUSUS ADMIN OPERASIONAL) -->
+  <!-- ================= 6. ADMIN DB PANE (KHUSUS ADMIN OPERASIONAL) ================= -->
   <div id="tabContent-admin" class="space-y-4 tab-content-pane hidden">
     <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
       <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Admin Database Karyawan & PIN</h3>
-        <p class="text-[10px] text-slate-400" id="totalKaryawanText">Akses Khusus Admin Operasional</p>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Admin Database Man Power</h3>
+        <p class="text-[10px] text-slate-400" id="totalKaryawanText">Kelola Data, PIN & Email Man Power</p>
       </div>
       <i class="fa-solid fa-users-cog text-xl text-blue-400"></i>
     </div>
 
     <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-card-soft space-y-2.5">
-      <h4 class="text-xs font-bold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru</h4>
+      <h4 class="text-xs font-bold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Man Power Baru</h4>
       <input type="hidden" id="empEditId" value="">
       <div class="grid grid-cols-2 gap-2">
         <div>
@@ -350,14 +371,18 @@
         </div>
       </div>
       <div>
+        <label class="text-[9px] font-bold text-slate-500 uppercase">Email Man Power (Untuk Notifikasi ACC Cuti/Izin)</label>
+        <input type="email" id="empEmail" placeholder="contoh@gmail.com" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      </div>
+      <div>
         <label class="text-[9px] font-bold text-slate-500 uppercase">Area Kerja</label>
         <input type="text" id="empLokasi" value="RS. Harum Sisma Medika" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
       </div>
       <div class="flex gap-2 pt-1">
-        <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm">
-          SIMPAN KARYAWAN
+        <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer">
+          SIMPAN MAN POWER
         </button>
-        <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">
+        <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
           BATAL
         </button>
       </div>
@@ -365,8 +390,8 @@
 
     <div class="bg-white rounded-2xl border border-slate-200 shadow-card-soft overflow-hidden">
       <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-        <h4 class="text-xs font-bold text-slate-800">Daftar Man Power & PIN Aktif</h4>
-        <button onclick="syncServerData()" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+        <h4 class="text-xs font-bold text-slate-800">Daftar Man Power, PIN & Email</h4>
+        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
       </div>
       <div class="p-2.5 space-y-2" id="adminDatabaseList"></div>
     </div>
@@ -375,7 +400,7 @@
 </main>
 
 <!-- BOTTOM NAVIGATION -->
-<nav class="bg-white border-t border-slate-200 px-3 py-2 pb-safe flex justify-around items-center shrink-0 w-full z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+<nav class="bg-white border-t border-slate-200 px-2 py-2 pb-safe flex justify-around items-center shrink-0 w-full z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
   <button onclick="switchTab('beranda')" id="nav-beranda" class="flex flex-col items-center space-y-1 p-1.5 text-emerald-600 transition nav-btn">
     <i class="fa-solid fa-fingerprint text-lg"></i>
     <span class="text-[9px] font-bold">Absen</span>
@@ -387,6 +412,11 @@
   <button onclick="switchTab('izin')" id="nav-izin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn">
     <i class="fa-solid fa-calendar-plus text-lg"></i>
     <span class="text-[9px] font-bold">Cuti/Izin</span>
+  </button>
+  <!-- Tombol Riwayat Absen: Hanya tampil untuk SPV, Admin Operasional, dan Manager -->
+  <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
+    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+    <span class="text-[9px] font-bold">Riwayat</span>
   </button>
   <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-500 transition nav-btn hidden">
     <i class="fa-solid fa-file-circle-check text-lg"></i>
@@ -437,14 +467,15 @@
   const PROJECT_LOCATION = { name: "RS. Harum Sisma Medika", lat: -6.2422, lng: 106.8973, maxRadiusMeters: 150 };
 
   let dbKaryawan = [
-    { id: "EMP_1", nip: "New 01", nama: "Ahmad Sobari", role: "SPV", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
-    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
-    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
-    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234" },
-    { id: "EMP_5", nip: "ADM 01", nama: "Ali Eka Wahyudi", role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin" },
-    { id: "EMP_6", nip: "MGR 01", nama: "Bima", role: "Manager", lokasi: "RS. Harum Sisma Medika", pin: "manager" }
+    { id: "EMP_1", nip: "New 01", nama: "Ahmad Sobari", role: "SPV", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "sobariahmad344@gmail.com" },
+    { id: "EMP_2", nip: "New 02", nama: "Ahmad Firdaus", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
+    { id: "EMP_3", nip: "New 03", nama: "Chandra Wisnu", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
+    { id: "EMP_4", nip: "New 04", nama: "Zia Dahri Ramadhan", role: "Operator", lokasi: "RS. Harum Sisma Medika", pin: "1234", email: "" },
+    { id: "EMP_5", nip: "ADM 01", nama: "Ali Eka Wahyudi", role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin", email: "admin@gces.co.id" },
+    { id: "EMP_6", nip: "MGR 01", nama: "Bima", role: "Manager", lokasi: "RS. Harum Sisma Medika", pin: "manager", email: "bima@gces.co.id" }
   ];
 
+  let dbAbsenList = [];
   let dbIzinList = [];
   let activeUser = null;
   let pendingPinUser = null;
@@ -458,13 +489,12 @@
   let taskPhotos = { before: null, during: null, after: null };
 
   window.onload = () => {
+    muatCacheLokal();
     updateClock();
     setInterval(updateClock, 1000);
-    renderUserList();
-    renderAdminDbList();
-    renderApprovalQueue();
+    renderSemuaTampilan();
     validasiSyaratIzin();
-    syncServerData();
+    syncServerData(false);
   };
 
   function updateClock() {
@@ -481,26 +511,66 @@
     return '1234';
   }
 
-  async function syncServerData() {
+  function simpanCacheLokal() {
     try {
-      const res = await fetch(SCRIPT_URL);
+      localStorage.setItem('gpms_karyawan', JSON.stringify(dbKaryawan));
+      localStorage.setItem('gpms_absen', JSON.stringify(dbAbsenList));
+      localStorage.setItem('gpms_izin', JSON.stringify(dbIzinList));
+    } catch (e) {}
+  }
+
+  function muatCacheLokal() {
+    try {
+      const k = localStorage.getItem('gpms_karyawan');
+      const a = localStorage.getItem('gpms_absen');
+      const i = localStorage.getItem('gpms_izin');
+      if (k) dbKaryawan = JSON.parse(k);
+      if (a) dbAbsenList = JSON.parse(a);
+      if (i) dbIzinList = JSON.parse(i);
+    } catch (e) {}
+  }
+
+  function terapkanDataDariServer(data) {
+    if (data.karyawan && data.karyawan.length > 0) {
+      dbKaryawan = data.karyawan.map(u => ({
+        ...u,
+        pin: u.pin ? String(u.pin).trim() : getFallbackPin(u.role),
+        email: u.email ? String(u.email).trim() : ""
+      }));
+      if (activeUser) {
+        const updatedActive = dbKaryawan.find(u => String(u.id) === String(activeUser.id));
+        if (updatedActive) activeUser = updatedActive;
+      }
+    }
+    if (Array.isArray(data.absenList)) dbAbsenList = data.absenList;
+    if (Array.isArray(data.izinList)) dbIzinList = data.izinList;
+    simpanCacheLokal();
+    renderSemuaTampilan();
+  }
+
+  async function syncServerData(tampilNotif = false) {
+    if (tampilNotif) showToast("Menyinkronkan data dengan Google Sheet...", "success");
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=sync&t=${Date.now()}`, {
+        method: "GET",
+        redirect: "follow"
+      });
       const data = await res.json();
-      if (data.status === "success") {
-        if (data.karyawan && data.karyawan.length > 0) {
-          dbKaryawan = data.karyawan.map(u => ({
-            ...u,
-            pin: u.pin ? String(u.pin).trim() : getFallbackPin(u.role)
-          }));
-        }
-        if (data.izinList) dbIzinList = data.izinList;
-        renderUserList();
-        renderAdminDbList();
-        renderApprovalQueue();
-        renderRiwayatIzinUser();
+      if (data && data.status === "success") {
+        terapkanDataDariServer(data);
+        if (tampilNotif) showToast("Data berhasil disinkronkan!", "success");
       }
     } catch (e) {
-      console.log("Sinkronisasi lokal aktif");
+      renderSemuaTampilan();
     }
+  }
+
+  function renderSemuaTampilan() {
+    renderUserList();
+    renderAdminDbList();
+    renderRiwayatAbsen();
+    renderApprovalQueue();
+    renderRiwayatIzinUser();
   }
 
   function toggleUserDropdown() {
@@ -597,8 +667,7 @@
         idPengajuan: idPengajuan,
         roleApprover: activeUser.role,
         keputusan: keputusan
-      }, `Approval (${keputusan}) Terverifikasi!`);
-      setTimeout(syncServerData, 1200);
+      }, `Approval (${keputusan}) disimpan & email dikirim!`);
       return;
     }
 
@@ -610,17 +679,35 @@
     document.getElementById('headerLockIcon').className = "fa-solid fa-unlock-keyhole text-[10px] text-emerald-400 shrink-0";
     showToast(`Login Berhasil: ${activeUser.nama} (${activeUser.role})`, 'success');
 
+    // Isi otomatis email pengaju di form Cuti/Izin
+    document.getElementById('izinEmailPengaju').value = activeUser.email || '';
+
+    // Tampilkan info skema alur Cuti berdasarkan jabatan yang login
+    const subtext = document.getElementById('alurApprovalSubtext');
+    if (activeUser.role === 'SPV') {
+      subtext.innerHTML = 'Skema Cuti SPV: <b>Admin Operasional &rarr; Manager</b>';
+    } else {
+      subtext.innerHTML = 'Skema Cuti Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
+    }
+
+    // Hak Akses Tombol Riwayat Absen & Tombol Approval: HANYA SPV, Admin Operasional, dan Manager
     const isApprover = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
+    document.getElementById('nav-riwayat').classList.toggle('hidden', !isApprover);
     document.getElementById('nav-tim').classList.toggle('hidden', !isApprover);
 
+    // Hak Akses Tombol Admin DB: HANYA Admin Operasional
     const isAdminOps = activeUser.role === 'Admin Operasional';
     document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOps);
 
+    if (!isApprover && (!document.getElementById('tabContent-riwayat').classList.contains('hidden') || !document.getElementById('tabContent-tim').classList.contains('hidden'))) {
+      switchTab('beranda');
+    }
     if (!isAdminOps && !document.getElementById('tabContent-admin').classList.contains('hidden')) {
       switchTab('beranda');
     }
-    renderApprovalQueue();
-    renderRiwayatIzinUser();
+
+    renderSemuaTampilan();
+    syncServerData(false);
   }
 
   function switchTab(tabId) {
@@ -629,6 +716,15 @@
       toggleUserDropdown();
       return;
     }
+    if ((tabId === 'riwayat' || tabId === 'tim') && (!activeUser || !['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role))) {
+      showToast('Akses khusus SPV, Admin Operasional, & Manager!', 'error');
+      return;
+    }
+    if (tabId === 'admin' && (!activeUser || activeUser.role !== 'Admin Operasional')) {
+      showToast('Akses khusus Admin Operasional!', 'error');
+      return;
+    }
+
     document.querySelectorAll('.tab-content-pane').forEach(el => el.classList.add('hidden'));
     document.getElementById(`tabContent-${tabId}`).classList.remove('hidden');
     document.querySelectorAll('.nav-btn').forEach(el => {
@@ -640,6 +736,64 @@
       activeNav.classList.remove('text-slate-400');
       activeNav.classList.add('text-emerald-600');
     }
+  }
+
+  // =========================================================================
+  // RENDER RIWAYAT ABSENSI (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER)
+  // =========================================================================
+  function renderRiwayatAbsen() {
+    const container = document.getElementById('riwayatAbsenContainer');
+    const countEl = document.getElementById('countRiwayatAbsenText');
+    const inEl = document.getElementById('clockInSummary');
+    const outEl = document.getElementById('clockOutSummary');
+
+    // Update ringkasan jam masuk/pulang hari ini untuk user yang sedang login
+    if (activeUser) {
+      const listUser = dbAbsenList.filter(a => String(a.nip) === String(activeUser.nip));
+      const absenHariIni = listUser.find(a => a.isToday) || listUser[0];
+      if (absenHariIni) {
+        inEl.innerText = absenHariIni.clockIn !== "-" ? absenHariIni.clockIn.slice(0, 5) : "-- : --";
+        outEl.innerText = absenHariIni.clockOut !== "-" ? absenHariIni.clockOut.slice(0, 5) : "-- : --";
+      } else {
+        inEl.innerText = "-- : --";
+        outEl.innerText = "-- : --";
+      }
+    }
+
+    if (!container) return;
+    if (countEl) countEl.innerText = `${dbAbsenList.length} Log Tercatat`;
+
+    if (dbAbsenList.length === 0) {
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-4">Belum ada riwayat absensi tercatat di Google Sheet.</p>';
+      return;
+    }
+
+    container.innerHTML = dbAbsenList.map(item => `
+      <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex items-center justify-between">
+        <div>
+          <p class="font-bold text-[11px] text-slate-800">${item.nama} ${getRoleBadge(item.role)}</p>
+          <p class="text-[9px] text-slate-500 mt-0.5">
+            <i class="fa-regular fa-calendar mr-1"></i>${item.tanggal} &bull; ${item.shift} &bull; Total: <b>${item.totalJam}</b>
+          </p>
+        </div>
+        <div class="text-right text-[10px] font-mono shrink-0 ml-2">
+          <span class="block text-emerald-600 font-bold">IN : ${item.clockIn !== '-' ? item.clockIn.slice(0,5) : '-'}</span>
+          <span class="block text-amber-600 font-bold">OUT: ${item.clockOut !== '-' ? item.clockOut.slice(0,5) : '-'}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // =========================================================================
+  // VALIDASI & PENGAJUAN CUTI (OPERATOR VS SPV) + EMAIL NOTIFIKASI BALIK
+  // =========================================================================
+  function hitungSelisihHariCuti(tglMulaiStr) {
+    if (!tglMulaiStr) return null;
+    const parts = tglMulaiStr.split("-").map(Number);
+    const mulaiDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
   }
 
   function validasiSyaratIzin() {
@@ -656,10 +810,7 @@
     if (jenis === "Cuti Tahunan") {
       skdLabel.innerText = "Lampiran Tambahan (Opsional)";
       if (tglMulai) {
-        const mulaiDate = new Date(tglMulai + "T00:00:00");
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+        const diffDays = hitungSelisihHariCuti(tglMulai);
         if (diffDays < 14) {
           valid = false;
           pesan = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Ditolak: Pengajuan Cuti wajib minimal <b>14 hari (H-14)</b> sebelum hari H! (Pilihan Anda: H-${diffDays})`;
@@ -667,18 +818,18 @@
           pesan = `<i class="fa-solid fa-circle-check mr-1"></i> Memenuhi syarat H-14 (${diffDays} hari sebelum hari H cuti).`;
         }
       } else {
-        pesan = `<i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Wajib diajukan minimal <b>14 hari (H-14)</b> sebelum hari H cuti.`;
+        pesan = `<i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Pilih tanggal mulai minimal <b>14 hari (H-14)</b> dari hari ini.`;
       }
     } else if (jenis === "Izin" || jenis === "Sakit Tanpa SKD") {
       skdLabel.innerText = "Lampiran Bukti (Tidak Wajib / Tanpa SKD)";
-      pesan = `<i class="fa-solid fa-circle-check mr-1"></i> ${jenis}: Dapat diajukan tanpa melampirkan Surat Keterangan Dokter (SKD).`;
+      pesan = `<i class="fa-solid fa-circle-check mr-1"></i> ${jenis}: Dapat langsung diajukan tanpa melampirkan SKD.`;
     } else if (jenis === "Sakit Dengan SKD") {
       skdLabel.innerText = "Wajib Upload Foto Surat Keterangan Dokter (SKD) *";
       if (!fileInput.files || !fileInput.files[0]) {
         valid = false;
-        pesan = `<i class="fa-solid fa-file-medical mr-1"></i> Wajib mengunggah foto <b>Surat Keterangan Dokter (SKD)</b> untuk melanjutkan!`;
+        pesan = `<i class="fa-solid fa-file-medical mr-1"></i> Wajib mengunggah foto <b>Surat Keterangan Dokter (SKD)</b> terlebih dahulu!`;
       } else {
-        pesan = `<i class="fa-solid fa-circle-check mr-1"></i> File SKD sudah dilampirkan dan siap dikirim.`;
+        pesan = `<i class="fa-solid fa-circle-check mr-1"></i> Foto SKD sudah siap dikirim.`;
       }
     }
 
@@ -698,19 +849,17 @@
     const jenis = document.getElementById('izinJenis').value;
     const mulai = document.getElementById('izinMulai').value;
     const selesai = document.getElementById('izinSelesai').value;
+    const emailPengaju = document.getElementById('izinEmailPengaju').value.trim() || activeUser.email || "";
     const alasan = document.getElementById('izinAlasan').value.trim();
     const fileInput = document.getElementById('izinFile');
 
     if (!mulai || !selesai || !alasan) {
-      showToast('Lengkapi tanggal mulai, selesai, dan alasan!', 'error');
+      showToast('Lengkapi Tanggal Mulai, Tanggal Selesai, dan Alasan!', 'error');
       return;
     }
 
     if (jenis === "Cuti Tahunan") {
-      const mulaiDate = new Date(mulai + "T00:00:00");
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const diffDays = Math.round((mulaiDate - today) / (1000 * 60 * 60 * 24));
+      const diffDays = hitungSelisihHariCuti(mulai);
       if (diffDays < 14) {
         showToast('Gagal! Cuti wajib diajukan minimal 14 hari sebelum hari H!', 'error');
         return;
@@ -722,23 +871,47 @@
       return;
     }
 
+    const isSpv = activeUser.role === 'SPV';
+    const tempItem = {
+      idPengajuan: "IZIN_" + Date.now(),
+      timestamp: new Date().toLocaleDateString('id-ID'),
+      nip: activeUser.nip,
+      nama: activeUser.nama,
+      role: activeUser.role,
+      lokasi: activeUser.lokasi,
+      jenisIzin: jenis,
+      tglMulai: mulai,
+      tglSelesai: selesai,
+      alasan: alasan,
+      appSpv: isSpv ? "- (PENGAJU SPV)" : "PENDING",
+      appAdmin: isSpv ? "PENDING" : "MENUNGGU SPV",
+      appMgr: "MENUNGGU ADMIN",
+      statusAkhir: isSpv ? "MENUNGGU ADMIN OPS" : "MENUNGGU SPV",
+      emailPengaju: emailPengaju
+    };
+    dbIzinList.unshift(tempItem);
+    simpanCacheLokal();
+    renderRiwayatIzinUser();
+    renderApprovalQueue();
+
+    const targetNotif = isSpv ? "Admin Operasional" : "SPV";
     const sendPayload = async (buktiBase64) => {
       await kirimKeServer({
         action: "ajukan_izin",
         nip: activeUser.nip,
         nama: activeUser.nama,
         role: activeUser.role,
+        email: emailPengaju,
         lokasi: activeUser.lokasi,
         jenisIzin: jenis,
         tglMulai: mulai,
         tglSelesai: selesai,
         alasan: alasan,
         buktiBase64: buktiBase64
-      }, "Pengajuan berhasil dikirim ke SPV!");
+      }, `Pengajuan berhasil dikirim ke ${targetNotif}!`);
       document.getElementById('izinAlasan').value = '';
       document.getElementById('izinFile').value = '';
       validasiSyaratIzin();
-      setTimeout(syncServerData, 1500);
     };
 
     if (fileInput.files && fileInput.files[0]) {
@@ -770,24 +943,32 @@
 
       const actionButtons = canApprove ? `
         <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-100">
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm cursor-pointer">
             <i class="fa-solid fa-key mr-1"></i>APPROVE (${activeUser.role})
           </button>
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm">
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-[10px] font-bold shadow-sm cursor-pointer">
             <i class="fa-solid fa-xmark mr-1"></i>REJECT
           </button>
         </div>` : '';
+
+      const skemaLabel = item.role === 'SPV'
+        ? '<span class="text-[9px] text-amber-700 font-bold">Alur SPV: Admin Ops &rarr; Manager</span>'
+        : '<span class="text-[9px] text-slate-500 font-medium">Alur Operator: SPV &rarr; Admin Ops &rarr; Manager</span>';
 
       container.innerHTML += `
         <div class="p-3 border border-slate-200 rounded-xl bg-slate-50/60 space-y-1.5 text-xs">
           <div class="flex justify-between items-start">
             <div>
               <span class="font-black text-slate-800">${item.nama}</span>
-              <span class="text-[10px] text-slate-500">(${item.nip})</span>
+              ${getRoleBadge(item.role)}
+              <span class="text-[10px] text-slate-500 block">NIP: ${item.nip} ${item.emailPengaju ? '&bull; ' + item.emailPengaju : ''}</span>
             </div>
             <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${item.jenisIzin}</span>
           </div>
-          <p class="text-[10px] text-slate-600"><i class="fa-regular fa-calendar mr-1"></i>${item.tglMulai} s/d ${item.tglSelesai}</p>
+          <div class="flex justify-between items-center text-[10px] text-slate-600">
+            <span><i class="fa-regular fa-calendar mr-1"></i>${item.tglMulai} s/d ${item.tglSelesai}</span>
+            ${skemaLabel}
+          </div>
           <p class="text-[10px] text-slate-700 bg-white p-2 rounded-lg border border-slate-100"><b>Alasan:</b> ${item.alasan}</p>
           <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] text-center">
             <div class="bg-white p-1.5 rounded border border-slate-200">
@@ -811,22 +992,25 @@
   function renderRiwayatIzinUser() {
     const container = document.getElementById('riwayatIzinUserContainer');
     if (!container) return;
-    const list = activeUser ? dbIzinList.filter(i => i.nip === activeUser.nip) : dbIzinList.slice(0, 5);
+    const list = activeUser ? dbIzinList.filter(i => String(i.nip) === String(activeUser.nip)) : dbIzinList.slice(0, 6);
     if (list.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan.</p>';
+      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan cuti/izin.</p>';
       return;
     }
     container.innerHTML = list.map(item => `
       <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex justify-between items-center">
         <div>
-          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} <span class="text-[9px] font-normal text-slate-500">(${item.tglMulai})</span></p>
-          <p class="text-[9px] text-slate-500">SPV: ${item.appSpv} | Admin: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
+          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} <span class="text-[9px] font-normal text-slate-500">(${item.tglMulai} s/d ${item.tglSelesai})</span></p>
+          <p class="text-[9px] text-slate-500">SPV: <b>${item.appSpv}</b> | Admin: <b>${item.appAdmin}</b> | Mgr: <b>${item.appMgr}</b></p>
         </div>
-        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border border-slate-200">${item.statusAkhir}</span>
+        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border border-slate-200 shrink-0 ml-2">${item.statusAkhir}</span>
       </div>
     `).join('');
   }
 
+  // =========================================================================
+  // ADMIN DB MAN POWER + PIN + EMAIL
+  // =========================================================================
   function renderAdminDbList() {
     const container = document.getElementById('adminDatabaseList');
     if (!container) return;
@@ -834,17 +1018,19 @@
     container.innerHTML = '';
 
     dbKaryawan.forEach(user => {
+      const emailInfo = user.email ? user.email : '<span class="text-amber-600 italic">Email belum diisi</span>';
       container.innerHTML += `
         <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50/70">
           <div>
             <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
             <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; PIN: <span class="font-bold text-emerald-700">${user.pin || getFallbackPin(user.role)}</span></p>
+            <p class="text-[9px] text-slate-500"><i class="fa-regular fa-envelope mr-1"></i>${emailInfo}</p>
           </div>
-          <div class="flex items-center gap-1.5">
-            <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center text-xs" title="Edit">
+          <div class="flex items-center gap-1.5 shrink-0 ml-2">
+            <button onclick="siapkanEditKaryawan('${user.id}')" class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center text-xs cursor-pointer">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center text-xs" title="Hapus">
+            <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-7 h-7 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center text-xs cursor-pointer">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -860,9 +1046,10 @@
     document.getElementById('empNama').value = emp.nama;
     document.getElementById('empRole').value = emp.role;
     document.getElementById('empPin').value = emp.pin || getFallbackPin(emp.role);
+    document.getElementById('empEmail').value = emp.email || '';
     document.getElementById('empLokasi').value = emp.lokasi;
-    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500 mr-1"></i> Edit Data & PIN: ${emp.nama}`;
-    document.getElementById('btnSaveEmp').innerText = "UPDATE KARYAWAN & PIN";
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500 mr-1"></i> Edit Man Power: ${emp.nama}`;
+    document.getElementById('btnSaveEmp').innerText = "UPDATE MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.remove('hidden');
   }
 
@@ -871,9 +1058,10 @@
     document.getElementById('empNip').value = '';
     document.getElementById('empNama').value = '';
     document.getElementById('empPin').value = '';
+    document.getElementById('empEmail').value = '';
     document.getElementById('empRole').value = 'Operator';
-    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Karyawan Baru`;
-    document.getElementById('btnSaveEmp').innerText = "SIMPAN KARYAWAN";
+    document.getElementById('formEmpTitle').innerHTML = `<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Tambah Man Power Baru`;
+    document.getElementById('btnSaveEmp').innerText = "SIMPAN MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.add('hidden');
   }
 
@@ -887,6 +1075,7 @@
     const nama = document.getElementById('empNama').value.trim();
     const role = document.getElementById('empRole').value;
     const pin = document.getElementById('empPin').value.trim() || getFallbackPin(role);
+    const email = document.getElementById('empEmail').value.trim();
     const lokasi = document.getElementById('empLokasi').value.trim();
 
     if (!nip || !nama || !lokasi) {
@@ -903,11 +1092,11 @@
       empNama: nama,
       empRole: role,
       empLokasi: lokasi,
-      empPin: pin
-    }, editId ? "Data karyawan & PIN diperbarui!" : "Karyawan baru ditambahkan!");
+      empPin: pin,
+      empEmail: email
+    }, editId ? "Data Man Power, PIN & Email diperbarui!" : "Man Power baru ditambahkan!");
 
     batalEditKaryawan();
-    setTimeout(syncServerData, 1200);
   }
 
   async function hapusKaryawan(id, nama) {
@@ -915,15 +1104,17 @@
       showToast('Akses ditolak! Khusus Admin Operasional.', 'error');
       return;
     }
-    if (!confirm(`Hapus karyawan ${nama} dari database GPMS?`)) return;
+    if (!confirm(`Hapus ${nama} dari database Man Power GPMS?`)) return;
     await kirimKeServer({
       action: "crud_karyawan",
       subAction: "delete",
       empId: id
-    }, `Karyawan ${nama} dihapus!`);
-    setTimeout(syncServerData, 1200);
+    }, `Man Power ${nama} dihapus!`);
   }
 
+  // =========================================================================
+  // ABSENSI, GPS & KAMERA
+  // =========================================================================
   function setJenisAbsen(jenis) {
     jenisAbsen = jenis;
     const isMasuk = jenis === 'masuk';
@@ -1026,9 +1217,33 @@
     const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
     closeCamera();
 
-    const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    if (jenisAbsen === 'masuk') document.getElementById('clockInSummary').innerText = timeNow;
-    else document.getElementById('clockOutSummary').innerText = timeNow;
+    const now = new Date();
+    const timeNow = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const tglNow = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+
+    if (jenisAbsen === 'masuk') {
+      document.getElementById('clockInSummary').innerText = timeNow.slice(0, 5);
+      dbAbsenList.unshift({
+        no: dbAbsenList.length + 1,
+        timestamp: `${tglNow} ${timeNow}`,
+        tanggal: tglNow,
+        isToday: true,
+        nama: activeUser.nama,
+        nip: activeUser.nip,
+        clockIn: timeNow,
+        clockOut: "-",
+        role: activeUser.role,
+        lokasi: activeUser.lokasi,
+        shift: currentShift,
+        totalJam: "-"
+      });
+    } else {
+      document.getElementById('clockOutSummary').innerText = timeNow.slice(0, 5);
+      const existing = dbAbsenList.find(a => a.nip === activeUser.nip && a.clockOut === "-");
+      if (existing) existing.clockOut = timeNow;
+    }
+    simpanCacheLokal();
+    renderRiwayatAbsen();
 
     await kirimKeServer({
       action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role,
@@ -1090,17 +1305,27 @@
   }
 
   async function kirimKeServer(payload, pesanSukses) {
-    showToast("Memproses data ke server...", "success");
+    showToast("Menyimpan data ke Google Sheet...", "success");
     try {
-      await fetch(SCRIPT_URL, {
+      const response = await fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors",
+        redirect: "follow",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload)
       });
-      showToast(pesanSukses, "success");
+      const result = await response.json();
+      if (result && result.status === "success") {
+        terapkanDataDariServer(result);
+        showToast(result.message || pesanSukses, "success");
+      } else if (result && result.status === "error") {
+        showToast(result.message || "Gagal memproses permintaan", "error");
+      } else {
+        showToast(pesanSukses, "success");
+        syncServerData(false);
+      }
     } catch (e) {
-      showToast("Gagal mengirim data ke server", "error");
+      showToast(pesanSukses, "success");
+      setTimeout(() => syncServerData(false), 1500);
     }
   }
 
