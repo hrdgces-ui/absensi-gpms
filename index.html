@@ -195,7 +195,6 @@
           </span>
         </div>
 
-        <!-- Toggle 1. Awal Lembur (Masuk) / 2. Akhir Lembur (Pulang) -->
         <div class="grid grid-cols-2 gap-1.5 bg-emerald-100/80 p-1 rounded-xl border border-emerald-200/70">
           <button onclick="setJenisLembur('masuk')" id="btnLemburMasuk" class="py-2.5 px-2 rounded-lg text-[10px] font-black bg-emerald-700 text-white shadow-xs transition cursor-pointer">
             1. AWAL LEMBUR (MASUK)
@@ -205,7 +204,6 @@
           </button>
         </div>
 
-        <!-- Input Tugas / Alasan Lembur -->
         <div>
           <label class="text-[10.5px] font-extrabold text-slate-800 block mb-1.5">
             Tugas / Alasan Lembur (Wajib Diisi Saat Masuk) <span class="text-rose-600">*</span>
@@ -213,7 +211,6 @@
           <input type="text" id="lemburTugasInput" placeholder="Contoh: Backup pos keluar / atur lalu lintas / pengawalan..." class="w-full border border-emerald-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 outline-none bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder:text-slate-400">
         </div>
 
-        <!-- Kotak Status Otorisasi Lembur Anda -->
         <div class="bg-white/80 border border-emerald-200/90 rounded-xl p-3 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-extrabold text-slate-800">Status Otorisasi Lembur Anda:</span>
@@ -243,7 +240,6 @@
 
       <!-- Area Sakelar Absen & Tombol Tap Kamera Live Selfie -->
       <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-soft flex flex-col items-center space-y-3.5">
-        <!-- Sakelar Absen Masuk / Pulang (Sembunyi otomatis saat mode Lembur Per Jam aktif) -->
         <div id="regularAbsenToggleWrap" class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl w-full">
           <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="py-2 rounded-lg text-[11px] font-black bg-white text-emerald-600 shadow-xs transition cursor-pointer">
             ABSEN MASUK
@@ -253,12 +249,10 @@
           </button>
         </div>
 
-        <!-- Info Status Khusus Saat Mode Lembur Per Jam Aktif -->
         <div id="lemburActiveHint" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-bold text-emerald-800">
           <i class="fa-solid fa-clock mr-1"></i> Mode <b>Log Lembur Per Jam</b> aktif &mdash; tap tombol kamera di bawah untuk mencatat.
         </div>
 
-        <!-- Info Status Terkunci Jika Sudah Absen Masuk Hari Ini -->
         <div id="clockInLockedNotice" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-semibold text-emerald-800">
           <i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih <b>ABSEN PULANG</b> saat selesai bertugas.
         </div>
@@ -275,7 +269,56 @@
 
     </div>
 
-    <!-- ================= 2. TAB CUTI / IZIN / SAKIT ================= -->
+    <!-- ================= 2. TAB RIWAYAT PRIBADI (SPV, ADMIN OPS, & MANAGER) ================= -->
+    <div id="tabContent-riwayat" class="space-y-3.5 tab-content-pane hidden">
+      <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-teal-400">
+        <div class="min-w-0 pr-2">
+          <h3 class="text-xs font-black uppercase tracking-wider text-teal-400">Riwayat Absen Pribadi</h3>
+          <p class="text-[10px] text-slate-300 mt-0.5 truncate" id="riwayatUserSubtitle">Catatan kehadiran & lembur Anda</p>
+        </div>
+        <button onclick="syncServerData(true)" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 cursor-pointer">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft text-center">
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Absen Saya Tercatat</span>
+          <span id="riwayatCountHadir" class="text-2xl font-black text-emerald-600 mt-0.5 block">0</span>
+        </div>
+        <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft text-center">
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Lembur Saya Tercatat</span>
+          <span id="riwayatCountLembur" class="text-2xl font-black text-amber-600 mt-0.5 block">0</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-200/80 p-1 rounded-xl">
+        <button onclick="switchRiwayatSubTab('absen')" id="btnRiwayatSubAbsen" class="py-2 rounded-lg text-[11px] font-black bg-white text-emerald-700 shadow-xs transition cursor-pointer">
+          ABSEN SAYA
+        </button>
+        <button onclick="switchRiwayatSubTab('lembur')" id="btnRiwayatSubLembur" class="py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer">
+          LEMBUR SAYA
+        </button>
+      </div>
+
+      <div id="riwayatAbsenSayaSection" class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-user-check text-emerald-600 mr-1.5"></i>Log Kehadiran Diri Sendiri</h4>
+          <span class="text-[10px] text-slate-400 font-semibold">Pribadi</span>
+        </div>
+        <div id="riwayatAbsenSayaList" class="space-y-2 text-xs"></div>
+      </div>
+
+      <div id="riwayatLemburSayaSection" class="hidden bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-business-time text-amber-600 mr-1.5"></i>Log Lembur Diri Sendiri</h4>
+          <span class="text-[10px] text-slate-400 font-semibold">Pribadi</span>
+        </div>
+        <div id="riwayatLemburSayaList" class="space-y-2 text-xs"></div>
+      </div>
+    </div>
+
+    <!-- ================= 3. TAB CUTI / IZIN / SAKIT ================= -->
     <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
       <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-400">
         <div>
@@ -350,7 +393,7 @@
       </div>
     </div>
 
-    <!-- ================= 3. TAB TIM (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER) ================= -->
+    <!-- ================= 4. TAB TIM (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER) ================= -->
     <div id="tabContent-tim" class="space-y-3.5 tab-content-pane hidden">
       <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-400">
         <div>
@@ -368,18 +411,29 @@
           <span id="timCountHadirHariIni" class="text-2xl font-black text-emerald-600 mt-0.5 block">0</span>
         </div>
         <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft text-center">
-          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Log Lembur Tercatat</span>
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Log Lembur Tim</span>
           <span id="timCountTotalLembur" class="text-2xl font-black text-amber-600 mt-0.5 block">0</span>
         </div>
+      </div>
+
+      <!-- Filter Personel Tim (Semua Tim / Diri Sendiri / Per Nama Man Power) -->
+      <div class="bg-white border border-slate-200/70 rounded-2xl p-3 shadow-soft">
+        <label class="text-[9.5px] font-bold text-slate-500 uppercase block mb-1.5">
+          <i class="fa-solid fa-filter text-emerald-600 mr-1"></i>Filter Riwayat Personel:
+        </label>
+        <select id="timFilterPersonel" onchange="renderTimAbsensi()" class="input-clean font-bold">
+          <option value="ALL">Semua Personel (Diri Sendiri & Tim)</option>
+          <option value="SELF">Hanya Riwayat Saya Sendiri</option>
+        </select>
       </div>
 
       <!-- Pilihan Sub-Tampilan: Log Absensi / Log Lembur Per Jam -->
       <div class="grid grid-cols-2 gap-1.5 bg-slate-200/80 p-1 rounded-xl">
         <button onclick="switchTimSubTab('absen')" id="btnTimSubAbsen" class="py-2 rounded-lg text-[11px] font-black bg-white text-emerald-700 shadow-xs transition cursor-pointer">
-          LOG ABSENSI
+          LOG ABSENSI TIM
         </button>
         <button onclick="switchTimSubTab('lembur')" id="btnTimSubLembur" class="py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer">
-          LOG LEMBUR PER JAM
+          LOG LEMBUR TIM
         </button>
       </div>
 
@@ -394,13 +448,13 @@
       <div id="timLemburSection" class="hidden bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
           <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-business-time text-amber-600 mr-1.5"></i>Data Lembur Per Jam Tim</h4>
-          <span class="text-[10px] text-slate-400 font-semibold">Log Terpisah</span>
+          <span class="text-[10px] text-slate-400 font-semibold" id="timCountLemburFiltered">0 Log</span>
         </div>
         <div id="timLemburListContainer" class="space-y-2 text-xs"></div>
       </div>
     </div>
 
-    <!-- ================= 4. TAB ADMIN DB (KHUSUS ADMIN OPERASIONAL & MANAGER) ================= -->
+    <!-- ================= 5. TAB ADMIN DB (KHUSUS ADMIN OPERASIONAL & MANAGER) ================= -->
     <div id="tabContent-admin" class="space-y-3.5 tab-content-pane hidden">
       <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-400">
         <div>
@@ -467,12 +521,17 @@
 
   </main>
 
-  <!-- BOTTOM NAVIGATION (BERSIH TANPA DUPLIKASI TOMBOL LEMBUR) -->
+  <!-- BOTTOM NAVIGATION -->
   <nav class="bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 pt-1.5 pb-safe flex items-center shrink-0 w-full z-30 shadow-[0_-6px_20px_rgba(15,23,42,0.05)]">
     <button onclick="switchTab('beranda')" id="nav-beranda" class="flex-1 flex flex-col items-center py-1 text-emerald-600 transition nav-btn cursor-pointer relative">
       <span class="nav-indicator w-6 h-0.5 rounded-full bg-emerald-600 mb-1"></span>
       <i class="fa-solid fa-fingerprint text-[17px]"></i>
       <span class="text-[10px] font-bold mt-0.5">Absen</span>
+    </button>
+    <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-emerald-600 transition nav-btn hidden cursor-pointer relative">
+      <span class="nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1"></span>
+      <i class="fa-solid fa-clock-rotate-left text-[17px]"></i>
+      <span class="text-[10px] font-bold mt-0.5">Riwayat</span>
     </button>
     <button onclick="switchTab('izin')" id="nav-izin" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-emerald-600 transition nav-btn cursor-pointer relative">
       <span class="nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1"></span>
@@ -578,6 +637,22 @@
     renderSemuaTampilan();
     syncServerData(false);
   };
+
+  // Helper Normalisasi Jabatan (Tahan Spasi / Huruf Besar-Kecil dari Sheet)
+  function getNormRole_(user) {
+    return user && user.role ? String(user.role).trim().toLowerCase() : "";
+  }
+  function isSpvRole_(user) {
+    const r = getNormRole_(user);
+    return r === "spv" || r === "supervisor";
+  }
+  function isAdminOrManager_(user) {
+    const r = getNormRole_(user);
+    return r === "admin operasional" || r === "manager";
+  }
+  function canAccessRiwayatAndTim_(user) {
+    return isSpvRole_(user) || isAdminOrManager_(user);
+  }
 
   function updateClock() {
     const now = new Date();
@@ -716,7 +791,6 @@
     document.getElementById('lemburActiveHint').classList.toggle('hidden', !isLemburPerJam);
 
     if (isLemburPerJam) {
-      // Jika ada sesi lembur aktif yang belum ditutup, otomatis arahkan ke 2. Akhir Lembur (Pulang)
       const openLembur = cekSesiLemburAktif_();
       setJenisLembur(openLembur ? 'pulang' : 'masuk');
       renderStatusOtorisasiLembur();
@@ -778,7 +852,6 @@
 
     const gpsOk = isInsideRadius || isDinasLuar;
 
-    // 1. Jika sedang di mode LEMBUR (L) — Log Terpisah Per Jam
     if (modeKehadiran === "Lembur (L)") {
       notice.classList.add('hidden');
       const sesiAktif = cekSesiLemburAktif_();
@@ -817,7 +890,6 @@
       return;
     }
 
-    // 2. Mode REGULER (H) atau LEMBUR WAJIB (L)
     const sudahMasuk = Boolean(absenHariIni);
 
     if (jenisAbsen === 'masuk' && sudahMasuk) {
@@ -1059,15 +1131,17 @@
   // LOGIN PIN, HAK AKSES, & NAVIGASI
   // =========================================================================
   function getFallbackPin(role) {
-    if (role === 'Manager') return 'manager';
-    if (role === 'Admin Operasional') return 'admin';
+    const r = String(role || "").trim().toLowerCase();
+    if (r === 'manager') return 'manager';
+    if (r === 'admin operasional') return 'admin';
     return '1234';
   }
 
   function getRoleBadge(role) {
-    if (role === 'SPV') return '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>';
-    if (role === 'Admin Operasional') return '<span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[8px] font-bold">ADMIN OPS</span>';
-    if (role === 'Manager') return '<span class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[8px] font-bold">MANAGER</span>';
+    const r = String(role || "").trim().toLowerCase();
+    if (r === 'spv' || r === 'supervisor') return '<span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[8px] font-bold">SPV</span>';
+    if (r === 'admin operasional') return '<span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[8px] font-bold">ADMIN OPS</span>';
+    if (r === 'manager') return '<span class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[8px] font-bold">MANAGER</span>';
     return '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[8px] font-bold">OPERATOR</span>';
   }
 
@@ -1156,18 +1230,19 @@
     document.getElementById('izinEmailPengaju').value = activeUser.email || '';
     showToast(`Selamat datang, ${activeUser.nama}!`, "success");
 
-    document.getElementById('alurApprovalSubtext').innerHTML = activeUser.role === 'SPV'
+    document.getElementById('alurApprovalSubtext').innerHTML = isSpvRole_(activeUser)
       ? 'Skema SPV: <b>Admin Operasional &rarr; Manager</b>'
       : 'Skema Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
 
-    const bolehTim = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
-    document.getElementById('nav-tim').classList.toggle('hidden', !bolehTim);
+    // Tab RIWAYAT (diri sendiri) & TIM (diri sendiri + tim): SPV, Admin Operasional, & Manager
+    const bolehRiwayatDanTim = canAccessRiwayatAndTim_(activeUser);
+    document.getElementById('nav-riwayat').classList.toggle('hidden', !bolehRiwayatDanTim);
+    document.getElementById('nav-tim').classList.toggle('hidden', !bolehRiwayatDanTim);
+    document.getElementById('approvalSectionCard').classList.toggle('hidden', !bolehRiwayatDanTim);
 
-    const bolehAdmin = ['Admin Operasional', 'Manager'].includes(activeUser.role);
+    // Tab ADMIN DB: Admin Operasional & Manager
+    const bolehAdmin = isAdminOrManager_(activeUser);
     document.getElementById('nav-admin').classList.toggle('hidden', !bolehAdmin);
-
-    const bolehApproval = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
-    document.getElementById('approvalSectionCard').classList.toggle('hidden', !bolehApproval);
 
     switchTab('beranda');
     renderSemuaTampilan();
@@ -1180,11 +1255,11 @@
       toggleUserDropdown();
       return;
     }
-    if (tabId === 'tim' && (!activeUser || !['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role))) {
-      showToast("Akses ditolak! Menu Tim khusus SPV, Admin Operasional & Manager.", "error");
+    if ((tabId === 'riwayat' || tabId === 'tim') && !canAccessRiwayatAndTim_(activeUser)) {
+      showToast("Akses ditolak! Menu ini khusus SPV, Admin Operasional & Manager.", "error");
       return;
     }
-    if (tabId === 'admin' && (!activeUser || !['Admin Operasional', 'Manager'].includes(activeUser.role))) {
+    if (tabId === 'admin' && !isAdminOrManager_(activeUser)) {
       showToast("Akses ditolak! Admin DB khusus Admin Operasional & Manager.", "error");
       return;
     }
@@ -1208,8 +1283,100 @@
   }
 
   // =========================================================================
-  // TAB TIM (MONITORING ABSENSI & LOG LEMBUR TIM)
+  // TAB RIWAYAT PRIBADI (ABSEN & LEMBUR DIRI SENDIRI)
   // =========================================================================
+  function switchRiwayatSubTab(sub) {
+    const isAbsen = (sub === 'absen');
+    document.getElementById('riwayatAbsenSayaSection').classList.toggle('hidden', !isAbsen);
+    document.getElementById('riwayatLemburSayaSection').classList.toggle('hidden', isAbsen);
+    document.getElementById('btnRiwayatSubAbsen').className = isAbsen
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-emerald-700 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer";
+    document.getElementById('btnRiwayatSubLembur').className = !isAbsen
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-amber-700 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer";
+  }
+
+  function renderRiwayatPribadi() {
+    const absenListEl = document.getElementById('riwayatAbsenSayaList');
+    const lemburListEl = document.getElementById('riwayatLemburSayaList');
+    if (!absenListEl || !lemburListEl) return;
+
+    if (!activeUser) {
+      document.getElementById('riwayatUserSubtitle').innerText = "Silakan login terlebih dahulu";
+      document.getElementById('riwayatCountHadir').innerText = "0";
+      document.getElementById('riwayatCountLembur').innerText = "0";
+      absenListEl.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-4">Belum ada data.</p>';
+      lemburListEl.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-4">Belum ada data.</p>';
+      return;
+    }
+
+    document.getElementById('riwayatUserSubtitle').innerText = `${activeUser.nama} (${activeUser.nip} - ${activeUser.role})`;
+
+    const myAbsen = dbAbsenList.filter(a => String(a.nip).trim() === String(activeUser.nip).trim());
+    const myLembur = dbLemburList.filter(l => String(l.nip).trim() === String(activeUser.nip).trim());
+
+    document.getElementById('riwayatCountHadir').innerText = myAbsen.length;
+    document.getElementById('riwayatCountLembur').innerText = myLembur.length;
+
+    if (myAbsen.length === 0) {
+      absenListEl.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada riwayat absen Anda tercatat.</p>';
+    } else {
+      absenListEl.innerHTML = myAbsen.map(item => `
+        <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-bold text-[11px] text-slate-800">${item.tanggal} &bull; <span class="text-emerald-700">${item.shift}</span></p>
+            <p class="text-[9.5px] text-slate-500 mt-0.5">Total Kerja: <b>${item.totalJam}</b></p>
+            <p class="text-[9px] font-mono text-slate-400 mt-0.5 truncate">GPS: ${item.koordinat || '-'}</p>
+          </div>
+          <div class="text-right text-[10px] font-mono shrink-0 bg-white px-2.5 py-1.5 rounded-lg border border-slate-100">
+            <span class="block text-emerald-600 font-bold">IN : ${item.clockIn !== '-' ? item.clockIn.slice(0,5) : '-'}</span>
+            <span class="block text-rose-600 font-bold">OUT: ${item.clockOut !== '-' ? item.clockOut.slice(0,5) : '-'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    if (myLembur.length === 0) {
+      lemburListEl.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada riwayat lembur Anda tercatat.</p>';
+    } else {
+      lemburListEl.innerHTML = myLembur.map(l => {
+        const isAktif = !l.jamSelesai || l.jamSelesai === "-";
+        return `
+          <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 space-y-1">
+            <div class="flex items-center justify-between gap-2">
+              <p class="font-bold text-[11px] text-slate-800">${l.tanggal} &bull; ${l.jamMulai.slice(0,5)} s/d ${isAktif ? '...' : l.jamSelesai.slice(0,5)}</p>
+              <span class="${isAktif ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'} px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0">
+                ${isAktif ? 'SEDANG LEMBUR' : l.totalDurasi}
+              </span>
+            </div>
+            <p class="text-[10px] text-slate-600">${l.uraian}</p>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // =========================================================================
+  // TAB TIM (MONITORING ABSENSI & LOG LEMBUR TIM + FILTER PERSONEL)
+  // =========================================================================
+  function renderTimFilterDropdown() {
+    const sel = document.getElementById('timFilterPersonel');
+    if (!sel) return;
+    const prevVal = sel.value || "ALL";
+    let html = `
+      <option value="ALL">Semua Personel (Diri Sendiri & Tim)</option>
+      <option value="SELF">Hanya Riwayat Saya Sendiri</option>
+    `;
+    dbKaryawan.forEach(u => {
+      html += `<option value="${u.nip}">${u.nama} (${u.role})</option>`;
+    });
+    sel.innerHTML = html;
+    if ([...sel.options].some(o => o.value === prevVal)) {
+      sel.value = prevVal;
+    }
+  }
+
   function switchTimSubTab(sub) {
     const isAbsen = (sub === 'absen');
     document.getElementById('timAbsenSection').classList.toggle('hidden', !isAbsen);
@@ -1227,16 +1394,29 @@
     const lemburContainer = document.getElementById('timLemburListContainer');
     if (!absenContainer || !lemburContainer) return;
 
+    const filterVal = document.getElementById('timFilterPersonel') ? document.getElementById('timFilterPersonel').value : "ALL";
+    const filterList_ = (arr) => {
+      if (filterVal === "ALL") return arr;
+      if (filterVal === "SELF") {
+        return activeUser ? arr.filter(x => String(x.nip).trim() === String(activeUser.nip).trim()) : [];
+      }
+      return arr.filter(x => String(x.nip).trim() === String(filterVal).trim());
+    };
+
+    const filteredAbsen = filterList_(dbAbsenList);
+    const filteredLembur = filterList_(dbLemburList);
+
     const tglToday = getTodayDmy_();
     const hadirToday = dbAbsenList.filter(a => a.isToday || a.tanggal === tglToday).length;
     document.getElementById('timCountHadirHariIni').innerText = hadirToday;
     document.getElementById('timCountTotalLembur').innerText = dbLemburList.length;
-    document.getElementById('timCountTotalLog').innerText = `${dbAbsenList.length} Log`;
+    document.getElementById('timCountTotalLog').innerText = `${filteredAbsen.length} Log`;
+    document.getElementById('timCountLemburFiltered').innerText = `${filteredLembur.length} Log`;
 
-    if (dbAbsenList.length === 0) {
-      absenContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data absensi masuk.</p>';
+    if (filteredAbsen.length === 0) {
+      absenContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data absensi untuk filter ini.</p>';
     } else {
-      absenContainer.innerHTML = dbAbsenList.map(item => `
+      absenContainer.innerHTML = filteredAbsen.map(item => `
         <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 flex items-center justify-between gap-2">
           <div class="min-w-0">
             <p class="font-bold text-[11px] text-slate-800 truncate">${item.nama} ${getRoleBadge(item.role)}</p>
@@ -1251,10 +1431,10 @@
       `).join('');
     }
 
-    if (dbLemburList.length === 0) {
-      lemburContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data lembur per jam tercatat.</p>';
+    if (filteredLembur.length === 0) {
+      lemburContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data lembur untuk filter ini.</p>';
     } else {
-      lemburContainer.innerHTML = dbLemburList.map(l => {
+      lemburContainer.innerHTML = filteredLembur.map(l => {
         const isAktif = !l.jamSelesai || l.jamSelesai === "-";
         return `
           <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 space-y-1">
@@ -1374,9 +1554,10 @@
     container.innerHTML = dbIzinList.map(item => {
       let canApprove = false;
       if (activeUser) {
-        if (activeUser.role === 'SPV' && item.appSpv === 'PENDING') canApprove = true;
-        if (activeUser.role === 'Admin Operasional' && item.appAdmin === 'PENDING') canApprove = true;
-        if (activeUser.role === 'Manager' && item.appMgr === 'PENDING') canApprove = true;
+        const r = getNormRole_(activeUser);
+        if ((r === 'spv' || r === 'supervisor') && item.appSpv === 'PENDING') canApprove = true;
+        if (r === 'admin operasional' && item.appAdmin === 'PENDING') canApprove = true;
+        if (r === 'manager' && item.appMgr === 'PENDING') canApprove = true;
       }
       const btns = canApprove ? `
         <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-200/70">
@@ -1403,7 +1584,7 @@
   function renderRiwayatIzinUser() {
     const container = document.getElementById('riwayatIzinUserContainer');
     if (!container) return;
-    const list = activeUser ? dbIzinList.filter(i => String(i.nip) === String(activeUser.nip)) : [];
+    const list = activeUser ? dbIzinList.filter(i => String(i.nip).trim() === String(activeUser.nip).trim()) : [];
     if (list.length === 0) {
       container.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-3">Belum ada riwayat pengajuan.</p>';
       return;
@@ -1467,7 +1648,7 @@
   }
 
   async function simpanDataKaryawan() {
-    if (!activeUser || !['Admin Operasional', 'Manager'].includes(activeUser.role)) return;
+    if (!isAdminOrManager_(activeUser)) return;
     const editId = document.getElementById('empEditId').value;
     const nip = document.getElementById('empNip').value.trim();
     const nama = document.getElementById('empNama').value.trim();
@@ -1489,7 +1670,7 @@
   }
 
   async function hapusKaryawan(id, nama) {
-    if (!activeUser || !['Admin Operasional', 'Manager'].includes(activeUser.role)) return;
+    if (!isAdminOrManager_(activeUser)) return;
     if (!confirm(`Hapus Man Power ${nama}?`)) return;
     await kirimKeServer({
       action: "crud_karyawan",
@@ -1547,6 +1728,8 @@
     renderUserList();
     updateStatusTombolAbsen();
     renderStatusOtorisasiLembur();
+    renderRiwayatPribadi();
+    renderTimFilterDropdown();
     renderTimAbsensi();
     renderApprovalQueue();
     renderRiwayatIzinUser();
