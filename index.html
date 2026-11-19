@@ -8,447 +8,501 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .shadow-soft { box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06); }
-    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .shadow-soft { box-shadow: 0 6px 24px -6px rgba(15, 23, 42, 0.07); }
+    .shadow-glow-emerald { box-shadow: 0 12px 30px -6px rgba(16, 185, 129, 0.45); }
+    .shadow-glow-rose { box-shadow: 0 12px 30px -6px rgba(244, 63, 94, 0.40); }
+    .shadow-glow-amber { box-shadow: 0 12px 30px -6px rgba(245, 158, 11, 0.45); }
+    .pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 10px), 10px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.55; }
+      50% { transform: scale(1.10); opacity: 0.15; }
+      100% { transform: scale(0.95); opacity: 0.55; }
+    }
+    .animate-pulse-ring { animation: pulseRing 3s infinite ease-in-out; }
+    .input-clean {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.75rem;
+      background-color: #f8fafc;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .input-clean:focus {
+      background-color: #ffffff;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    }
   </style>
 </head>
-<body class="bg-[#f1f5f9] text-slate-800 flex flex-col h-[100dvh] max-w-md mx-auto relative overflow-hidden select-none">
+<body class="bg-slate-200/80 text-slate-800 flex justify-center min-h-[100dvh] select-none">
 
-<!-- HEADER (Logo GPMS + Tulisan di Kiri Atas, Tombol Login Akun di Kanan Atas) -->
-<header class="bg-[#0b132b] text-white px-3.5 py-3 flex items-center justify-between sticky top-0 z-30 shadow-lg shrink-0">
-  <!-- Logo GPMS & Tulisan di Kiri Atas -->
-  <div class="flex items-center space-x-2.5 min-w-0">
-    <div class="h-10 rounded-xl bg-black border border-slate-700 flex items-center justify-center overflow-hidden shadow-md shrink-0 p-0.5" style="width: 54px;">
-      <img src="Logo gpms.jpeg" alt="GPMS" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='GPMS.jpeg';">
+<div class="w-full max-w-md h-[100dvh] bg-[#f4f7fb] flex flex-col relative overflow-hidden sm:shadow-2xl sm:border-x sm:border-slate-300/70">
+
+  <!-- HEADER: Logo GPMS + Judul di Kiri Atas, Tombol Login di Kanan Atas -->
+  <header class="bg-[#0b132b] text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-md border-b border-white/5 shrink-0">
+    <div class="flex items-center space-x-2.5 min-w-0">
+      <div class="h-10 w-[52px] rounded-xl bg-black border border-white/15 flex items-center justify-center overflow-hidden shadow-inner shrink-0 p-0.5">
+        <img src="Logo gpms.jpeg" alt="GPMS" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='GPMS.jpeg';">
+      </div>
+      <div class="text-left min-w-0">
+        <p class="text-[8.5px] font-semibold tracking-[0.14em] text-slate-400 uppercase leading-none">ONE-STOP APPLICATION</p>
+        <div class="flex items-center space-x-1.5 mt-1">
+          <h1 class="text-[13px] font-black text-white tracking-tight leading-none whitespace-nowrap">PT. SGBS - GPMS</h1>
+          <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full leading-none shrink-0">V1.0</span>
+        </div>
+      </div>
     </div>
-    <div class="text-left min-w-0">
-      <p class="text-[9px] font-semibold tracking-[0.12em] text-slate-300 uppercase leading-tight truncate">ONE-STOP APPLICATION</p>
-      <div class="flex items-center space-x-1.5 mt-0.5">
-        <h1 class="text-[13px] font-black text-white tracking-tight leading-none whitespace-nowrap">PT. SGBS - GPMS</h1>
-        <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full leading-none shrink-0">V1.0</span>
+
+    <button onclick="toggleUserDropdown()" class="bg-[#1b2646] hover:bg-[#24325c] active:scale-95 text-slate-100 border border-white/10 px-3 py-1.5 rounded-full text-xs font-bold flex items-center space-x-2 transition cursor-pointer shadow-sm max-w-[112px] shrink-0 ml-2">
+      <span id="headerStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+      <span class="text-[11px] truncate text-left" id="headerActiveUserShort">Login</span>
+      <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
+    </button>
+  </header>
+
+  <!-- DROPDOWN PILIH AKUN -->
+  <div id="userDropdownCard" class="hidden absolute top-[66px] left-4 right-4 z-40 bg-white border border-slate-200/90 rounded-2xl shadow-2xl p-4 flex flex-col max-h-[72vh]">
+    <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3 shrink-0">
+      <div>
+        <span class="text-xs font-black text-slate-800 uppercase tracking-wide block">Pilih Akun Man Power</span>
+        <span class="text-[10px] text-slate-500">Verifikasi dengan PIN untuk mengakses menu</span>
+      </div>
+      <button onclick="toggleUserDropdown()" class="text-slate-500 hover:text-slate-800 bg-slate-100 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+    </div>
+    <div class="overflow-y-auto no-scrollbar space-y-2 text-xs pb-1" id="userListContainer"></div>
+  </div>
+
+  <!-- MODAL VERIFIKASI PIN -->
+  <div id="pinModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl border border-slate-200 p-5 space-y-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-[#0b132b] text-emerald-400 mx-auto flex items-center justify-center text-lg shadow-md">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-black text-slate-800 uppercase tracking-wide" id="pinModalTitle">Verifikasi PIN</h3>
+        <p class="text-[11px] text-slate-500 mt-0.5 font-semibold" id="pinModalSubtitle">Pilih Akun</p>
+      </div>
+      <div class="relative">
+        <input type="password" id="pinInputField" placeholder="Masukkan PIN..." onkeydown="if(event.key==='Enter') verifyPinSubmit()" class="w-full border-2 border-slate-200 focus:border-emerald-500 outline-none rounded-xl py-2.5 px-4 text-center text-sm font-black tracking-widest bg-slate-50 text-slate-800">
+        <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer">
+          <i id="pinEyeIcon" class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="closePinModal()" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">BATAL</button>
+        <button onclick="verifyPinSubmit()" class="py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer">MASUK</button>
       </div>
     </div>
   </div>
 
-  <!-- Tombol Pilih Akun & Login PIN di Kanan Atas -->
-  <button onclick="toggleUserDropdown()" class="bg-[#1c2541] hover:bg-slate-800 text-slate-100 border border-slate-700 px-3 py-2 rounded-full text-xs font-bold flex items-center space-x-2 transition cursor-pointer shadow-sm max-w-[110px] shrink-0 ml-2">
-    <span id="headerStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
-    <span class="text-[11px] truncate text-left" id="headerActiveUserShort">Login</span>
-    <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
-  </button>
-</header>
+  <!-- KONTEN UTAMA -->
+  <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-6 space-y-3.5">
 
-<!-- DROPDOWN PILIH AKUN -->
-<div id="userDropdownCard" class="hidden absolute top-16 left-4 right-4 z-40 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 flex flex-col max-h-[75vh]">
-  <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3 shrink-0">
-    <div>
-      <span class="text-sm font-extrabold text-slate-800 block">Pilih Akun Man Power</span>
-      <span class="text-[10px] text-slate-500">Masukkan PIN untuk masuk ke akun Anda</span>
-    </div>
-    <button onclick="toggleUserDropdown()" class="text-slate-500 hover:text-slate-800 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="overflow-y-auto space-y-2 text-xs pb-1 pr-1" id="userListContainer"></div>
-</div>
+    <!-- ================= 1. TAB ABSEN (DASHBOARD UTAMA + LEMBUR TERINTEGRASI) ================= -->
+    <div id="tabContent-beranda" class="space-y-3.5 tab-content-pane">
 
-<!-- MODAL VERIFIKASI PIN -->
-<div id="pinModal" class="hidden fixed inset-0 z-50 bg-slate-900/85 backdrop-blur-sm flex items-center justify-center p-4">
-  <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl border border-slate-200 p-5 space-y-4 text-center">
-    <div class="w-12 h-12 rounded-2xl bg-[#0b132b] text-emerald-400 mx-auto flex items-center justify-center text-xl shadow-md">
-      <i class="fa-solid fa-key"></i>
-    </div>
-    <div>
-      <h3 class="text-sm font-black text-slate-800 uppercase" id="pinModalTitle">Verifikasi PIN</h3>
-      <p class="text-[11px] text-slate-500 mt-0.5 font-semibold" id="pinModalSubtitle">Pilih Akun</p>
-    </div>
-    <div class="relative">
-      <input type="password" id="pinInputField" placeholder="Masukkan PIN..." onkeydown="if(event.key==='Enter') verifyPinSubmit()" class="w-full border-2 border-slate-200 focus:border-emerald-500 outline-none rounded-xl py-2.5 px-4 text-center text-sm font-black tracking-widest bg-slate-50 text-slate-800">
-      <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
-        <i id="pinEyeIcon" class="fa-solid fa-eye"></i>
-      </button>
-    </div>
-    <div class="grid grid-cols-2 gap-2 pt-1">
-      <button onclick="closePinModal()" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600">BATAL</button>
-      <button onclick="verifyPinSubmit()" class="py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">MASUK</button>
-    </div>
-  </div>
-</div>
-
-<!-- KONTEN UTAMA -->
-<main class="flex-1 overflow-y-auto p-4 space-y-3.5">
-
-  <!-- ================= 1. TAB ABSEN ================= -->
-  <div id="tabContent-beranda" class="space-y-3.5 tab-content-pane">
-
-    <!-- Kartu Status Radius GPS (1.000 Meter / 1 KM) -->
-    <div id="gpsStatusCard" class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-soft transition-all">
-      <div class="flex items-center space-x-3">
-        <div id="gpsIconBg" class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-sm shrink-0">
-          <i class="fa-solid fa-crosshairs"></i>
+      <!-- Kartu Status Radius GPS (Max 1.000m / 1 KM) -->
+      <div id="gpsStatusCard" class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-soft transition-all">
+        <div class="flex items-center space-x-3 min-w-0">
+          <div id="gpsIconBg" class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0">
+            <i class="fa-solid fa-crosshairs"></i>
+          </div>
+          <div class="min-w-0">
+            <p id="gpsStatusTitle" class="text-[11px] font-black text-amber-900 uppercase tracking-wide truncate">MENDETEKSI LOKASI GPS...</p>
+            <p id="gpsDistanceText" class="text-[11px] font-semibold text-amber-800 mt-0.5 truncate">Jarak: -- Meter (Max 1.000m)</p>
+            <p id="gpsLocationName" class="text-[10px] text-amber-700/80 font-medium mt-0.5 truncate">Titik Lokasi: RS. HARUM SISMA MEDIKA</p>
+          </div>
         </div>
-        <div>
-          <p id="gpsStatusTitle" class="text-xs font-black text-amber-900 uppercase tracking-tight">MENDETEKSI LOKASI GPS...</p>
-          <p id="gpsDistanceText" class="text-[11px] font-semibold text-amber-800 mt-0.5">Jarak: -- Meter (Max 1.000m)</p>
-          <p id="gpsLocationName" class="text-[10px] text-amber-700/80 font-medium mt-0.5">Titik Lokasi: RS. HARUM SISMA MEDIKA</p>
-        </div>
-      </div>
-      <button onclick="detectRealGps(true)" class="bg-white hover:bg-slate-50 text-slate-700 w-10 h-10 rounded-full border border-slate-200 shadow-sm flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition">
-        <i class="fa-solid fa-rotate text-sm"></i>
-      </button>
-    </div>
-
-    <!-- Banner Peringatan Luar Radius -->
-    <div id="gpsLockedAlert" class="hidden bg-rose-50 border-l-4 border-rose-500 rounded-2xl p-3.5 shadow-soft">
-      <h4 id="gpsAlertHeading" class="text-xs font-extrabold text-rose-900">Luar Area Kerja (> 1.000 m)</h4>
-      <p class="text-[11px] text-rose-700 mt-1 leading-relaxed">
-        Aktifkan tombol <b>Dinas Luar</b> di bawah jika sedang backup lokasi lain (otomatis mencetak koordinat GPS di foto).
-      </p>
-    </div>
-
-    <!-- Kartu Jam Digital & Jam Masuk/Pulang Hari Ini -->
-    <div class="bg-[#0b132b] text-white rounded-3xl p-5 shadow-lg text-center">
-      <p class="text-[11px] text-slate-400 font-bold uppercase tracking-[0.14em]" id="liveDateText">MEMUAT TANGGAL...</p>
-      <div class="mt-1.5 flex items-baseline justify-center space-x-2">
-        <span class="text-4xl font-black text-white tracking-wider font-mono" id="liveClockText">00.00.00</span>
-        <span class="text-xs font-extrabold text-emerald-400 tracking-wider">WIB</span>
-      </div>
-      <div class="mt-4 grid grid-cols-2 gap-3">
-        <div class="bg-[#16203c] py-3 px-2 rounded-2xl border border-slate-700/50">
-          <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">JAM MASUK HARI INI</span>
-          <span id="clockInSummary" class="text-lg font-black text-emerald-400 mt-1 block">--:--</span>
-        </div>
-        <div class="bg-[#16203c] py-3 px-2 rounded-2xl border border-slate-700/50">
-          <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">JAM PULANG HARI INI</span>
-          <span id="clockOutSummary" class="text-lg font-black text-rose-400 mt-1 block">--:--</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Kartu Mode Kehadiran / Lembur -->
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-soft space-y-2.5">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-extrabold text-slate-800 flex items-center">
-          <i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i> Mode Kehadiran / Lembur:
-        </span>
-        <span id="kodeRekapBadge" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-1 rounded-full">
-          Kode Rekap: H (Reguler)
-        </span>
-      </div>
-      <div class="grid grid-cols-3 gap-2">
-        <button onclick="selectModeKehadiran('Reguler (H)')" id="btnModeReguler" class="border-2 border-emerald-500 bg-emerald-50/70 text-emerald-800 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer">
-          <span class="block text-[11px] font-black">REGULER</span>
-          <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Hadir (H)</span>
-        </button>
-        <button onclick="selectModeKehadiran('Lembur (L)')" id="btnModeLembur" class="border border-slate-200 bg-white text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer">
-          <span class="block text-[11px] font-black">LEMBUR (L)</span>
-          <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Otorisasi Jam</span>
-        </button>
-        <button onclick="selectModeKehadiran('Long Shift (LS)')" id="btnModeLongShift" class="border border-slate-200 bg-white text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer">
-          <span class="block text-[11px] font-black">LONG SHIFT</span>
-          <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Double (LS)</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Kartu Dinas Luar / Backup Lokasi -->
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-soft flex items-center justify-between">
-      <div class="flex items-center space-x-3 pr-2">
-        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
-          <i class="fa-solid fa-route text-base"></i>
-        </div>
-        <div>
-          <p class="text-xs font-extrabold text-slate-800">Dinas Luar / Backup Lokasi</p>
-          <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Mencetak titik koordinat GPS real-time di dalam foto</p>
-        </div>
-      </div>
-      <button onclick="toggleDinasLuar()" id="btnDinasLuar" class="bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-extrabold shrink-0 cursor-pointer transition">
-        NONAKTIF
-      </button>
-    </div>
-
-    <!-- Sakelar Absen Masuk / Absen Pulang & Tombol Kamera Live Selfie -->
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-3 shadow-soft space-y-3">
-      <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl">
-        <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="py-2.5 rounded-lg text-xs font-black bg-white text-emerald-600 shadow-sm transition cursor-pointer">
-          ABSEN MASUK
-        </button>
-        <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="py-2.5 rounded-lg text-xs font-black text-slate-500 transition cursor-pointer">
-          ABSEN PULANG
+        <button onclick="detectRealGps(true)" title="Perbarui GPS" class="bg-white hover:bg-slate-50 text-slate-700 w-9 h-9 rounded-full border border-slate-200 shadow-xs flex items-center justify-center shrink-0 ml-2 cursor-pointer active:scale-95 transition">
+          <i class="fa-solid fa-rotate text-xs"></i>
         </button>
       </div>
 
-      <!-- Info Status Terkunci Jika Sudah Absen Masuk Hari Ini -->
-      <div id="clockInLockedNotice" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center text-[11px] font-bold text-emerald-800">
-        <i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih <b>ABSEN PULANG</b> saat selesai bertugas.
+      <!-- Banner Peringatan Luar Radius -->
+      <div id="gpsLockedAlert" class="hidden bg-rose-50 border-l-4 border-rose-500 rounded-2xl px-3.5 py-3 shadow-soft">
+        <h4 id="gpsAlertHeading" class="text-xs font-extrabold text-rose-900">Luar Area Kerja (> 1.000 m)</h4>
+        <p class="text-[11px] text-rose-700 mt-0.5 leading-relaxed">
+          Aktifkan tombol <b>Dinas Luar</b> di bawah jika sedang backup lokasi lain (koordinat GPS otomatis tercetak di foto).
+        </p>
       </div>
 
-      <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-black text-xs tracking-wider uppercase shadow-md flex items-center justify-center space-x-2 active:scale-[0.99] transition cursor-pointer">
-        <i id="mainAbsenIcon" class="fa-solid fa-camera text-base"></i>
-        <span id="mainAbsenLabel">AMBIL SELFIE ABSEN MASUK</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ================= 2. TAB LEMBUR PER JAM ================= -->
-  <div id="tabContent-lembur" class="space-y-3.5 tab-content-pane hidden">
-    <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between">
-      <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-amber-400">Lembur Per Jam (Overtime)</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Wajib Live Selfie & Titik Koordinat GPS Otomatis</p>
-      </div>
-      <i class="fa-solid fa-business-time text-2xl text-amber-400"></i>
-    </div>
-
-    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-soft space-y-3">
-      <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Tanggal Lembur</label>
-        <input type="date" id="lemburTanggal" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-semibold">
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Jam Mulai Lembur</label>
-          <input type="time" id="lemburMulai" value="18:00" onchange="hitungPreviewDurasiLembur()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold">
+      <!-- Kartu Jam Digital & Ringkasan Masuk/Pulang -->
+      <div class="bg-gradient-to-b from-[#111c3a] to-[#0b132b] text-white rounded-3xl p-5 shadow-lg text-center border border-white/5">
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.16em]" id="liveDateText">MEMUAT TANGGAL...</p>
+        <div class="mt-1.5 flex items-baseline justify-center space-x-2">
+          <span class="text-[36px] font-black text-white tracking-wider font-mono leading-none" id="liveClockText">00.00.00</span>
+          <span class="text-xs font-extrabold text-emerald-400 tracking-wider">WIB</span>
         </div>
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Jam Selesai Lembur</label>
-          <input type="time" id="lemburSelesai" value="20:00" onchange="hitungPreviewDurasiLembur()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold">
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <div class="bg-white/[0.06] py-3 px-2 rounded-2xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">JAM MASUK HARI INI</span>
+            <span id="clockInSummary" class="text-lg font-black text-emerald-400 mt-1 block font-mono">--:--</span>
+          </div>
+          <div class="bg-white/[0.06] py-3 px-2 rounded-2xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">JAM PULANG HARI INI</span>
+            <span id="clockOutSummary" class="text-lg font-black text-rose-400 mt-1 block font-mono">--:--</span>
+          </div>
         </div>
       </div>
 
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 flex items-center justify-between">
-        <span class="text-[10px] font-bold text-amber-900 uppercase">Total Durasi Lembur</span>
-        <span id="lemburDurasiPreview" class="text-xs font-black text-amber-700">2 Jam (2.00 Jam)</span>
-      </div>
-
-      <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Uraian Pekerjaan Lembur</label>
-        <textarea id="lemburUraian" rows="2" placeholder="Jelaskan tugas / area lembur..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50"></textarea>
-      </div>
-
-      <button onclick="openLiveCamera('lembur')" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2 cursor-pointer">
-        <i class="fa-solid fa-camera"></i>
-        <span>SELFIE & KIRIM LEMBUR PER JAM</span>
-      </button>
-    </div>
-
-    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-soft space-y-2.5">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-        <h4 class="text-xs font-extrabold text-slate-800">Riwayat Lembur Per Jam</h4>
-        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
-      </div>
-      <div id="riwayatLemburContainer" class="space-y-2 text-xs"></div>
-    </div>
-  </div>
-
-  <!-- ================= 3. TAB PENGAJUAN CUTI / IZIN / SAKIT ================= -->
-  <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
-    <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between">
-      <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Pengajuan Cuti, Izin & Sakit</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5" id="alurApprovalSubtext">Operator: SPV &rarr; Admin Ops &rarr; Manager</p>
-      </div>
-      <i class="fa-solid fa-calendar-check text-2xl text-blue-400"></i>
-    </div>
-
-    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-soft space-y-3">
-      <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Kategori Pengajuan</label>
-        <select id="izinJenis" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 font-bold text-slate-800">
-          <option value="Cuti Tahunan">1. Cuti Tahunan (Minimal Pengajuan H-14)</option>
-          <option value="Izin">2. Izin (Tanpa SKD)</option>
-          <option value="Sakit Tanpa SKD">3. Sakit Tanpa SKD (Surat Keterangan Dokter)</option>
-          <option value="Sakit Dengan SKD">4. Sakit Dengan SKD (Wajib Upload SKD)</option>
-        </select>
-      </div>
-
-      <div id="izinRuleBanner" class="bg-amber-50 border border-amber-200 text-amber-800 p-2.5 rounded-xl text-[10px] font-semibold">
-        <i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Tanggal mulai minimal <b>14 hari (H-14)</b> ke depan.
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Tgl Mulai</label>
-          <input type="date" id="izinMulai" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      <!-- Kartu Mode Kehadiran / Lembur (Reguler, Lembur Per Jam, Lembur Wajib) -->
+      <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-extrabold text-slate-800 flex items-center">
+            <i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i>Mode Kehadiran / Lembur:
+          </span>
+          <span id="kodeRekapBadge" class="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full truncate">
+            Kode Rekap: H (Reguler)
+          </span>
         </div>
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Tgl Selesai</label>
-          <input type="date" id="izinSelesai" onchange="validasiSyaratIzin()" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="selectModeKehadiran('Reguler (H)')" id="btnModeReguler" class="border-2 border-emerald-500 bg-emerald-50/70 text-emerald-800 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer">
+            <span class="block text-[11px] font-black leading-tight">REGULER</span>
+            <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Hadir (H)</span>
+          </button>
+          <button onclick="selectModeKehadiran('Lembur (L)')" id="btnModeLembur" class="border border-slate-200 bg-slate-50/50 text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer hover:bg-slate-50">
+            <span class="block text-[11px] font-black leading-tight">LEMBUR (L)</span>
+            <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Otorisasi Jam</span>
+          </button>
+          <button onclick="selectModeKehadiran('Lembur Wajib (L)')" id="btnModeLemburWajib" class="border border-slate-200 bg-slate-50/50 text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer hover:bg-slate-50">
+            <span class="block text-[11px] font-black leading-tight">LEMBUR WAJIB</span>
+            <span class="block text-[9px] font-semibold opacity-80 mt-0.5">Wajib (L)</span>
+          </button>
         </div>
       </div>
 
-      <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Email Notifikasi Balik</label>
-        <input type="email" id="izinEmailPengaju" placeholder="email@domain.com" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50">
-      </div>
-
-      <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Alasan Lengkap</label>
-        <textarea id="izinAlasan" rows="2" placeholder="Tuliskan alasan pengajuan..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50"></textarea>
-      </div>
-
-      <div>
-        <label id="skdLabel" class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Lampiran SKD / Bukti</label>
-        <input type="file" id="izinFile" accept="image/*" onchange="validasiSyaratIzin()" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700">
-      </div>
-
-      <button id="btnSubmitIzin" onclick="submitIzin()" class="w-full py-3 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer">
-        KIRIM PENGAJUAN
-      </button>
-    </div>
-
-    <!-- Panel Approval (Muncul otomatis bagi SPV, Admin Operasional, & Manager) -->
-    <div id="approvalSectionCard" class="hidden bg-white border border-slate-200 rounded-2xl shadow-soft overflow-hidden">
-      <div class="p-3 bg-slate-900 text-white flex justify-between items-center">
-        <h4 class="text-xs font-extrabold text-amber-400"><i class="fa-solid fa-file-signature mr-1.5"></i>Antrean Approval Pengajuan</h4>
-        <button onclick="syncServerData(true)" class="text-[10px] text-slate-300 font-bold"><i class="fa-solid fa-rotate"></i></button>
-      </div>
-      <div id="approvalQueueContainer" class="p-3 space-y-2.5 text-xs"></div>
-    </div>
-
-    <!-- Riwayat Pengajuan Pribadi -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-soft space-y-2.5">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-        <h4 class="text-xs font-extrabold text-slate-800">Riwayat Pengajuan Anda</h4>
-        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Refresh</button>
-      </div>
-      <div id="riwayatIzinUserContainer" class="space-y-2 text-xs"></div>
-    </div>
-  </div>
-
-  <!-- ================= 4. TAB TIM (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER) ================= -->
-  <div id="tabContent-tim" class="space-y-3.5 tab-content-pane hidden">
-    <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-500">
-      <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Absensi Tim</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Akses Khusus SPV, Admin Operasional & Manager</p>
-      </div>
-      <button onclick="syncServerData(true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer">
-        <i class="fa-solid fa-rotate"></i>
-      </button>
-    </div>
-
-    <div class="grid grid-cols-2 gap-2.5">
-      <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-soft text-center">
-        <span class="text-[9px] font-bold text-slate-400 uppercase block">Hadir Hari Ini</span>
-        <span id="timCountHadirHariIni" class="text-xl font-black text-emerald-600">0</span>
-      </div>
-      <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-soft text-center">
-        <span class="text-[9px] font-bold text-slate-400 uppercase block">Total Log Absen</span>
-        <span id="timCountTotalLog" class="text-xl font-black text-slate-800">0</span>
-      </div>
-    </div>
-
-    <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-soft space-y-2.5">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-        <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-users text-emerald-600 mr-1.5"></i>Data Absen Man Power</h4>
-        <span class="text-[10px] text-slate-400 font-semibold" id="timPeriodeText">Periode 19 - 20</span>
-      </div>
-      <div id="timAbsenListContainer" class="space-y-2 text-xs"></div>
-    </div>
-  </div>
-
-  <!-- ================= 5. TAB ADMIN DB (KHUSUS ADMIN OPERASIONAL & MANAGER) ================= -->
-  <div id="tabContent-admin" class="space-y-3.5 tab-content-pane hidden">
-    <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-500">
-      <div>
-        <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Admin Database Man Power</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Akses Admin Operasional & Manager (Nama, NIP, Email, Area, PIN)</p>
-      </div>
-      <i class="fa-solid fa-database text-2xl text-blue-400"></i>
-    </div>
-
-    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-soft space-y-2.5">
-      <h4 class="text-xs font-extrabold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i>Tambah Man Power</h4>
-      <input type="hidden" id="empEditId" value="">
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">NIP</label>
-          <input type="text" id="empNip" placeholder="Cth: 01.008.11.26" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+      <!-- PANEL ABSEN LEMBUR PER JAM (LOG TERPISAH) — MUNCUL SAAT PILIH LEMBUR (L) -->
+      <div id="lemburPerJamCard" class="hidden bg-emerald-50/45 border-2 border-emerald-500 rounded-2xl p-4 shadow-soft space-y-3.5 transition-all">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <h4 class="text-[13px] font-black text-slate-900 flex items-center">
+              <i class="fa-solid fa-business-time text-emerald-700 mr-1.5"></i>Absen Lembur Per Jam (Log Terpisah)
+            </h4>
+            <p class="text-[10.5px] text-emerald-900/75 mt-1 leading-snug">
+              Durasi jam lembur dihitung otomatis dari Tap Masuk s/d Tap Pulang
+            </p>
+          </div>
+          <span class="bg-emerald-700 text-white text-[9px] font-black px-2.5 py-1.5 rounded-lg uppercase tracking-wide text-center leading-tight shrink-0 shadow-xs">
+            LOG<br>LEMBUR
+          </span>
         </div>
+
+        <!-- Toggle 1. Awal Lembur (Masuk) / 2. Akhir Lembur (Pulang) -->
+        <div class="grid grid-cols-2 gap-1.5 bg-emerald-100/80 p-1 rounded-xl border border-emerald-200/70">
+          <button onclick="setJenisLembur('masuk')" id="btnLemburMasuk" class="py-2.5 px-2 rounded-lg text-[10px] font-black bg-emerald-700 text-white shadow-xs transition cursor-pointer">
+            1. AWAL LEMBUR (MASUK)
+          </button>
+          <button onclick="setJenisLembur('pulang')" id="btnLemburPulang" class="py-2.5 px-2 rounded-lg text-[10px] font-extrabold text-emerald-900 transition cursor-pointer">
+            2. AKHIR LEMBUR (PULANG)
+          </button>
+        </div>
+
+        <!-- Input Tugas / Alasan Lembur -->
         <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">Jabatan</label>
-          <select id="empRole" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-semibold">
-            <option value="Operator">Operator</option>
-            <option value="SPV">SPV</option>
-            <option value="Admin Operasional">Admin Operasional</option>
-            <option value="Manager">Manager</option>
+          <label class="text-[10.5px] font-extrabold text-slate-800 block mb-1.5">
+            Tugas / Alasan Lembur (Wajib Diisi Saat Masuk) <span class="text-rose-600">*</span>
+          </label>
+          <input type="text" id="lemburTugasInput" placeholder="Contoh: Backup pos keluar / atur lalu lintas / pengawalan..." class="w-full border border-emerald-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 outline-none bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder:text-slate-400">
+        </div>
+
+        <!-- Kotak Status Otorisasi Lembur Anda -->
+        <div class="bg-white/80 border border-emerald-200/90 rounded-xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold text-slate-800">Status Otorisasi Lembur Anda:</span>
+            <button onclick="syncServerData(true)" class="text-[10.5px] font-bold text-emerald-700 hover:text-emerald-900 underline cursor-pointer">Segarkan</button>
+          </div>
+          <div id="statusOtorisasiLemburList" class="space-y-1.5 text-[11px] text-slate-500">
+            <p class="italic text-slate-400">Belum ada riwayat lembur per jam.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kartu Dinas Luar / Backup Lokasi -->
+      <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft flex items-center justify-between gap-2">
+        <div class="flex items-center space-x-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-route text-sm"></i>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-extrabold text-slate-800 truncate">Dinas Luar / Backup Lokasi</p>
+            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Mencetak titik koordinat GPS real-time di dalam foto</p>
+          </div>
+        </div>
+        <button onclick="toggleDinasLuar()" id="btnDinasLuar" class="bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-extrabold shrink-0 cursor-pointer transition">
+          NONAKTIF
+        </button>
+      </div>
+
+      <!-- Area Sakelar Absen & Tombol Tap Kamera Live Selfie -->
+      <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-soft flex flex-col items-center space-y-3.5">
+        <!-- Sakelar Absen Masuk / Pulang (Sembunyi otomatis saat mode Lembur Per Jam aktif) -->
+        <div id="regularAbsenToggleWrap" class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl w-full">
+          <button onclick="setJenisAbsen('masuk')" id="btnJenisMasuk" class="py-2 rounded-lg text-[11px] font-black bg-white text-emerald-600 shadow-xs transition cursor-pointer">
+            ABSEN MASUK
+          </button>
+          <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="py-2 rounded-lg text-[11px] font-black text-slate-500 transition cursor-pointer">
+            ABSEN PULANG
+          </button>
+        </div>
+
+        <!-- Info Status Khusus Saat Mode Lembur Per Jam Aktif -->
+        <div id="lemburActiveHint" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-bold text-emerald-800">
+          <i class="fa-solid fa-clock mr-1"></i> Mode <b>Log Lembur Per Jam</b> aktif &mdash; tap tombol kamera di bawah untuk mencatat.
+        </div>
+
+        <!-- Info Status Terkunci Jika Sudah Absen Masuk Hari Ini -->
+        <div id="clockInLockedNotice" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-semibold text-emerald-800">
+          <i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih <b>ABSEN PULANG</b> saat selesai bertugas.
+        </div>
+
+        <div class="relative flex items-center justify-center py-2">
+          <div id="mainAbsenRing" class="absolute w-36 h-36 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
+          <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-glow-emerald border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer">
+            <i id="mainAbsenIcon" class="fa-solid fa-camera text-2xl mb-1.5"></i>
+            <span id="mainAbsenLabel" class="text-[11px] font-black uppercase tracking-wider leading-tight">ABSEN MASUK</span>
+            <span id="mainAbsenSub" class="text-[9px] font-semibold opacity-90 mt-1">Live Selfie</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= 2. TAB CUTI / IZIN / SAKIT ================= -->
+    <div id="tabContent-izin" class="space-y-3.5 tab-content-pane hidden">
+      <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-400">
+        <div>
+          <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Pengajuan Cuti, Izin & Sakit</h3>
+          <p class="text-[10px] text-slate-300 mt-0.5" id="alurApprovalSubtext">Operator: SPV &rarr; Admin Ops &rarr; Manager</p>
+        </div>
+        <i class="fa-solid fa-calendar-check text-2xl text-blue-400"></i>
+      </div>
+
+      <div class="bg-white border border-slate-200/70 rounded-2xl p-4 shadow-soft space-y-3">
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Kategori Pengajuan</label>
+          <select id="izinJenis" onchange="validasiSyaratIzin()" class="input-clean font-bold">
+            <option value="Cuti Tahunan">1. Cuti Tahunan (Minimal Pengajuan H-14)</option>
+            <option value="Izin">2. Izin (Tanpa SKD)</option>
+            <option value="Sakit Tanpa SKD">3. Sakit Tanpa SKD (Surat Keterangan Dokter)</option>
+            <option value="Sakit Dengan SKD">4. Sakit Dengan SKD (Wajib Upload SKD)</option>
           </select>
         </div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">Nama Lengkap</label>
-          <input type="text" id="empNama" placeholder="Nama lengkap..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
+
+        <div id="izinRuleBanner" class="bg-amber-50 border border-amber-200 text-amber-800 p-2.5 rounded-xl text-[10px] font-semibold">
+          <i class="fa-solid fa-circle-info mr-1"></i> Syarat Cuti: Tanggal mulai minimal <b>14 hari (H-14)</b> ke depan.
         </div>
-        <div>
-          <label class="text-[9px] font-bold text-slate-500 uppercase">PIN Login</label>
-          <input type="text" id="empPin" placeholder="Default: 1234" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50 font-bold text-emerald-700">
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Tgl Mulai</label>
+            <input type="date" id="izinMulai" onchange="validasiSyaratIzin()" class="input-clean">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Tgl Selesai</label>
+            <input type="date" id="izinSelesai" onchange="validasiSyaratIzin()" class="input-clean">
+          </div>
         </div>
-      </div>
-      <div>
-        <label class="text-[9px] font-bold text-slate-500 uppercase">Email</label>
-        <input type="email" id="empEmail" placeholder="email@gmail.com" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
-      </div>
-      <div>
-        <label class="text-[9px] font-bold text-slate-500 uppercase">Area Kerja</label>
-        <input type="text" id="empLokasi" value="RS. Harum Sisma Medika" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-slate-50">
-      </div>
-      <div class="flex gap-2 pt-1">
-        <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black shadow-sm cursor-pointer">
-          SIMPAN MAN POWER
+
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Email Notifikasi Balik</label>
+          <input type="email" id="izinEmailPengaju" placeholder="email@domain.com" class="input-clean">
+        </div>
+
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Alasan Lengkap</label>
+          <textarea id="izinAlasan" rows="2" placeholder="Tuliskan alasan pengajuan..." class="input-clean"></textarea>
+        </div>
+
+        <div>
+          <label id="skdLabel" class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Lampiran SKD / Bukti</label>
+          <input type="file" id="izinFile" accept="image/*" onchange="validasiSyaratIzin()" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 cursor-pointer">
+        </div>
+
+        <button id="btnSubmitIzin" onclick="submitIzin()" class="w-full py-3 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.99] transition shadow-md cursor-pointer">
+          KIRIM PENGAJUAN
         </button>
-        <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
-          BATAL
-        </button>
+      </div>
+
+      <!-- Panel Approval (SPV, Admin Operasional, & Manager) -->
+      <div id="approvalSectionCard" class="hidden bg-white border border-slate-200/70 rounded-2xl shadow-soft overflow-hidden">
+        <div class="px-3.5 py-3 bg-[#0b132b] text-white flex justify-between items-center">
+          <h4 class="text-xs font-extrabold text-amber-400"><i class="fa-solid fa-file-signature mr-1.5"></i>Antrean Approval Pengajuan</h4>
+          <button onclick="syncServerData(true)" class="text-[10px] text-slate-300 hover:text-white font-bold cursor-pointer"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+        <div id="approvalQueueContainer" class="p-3 space-y-2.5 text-xs"></div>
+      </div>
+
+      <!-- Riwayat Pengajuan Pribadi -->
+      <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-extrabold text-slate-800">Riwayat Pengajuan Anda</h4>
+          <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold cursor-pointer"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button>
+        </div>
+        <div id="riwayatIzinUserContainer" class="space-y-2 text-xs"></div>
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-soft overflow-hidden">
-      <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-        <h4 class="text-xs font-extrabold text-slate-800">Daftar Man Power Aktif</h4>
-        <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold"><i class="fa-solid fa-rotate"></i> Sync</button>
+    <!-- ================= 3. TAB TIM (KHUSUS SPV, ADMIN OPERASIONAL, & MANAGER) ================= -->
+    <div id="tabContent-tim" class="space-y-3.5 tab-content-pane hidden">
+      <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-emerald-400">
+        <div>
+          <h3 class="text-xs font-black uppercase tracking-wider text-emerald-400">Monitoring Absensi & Lembur Tim</h3>
+          <p class="text-[10px] text-slate-300 mt-0.5">Akses SPV, Admin Operasional & Manager</p>
+        </div>
+        <button onclick="syncServerData(true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold cursor-pointer">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
       </div>
-      <div class="p-2.5 space-y-2" id="adminDatabaseList"></div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft text-center">
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Hadir Hari Ini</span>
+          <span id="timCountHadirHariIni" class="text-2xl font-black text-emerald-600 mt-0.5 block">0</span>
+        </div>
+        <div class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft text-center">
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Log Lembur Tercatat</span>
+          <span id="timCountTotalLembur" class="text-2xl font-black text-amber-600 mt-0.5 block">0</span>
+        </div>
+      </div>
+
+      <!-- Pilihan Sub-Tampilan: Log Absensi / Log Lembur Per Jam -->
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-200/80 p-1 rounded-xl">
+        <button onclick="switchTimSubTab('absen')" id="btnTimSubAbsen" class="py-2 rounded-lg text-[11px] font-black bg-white text-emerald-700 shadow-xs transition cursor-pointer">
+          LOG ABSENSI
+        </button>
+        <button onclick="switchTimSubTab('lembur')" id="btnTimSubLembur" class="py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer">
+          LOG LEMBUR PER JAM
+        </button>
+      </div>
+
+      <div id="timAbsenSection" class="bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-users text-emerald-600 mr-1.5"></i>Data Absen Man Power</h4>
+          <span class="text-[10px] text-slate-400 font-semibold" id="timCountTotalLog">0 Log</span>
+        </div>
+        <div id="timAbsenListContainer" class="space-y-2 text-xs"></div>
+      </div>
+
+      <div id="timLemburSection" class="hidden bg-white border border-slate-200/70 rounded-2xl p-3.5 shadow-soft space-y-2.5">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-extrabold text-slate-800"><i class="fa-solid fa-business-time text-amber-600 mr-1.5"></i>Data Lembur Per Jam Tim</h4>
+          <span class="text-[10px] text-slate-400 font-semibold">Log Terpisah</span>
+        </div>
+        <div id="timLemburListContainer" class="space-y-2 text-xs"></div>
+      </div>
     </div>
-  </div>
 
-</main>
+    <!-- ================= 4. TAB ADMIN DB (KHUSUS ADMIN OPERASIONAL & MANAGER) ================= -->
+    <div id="tabContent-admin" class="space-y-3.5 tab-content-pane hidden">
+      <div class="bg-[#0b132b] text-white p-4 rounded-2xl shadow-md flex items-center justify-between border-l-4 border-blue-400">
+        <div>
+          <h3 class="text-xs font-black uppercase tracking-wider text-blue-400">Admin Database Man Power</h3>
+          <p class="text-[10px] text-slate-300 mt-0.5">Kelola Nama, NIP, Jabatan, Email, Area & PIN</p>
+        </div>
+        <i class="fa-solid fa-database text-2xl text-blue-400"></i>
+      </div>
 
-<!-- BOTTOM NAVIGATION -->
-<nav class="bg-white border-t border-slate-200 px-2 py-2 pb-safe flex justify-around items-center shrink-0 w-full z-30 shadow-[0_-4px_15px_rgba(15,23,42,0.05)]">
-  <button onclick="switchTab('beranda')" id="nav-beranda" class="flex flex-col items-center space-y-1 p-1.5 text-emerald-600 transition nav-btn cursor-pointer">
-    <i class="fa-solid fa-fingerprint text-lg"></i>
-    <span class="text-[10px] font-bold">Absen</span>
-  </button>
-  <button onclick="switchTab('lembur')" id="nav-lembur" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-600 transition nav-btn cursor-pointer">
-    <i class="fa-solid fa-clock text-lg"></i>
-    <span class="text-[10px] font-bold">Lembur</span>
-  </button>
-  <button onclick="switchTab('izin')" id="nav-izin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-600 transition nav-btn cursor-pointer">
-    <i class="fa-solid fa-calendar-days text-lg"></i>
-    <span class="text-[10px] font-bold">Cuti</span>
-  </button>
-  <button onclick="switchTab('tim')" id="nav-tim" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-600 transition nav-btn hidden cursor-pointer">
-    <i class="fa-solid fa-users-gear text-lg"></i>
-    <span class="text-[10px] font-bold">Tim</span>
-  </button>
-  <button onclick="switchTab('admin')" id="nav-admin" class="flex flex-col items-center space-y-1 p-1.5 text-slate-400 hover:text-emerald-600 transition nav-btn hidden cursor-pointer">
-    <i class="fa-solid fa-server text-lg"></i>
-    <span class="text-[10px] font-bold">Admin DB</span>
-  </button>
-</nav>
+      <div class="bg-white rounded-2xl border border-slate-200/70 p-4 shadow-soft space-y-2.5">
+        <h4 class="text-xs font-extrabold text-slate-800" id="formEmpTitle"><i class="fa-solid fa-user-plus text-blue-600 mr-1.5"></i>Tambah Man Power</h4>
+        <input type="hidden" id="empEditId" value="">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">NIP</label>
+            <input type="text" id="empNip" placeholder="Cth: 01.008.11.26" class="input-clean">
+          </div>
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Jabatan</label>
+            <select id="empRole" class="input-clean font-semibold">
+              <option value="Operator">Operator</option>
+              <option value="SPV">SPV</option>
+              <option value="Admin Operasional">Admin Operasional</option>
+              <option value="Manager">Manager</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Nama Lengkap</label>
+            <input type="text" id="empNama" placeholder="Nama lengkap..." class="input-clean">
+          </div>
+          <div>
+            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">PIN Login</label>
+            <input type="text" id="empPin" placeholder="Default: 1234" class="input-clean font-bold text-emerald-700">
+          </div>
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Email</label>
+          <input type="email" id="empEmail" placeholder="email@gmail.com" class="input-clean">
+        </div>
+        <div>
+          <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Area Kerja</label>
+          <input type="text" id="empLokasi" value="RS. Harum Sisma Medika" class="input-clean">
+        </div>
+        <div class="flex gap-2 pt-1">
+          <button onclick="simpanDataKaryawan()" id="btnSaveEmp" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white rounded-xl text-xs font-black shadow-sm cursor-pointer transition">
+            SIMPAN MAN POWER
+          </button>
+          <button onclick="batalEditKaryawan()" id="btnCancelEditEmp" class="hidden px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
+            BATAL
+          </button>
+        </div>
+      </div>
 
-<!-- TOAST NOTIFIKASI -->
-<div id="toastNotification" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-[#0b132b] text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none z-50 text-xs font-semibold border border-slate-700 w-11/12 max-w-[360px]">
-  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-  <span id="toastMessage">Pesan</span>
+      <div class="bg-white rounded-2xl border border-slate-200/70 shadow-soft overflow-hidden">
+        <div class="px-3.5 py-3 bg-slate-50 border-b border-slate-200/70 flex justify-between items-center">
+          <h4 class="text-xs font-extrabold text-slate-800">Daftar Man Power Aktif</h4>
+          <button onclick="syncServerData(true)" class="text-[10px] text-blue-600 font-bold cursor-pointer"><i class="fa-solid fa-rotate mr-1"></i>Sync</button>
+        </div>
+        <div class="p-3 space-y-2" id="adminDatabaseList"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION (BERSIH TANPA DUPLIKASI TOMBOL LEMBUR) -->
+  <nav class="bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 pt-1.5 pb-safe flex items-center shrink-0 w-full z-30 shadow-[0_-6px_20px_rgba(15,23,42,0.05)]">
+    <button onclick="switchTab('beranda')" id="nav-beranda" class="flex-1 flex flex-col items-center py-1 text-emerald-600 transition nav-btn cursor-pointer relative">
+      <span class="nav-indicator w-6 h-0.5 rounded-full bg-emerald-600 mb-1"></span>
+      <i class="fa-solid fa-fingerprint text-[17px]"></i>
+      <span class="text-[10px] font-bold mt-0.5">Absen</span>
+    </button>
+    <button onclick="switchTab('izin')" id="nav-izin" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-emerald-600 transition nav-btn cursor-pointer relative">
+      <span class="nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1"></span>
+      <i class="fa-solid fa-calendar-days text-[17px]"></i>
+      <span class="text-[10px] font-bold mt-0.5">Cuti</span>
+    </button>
+    <button onclick="switchTab('tim')" id="nav-tim" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-emerald-600 transition nav-btn hidden cursor-pointer relative">
+      <span class="nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1"></span>
+      <i class="fa-solid fa-users-gear text-[17px]"></i>
+      <span class="text-[10px] font-bold mt-0.5">Tim</span>
+    </button>
+    <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-emerald-600 transition nav-btn hidden cursor-pointer relative">
+      <span class="nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1"></span>
+      <i class="fa-solid fa-server text-[17px]"></i>
+      <span class="text-[10px] font-bold mt-0.5">Admin DB</span>
+    </button>
+  </nav>
+
 </div>
 
-<!-- MODAL KAMERA LIVE SELFIE (ANTI GALERI + WATERMARK KOORDINAT GPS) -->
-<div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+<!-- TOAST NOTIFIKASI -->
+<div id="toastNotification" class="fixed top-[74px] left-1/2 transform -translate-x-1/2 bg-[#0b132b] text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none z-50 text-xs font-semibold border border-white/10 w-11/12 max-w-[360px]">
+  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base shrink-0"></i>
+  <span id="toastMessage" class="leading-snug">Pesan</span>
+</div>
+
+<!-- MODAL KAMERA LIVE SELFIE -->
+<div id="cameraModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xs flex flex-col items-center justify-center p-4">
   <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col">
-    <div class="p-4 bg-[#0b132b] text-white flex justify-between items-center border-b border-slate-700">
+    <div class="p-4 bg-[#0b132b] text-white flex justify-between items-center border-b border-white/10">
       <div class="flex items-center space-x-2">
         <i class="fa-solid fa-camera text-emerald-400"></i>
         <h3 class="text-xs font-extrabold uppercase tracking-wide" id="cameraModalTitle">Live Selfie Absensi</h3>
@@ -464,7 +518,7 @@
         <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-emerald-400"></i>
         <p class="text-[10px] font-bold uppercase tracking-widest">Membuka Kamera Selfie...</p>
       </div>
-      <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xs text-white px-2.5 py-1.5 rounded-lg text-[9px] font-mono">
+      <div class="absolute bottom-2.5 left-2.5 right-2.5 bg-black/65 backdrop-blur-xs text-white px-3 py-1.5 rounded-xl text-[9.5px] font-mono">
         <span id="camOverlayCoord">GPS: Mendeteksi koordinat...</span>
       </div>
     </div>
@@ -472,14 +526,14 @@
       <button onclick="captureCameraFrame()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-lg flex items-center justify-center text-white active:scale-90 transition cursor-pointer">
         <i class="fa-solid fa-camera text-2xl"></i>
       </button>
-      <span class="text-[9px] font-bold text-slate-400 uppercase">Live Selfie &bull; Koordinat GPS Otomatis Tercetak</span>
+      <span class="text-[9.5px] font-bold text-slate-400 uppercase">Live Selfie &bull; Koordinat GPS Otomatis Tercetak</span>
     </div>
   </div>
 </div>
 
 <script>
   // TEMPELKAN WEB APP URL APPS SCRIPT ANDA DI SINI:
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSfqNNRW4170t_nf1Sm-ENuRCXhlM_OkxjyTN4Z5Hd_CxCR6LFkOwDUqVp3UKYQAX1fw/exec";
+  const SCRIPT_URL = "PASTE_URL_WEB_APP_BARU_DISINI";
 
   // KONFIGURASI GEOFENCING AKURAT: RADIUS 1.000 METER (1 KM)
   const PROJECT_LOCATION = {
@@ -507,6 +561,7 @@
 
   let modeKehadiran = "Reguler (H)";
   let jenisAbsen = "masuk";
+  let jenisLembur = "masuk";
   let isDinasLuar = false;
   let isInsideRadius = false;
   let currentCoordStr = "Belum terdeteksi";
@@ -516,8 +571,6 @@
 
   window.onload = () => {
     muatCacheLokal();
-    document.getElementById('lemburTanggal').value = new Date().toISOString().split('T')[0];
-    hitungPreviewDurasiLembur();
     updateClock();
     setInterval(updateClock, 1000);
     detectRealGps(false);
@@ -612,20 +665,20 @@
     locEl.innerText = `Titik Lokasi: ${PROJECT_LOCATION.name}`;
 
     if (isInsideRadius) {
-      card.className = "bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between shadow-soft transition-all";
-      iconBg.className = "w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-sm shrink-0";
-      title.className = "text-xs font-black text-emerald-900 uppercase tracking-tight";
+      card.className = "bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-soft transition-all";
+      iconBg.className = "w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0";
+      title.className = "text-[11px] font-black text-emerald-900 uppercase tracking-wide truncate";
       title.innerText = "DI DALAM RADIUS KERJA";
-      distEl.className = "text-[11px] font-semibold text-emerald-800 mt-0.5";
-      locEl.className = "text-[10px] text-emerald-700/80 font-medium mt-0.5";
+      distEl.className = "text-[11px] font-semibold text-emerald-800 mt-0.5 truncate";
+      locEl.className = "text-[10px] text-emerald-700/80 font-medium mt-0.5 truncate";
       alertBox.classList.add('hidden');
     } else {
       card.className = "bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-soft transition-all";
-      iconBg.className = "w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-sm shrink-0";
-      title.className = "text-xs font-black text-amber-900 uppercase tracking-tight";
+      iconBg.className = "w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0";
+      title.className = "text-[11px] font-black text-amber-900 uppercase tracking-wide truncate";
       title.innerText = isDinasLuar ? "MODE DINAS LUAR AKTIF" : "DI LUAR RADIUS KERJA";
-      distEl.className = "text-[11px] font-semibold text-amber-800 mt-0.5";
-      locEl.className = "text-[10px] text-amber-700/80 font-medium mt-0.5";
+      distEl.className = "text-[11px] font-semibold text-amber-800 mt-0.5 truncate";
+      locEl.className = "text-[10px] text-amber-700/80 font-medium mt-0.5 truncate";
       if (!isDinasLuar) {
         alertBox.classList.remove('hidden');
         alertHead.innerText = `Luar Area Kerja (${jarakFmt} m)`;
@@ -637,8 +690,53 @@
   }
 
   // =========================================================================
-  // KUNCI TOMBOL ABSEN MASUK SETELAH ABSEN MASUK HARI INI
+  // MODE KEHADIRAN, PANEL LEMBUR PER JAM, & KUNCI ABSEN MASUK
   // =========================================================================
+  function selectModeKehadiran(mode) {
+    modeKehadiran = mode;
+    const mapBtn = {
+      "Reguler (H)":      { id: "btnModeReguler",     badge: "Kode Rekap: H (Reguler)" },
+      "Lembur (L)":       { id: "btnModeLembur",      badge: "Kode Rekap: L (Otorisasi Jam)" },
+      "Lembur Wajib (L)": { id: "btnModeLemburWajib", badge: "Kode Rekap: L (Lembur Wajib)" }
+    };
+
+    Object.keys(mapBtn).forEach(k => {
+      const el = document.getElementById(mapBtn[k].id);
+      if (k === mode) {
+        el.className = "border-2 border-emerald-500 bg-emerald-50/70 text-emerald-800 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer";
+        document.getElementById('kodeRekapBadge').innerText = mapBtn[k].badge;
+      } else {
+        el.className = "border border-slate-200 bg-slate-50/50 text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer hover:bg-slate-50";
+      }
+    });
+
+    const isLemburPerJam = (mode === "Lembur (L)");
+    document.getElementById('lemburPerJamCard').classList.toggle('hidden', !isLemburPerJam);
+    document.getElementById('regularAbsenToggleWrap').classList.toggle('hidden', isLemburPerJam);
+    document.getElementById('lemburActiveHint').classList.toggle('hidden', !isLemburPerJam);
+
+    if (isLemburPerJam) {
+      // Jika ada sesi lembur aktif yang belum ditutup, otomatis arahkan ke 2. Akhir Lembur (Pulang)
+      const openLembur = cekSesiLemburAktif_();
+      setJenisLembur(openLembur ? 'pulang' : 'masuk');
+      renderStatusOtorisasiLembur();
+    } else {
+      updateStatusTombolAbsen();
+    }
+  }
+
+  function setJenisLembur(jenis) {
+    jenisLembur = jenis;
+    const isMasuk = (jenis === 'masuk');
+    document.getElementById('btnLemburMasuk').className = isMasuk
+      ? "py-2.5 px-2 rounded-lg text-[10px] font-black bg-emerald-700 text-white shadow-xs transition cursor-pointer"
+      : "py-2.5 px-2 rounded-lg text-[10px] font-extrabold text-emerald-900 transition cursor-pointer";
+    document.getElementById('btnLemburPulang').className = !isMasuk
+      ? "py-2.5 px-2 rounded-lg text-[10px] font-black bg-emerald-700 text-white shadow-xs transition cursor-pointer"
+      : "py-2.5 px-2 rounded-lg text-[10px] font-extrabold text-emerald-900 transition cursor-pointer";
+    updateStatusTombolAbsen();
+  }
+
   function cekSudahAbsenMasukHariIni_() {
     if (!activeUser) return null;
     const tglToday = getTodayDmy_();
@@ -646,6 +744,14 @@
       String(a.nip).trim() === String(activeUser.nip).trim() &&
       (a.isToday || a.tanggal === tglToday) &&
       a.clockIn && a.clockIn !== "-"
+    ) || null;
+  }
+
+  function cekSesiLemburAktif_() {
+    if (!activeUser) return null;
+    return dbLemburList.find(l =>
+      String(l.nip).trim() === String(activeUser.nip).trim() &&
+      (!l.jamSelesai || l.jamSelesai === "-")
     ) || null;
   }
 
@@ -664,36 +770,87 @@
 
     const notice = document.getElementById('clockInLockedNotice');
     const mainBtn = document.getElementById('mainAbsenBtn');
+    const mainRing = document.getElementById('mainAbsenRing');
     const mainLabel = document.getElementById('mainAbsenLabel');
+    const mainSub = document.getElementById('mainAbsenSub');
     const mainIcon = document.getElementById('mainAbsenIcon');
     const btnMasuk = document.getElementById('btnJenisMasuk');
 
-    const sudahMasuk = Boolean(absenHariIni);
     const gpsOk = isInsideRadius || isDinasLuar;
+
+    // 1. Jika sedang di mode LEMBUR (L) — Log Terpisah Per Jam
+    if (modeKehadiran === "Lembur (L)") {
+      notice.classList.add('hidden');
+      const sesiAktif = cekSesiLemburAktif_();
+
+      if (!gpsOk) {
+        mainBtn.disabled = true;
+        mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
+        mainRing.className = "hidden";
+        mainIcon.className = "fa-solid fa-location-dot text-2xl mb-1";
+        mainLabel.innerText = "LUAR RADIUS";
+        mainSub.innerText = "Max 1.000m";
+        return;
+      }
+
+      if (jenisLembur === 'masuk' && sesiAktif) {
+        mainBtn.disabled = true;
+        mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
+        mainRing.className = "hidden";
+        mainIcon.className = "fa-solid fa-lock text-2xl mb-1";
+        mainLabel.innerText = "LEMBUR AKTIF";
+        mainSub.innerText = `Mulai ${sesiAktif.jamMulai.slice(0, 5)}`;
+        return;
+      }
+
+      mainBtn.disabled = false;
+      const isMasukLembur = (jenisLembur === 'masuk');
+      mainBtn.className = isMasukLembur
+        ? "relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-700 to-emerald-500 text-white shadow-glow-emerald border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer"
+        : "relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-amber-600 to-orange-400 text-white shadow-glow-amber border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer";
+      mainRing.className = isMasukLembur
+        ? "absolute w-36 h-36 rounded-full bg-emerald-500/20 animate-pulse-ring"
+        : "absolute w-36 h-36 rounded-full bg-amber-500/20 animate-pulse-ring";
+      mainIcon.className = "fa-solid fa-camera text-2xl mb-1.5";
+      mainLabel.innerText = isMasukLembur ? "AWAL LEMBUR" : "AKHIR LEMBUR";
+      mainSub.innerText = isMasukLembur ? "Tap Masuk" : "Tap Pulang";
+      return;
+    }
+
+    // 2. Mode REGULER (H) atau LEMBUR WAJIB (L)
+    const sudahMasuk = Boolean(absenHariIni);
 
     if (jenisAbsen === 'masuk' && sudahMasuk) {
       notice.classList.remove('hidden');
       btnMasuk.innerHTML = '<i class="fa-solid fa-lock mr-1"></i>SUDAH MASUK';
       mainBtn.disabled = true;
-      mainBtn.className = "w-full py-3.5 rounded-xl bg-slate-300 text-slate-500 font-black text-xs tracking-wider uppercase flex items-center justify-center space-x-2 cursor-not-allowed";
-      mainIcon.className = "fa-solid fa-lock text-sm";
-      mainLabel.innerText = `ABSEN MASUK TERKUNCI (${absenHariIni.clockIn.slice(0,5)})`;
+      mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
+      mainRing.className = "hidden";
+      mainIcon.className = "fa-solid fa-lock text-2xl mb-1";
+      mainLabel.innerText = "TERKUNCI";
+      mainSub.innerText = `In ${absenHariIni.clockIn.slice(0, 5)}`;
     } else {
       notice.classList.add('hidden');
       btnMasuk.innerText = sudahMasuk ? "✓ SUDAH MASUK" : "ABSEN MASUK";
       if (!gpsOk) {
         mainBtn.disabled = true;
-        mainBtn.className = "w-full py-3.5 rounded-xl bg-slate-300 text-slate-500 font-black text-xs tracking-wider uppercase flex items-center justify-center space-x-2 cursor-not-allowed";
-        mainIcon.className = "fa-solid fa-location-dot text-sm";
-        mainLabel.innerText = "LUAR RADIUS (> 1 KM)";
+        mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
+        mainRing.className = "hidden";
+        mainIcon.className = "fa-solid fa-location-dot text-2xl mb-1";
+        mainLabel.innerText = "LUAR RADIUS";
+        mainSub.innerText = "Max 1.000m";
       } else {
         mainBtn.disabled = false;
         const isMasuk = jenisAbsen === 'masuk';
         mainBtn.className = isMasuk
-          ? "w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-black text-xs tracking-wider uppercase shadow-md flex items-center justify-center space-x-2 active:scale-[0.99] transition cursor-pointer"
-          : "w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-500 hover:from-rose-700 hover:to-orange-600 text-white font-black text-xs tracking-wider uppercase shadow-md flex items-center justify-center space-x-2 active:scale-[0.99] transition cursor-pointer";
-        mainIcon.className = "fa-solid fa-camera text-base";
-        mainLabel.innerText = isMasuk ? "AMBIL SELFIE ABSEN MASUK" : "AMBIL SELFIE ABSEN PULANG";
+          ? "relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-glow-emerald border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer"
+          : "relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-rose-600 to-orange-400 text-white shadow-glow-rose border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer";
+        mainRing.className = isMasuk
+          ? "absolute w-36 h-36 rounded-full bg-emerald-500/20 animate-pulse-ring"
+          : "absolute w-36 h-36 rounded-full bg-rose-500/20 animate-pulse-ring";
+        mainIcon.className = "fa-solid fa-camera text-2xl mb-1.5";
+        mainLabel.innerText = isMasuk ? "ABSEN MASUK" : "ABSEN PULANG";
+        mainSub.innerText = modeKehadiran === "Lembur Wajib (L)" ? "Lembur Wajib" : "Live Selfie";
       }
     }
   }
@@ -702,30 +859,12 @@
     jenisAbsen = jenis;
     const isMasuk = jenis === 'masuk';
     document.getElementById('btnJenisMasuk').className = isMasuk
-      ? "py-2.5 rounded-lg text-xs font-black bg-white text-emerald-600 shadow-sm transition cursor-pointer"
-      : "py-2.5 rounded-lg text-xs font-black text-slate-500 transition cursor-pointer";
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-emerald-600 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-black text-slate-500 transition cursor-pointer";
     document.getElementById('btnJenisPulang').className = !isMasuk
-      ? "py-2.5 rounded-lg text-xs font-black bg-white text-rose-600 shadow-sm transition cursor-pointer"
-      : "py-2.5 rounded-lg text-xs font-black text-slate-500 transition cursor-pointer";
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-rose-600 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-black text-slate-500 transition cursor-pointer";
     updateStatusTombolAbsen();
-  }
-
-  function selectModeKehadiran(mode) {
-    modeKehadiran = mode;
-    const mapBtn = {
-      "Reguler (H)":     { id: "btnModeReguler",   badge: "Kode Rekap: H (Reguler)" },
-      "Lembur (L)":      { id: "btnModeLembur",    badge: "Kode Rekap: L (Lembur)" },
-      "Long Shift (LS)": { id: "btnModeLongShift", badge: "Kode Rekap: LS (Long Shift)" }
-    };
-    Object.keys(mapBtn).forEach(k => {
-      const el = document.getElementById(mapBtn[k].id);
-      if (k === mode) {
-        el.className = "border-2 border-emerald-500 bg-emerald-50/70 text-emerald-800 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer";
-        document.getElementById('kodeRekapBadge').innerText = mapBtn[k].badge;
-      } else {
-        el.className = "border border-slate-200 bg-white text-slate-600 py-2.5 px-1.5 rounded-xl text-center transition cursor-pointer";
-      }
-    });
   }
 
   function triggerAbsenAction() {
@@ -734,12 +873,35 @@
       toggleUserDropdown();
       return;
     }
-    if (jenisAbsen === 'masuk' && cekSudahAbsenMasukHariIni_()) {
-      showToast("Absen Masuk hari ini sudah terkunci!", "error");
-      return;
-    }
     if (!isInsideRadius && !isDinasLuar) {
       showToast("Anda di luar radius 1.000m! Aktifkan Dinas Luar jika bertugas di luar.", "error");
+      return;
+    }
+
+    if (modeKehadiran === "Lembur (L)") {
+      if (jenisLembur === 'masuk') {
+        if (cekSesiLemburAktif_()) {
+          showToast("Sesi lembur masih aktif! Pilih 2. Akhir Lembur (Pulang).", "error");
+          return;
+        }
+        const tugas = document.getElementById('lemburTugasInput').value.trim();
+        if (!tugas) {
+          showToast("Tugas / Alasan Lembur wajib diisi saat Awal Lembur!", "error");
+          document.getElementById('lemburTugasInput').focus();
+          return;
+        }
+      } else {
+        if (!cekSesiLemburAktif_()) {
+          showToast("Belum ada sesi Awal Lembur (Masuk) yang aktif!", "error");
+          return;
+        }
+      }
+      openLiveCamera('lembur');
+      return;
+    }
+
+    if (jenisAbsen === 'masuk' && cekSudahAbsenMasukHariIni_()) {
+      showToast("Absen Masuk hari ini sudah terkunci!", "error");
       return;
     }
     openLiveCamera('absen');
@@ -749,21 +911,9 @@
   // KAMERA LIVE SELFIE + WATERMARK TITIK KOORDINAT GPS DI DALAM FOTO
   // =========================================================================
   async function openLiveCamera(mode) {
-    if (!activeUser) {
-      showToast("Silakan login dengan PIN terlebih dahulu!", "error");
-      toggleUserDropdown();
-      return;
-    }
-    if (mode === 'lembur') {
-      const uraian = document.getElementById('lemburUraian').value.trim();
-      if (!uraian) {
-        showToast("Isi uraian pekerjaan lembur terlebih dahulu!", "error");
-        return;
-      }
-    }
     cameraMode = mode;
     document.getElementById('cameraModalTitle').innerText = mode === 'lembur'
-      ? "Live Selfie Lembur Per Jam"
+      ? (jenisLembur === 'masuk' ? "Live Selfie Awal Lembur (Masuk)" : "Live Selfie Akhir Lembur (Pulang)")
       : (jenisAbsen === 'masuk' ? "Live Selfie Absen Masuk" : "Live Selfie Absen Pulang");
 
     document.getElementById('camOverlayCoord').innerText = `GPS: ${currentCoordStr}`;
@@ -805,11 +955,11 @@
 
     const nowStr = new Date().toLocaleString('id-ID');
     const statusLabel = cameraMode === 'lembur'
-      ? `LEMBUR PER JAM (${document.getElementById('lemburMulai').value} - ${document.getElementById('lemburSelesai').value})`
+      ? `LEMBUR PER JAM (${jenisLembur === 'masuk' ? 'AWAL / MASUK' : 'AKHIR / PULANG'})${isDinasLuar ? ' [DINAS LUAR]' : ''}`
       : `ABSEN ${jenisAbsen.toUpperCase()} | ${modeKehadiran}${isDinasLuar ? ' [DINAS LUAR]' : ''}`;
     const jarakText = currentDistanceMeters !== null ? `${currentDistanceMeters}m dari lokasi` : "GPS Aktif";
 
-    ctx.fillStyle = "rgba(11, 19, 43, 0.80)";
+    ctx.fillStyle = "rgba(11, 19, 43, 0.82)";
     ctx.fillRect(0, canvas.height - 96, canvas.width, 96);
     ctx.fillStyle = "#34d399";
     ctx.font = "bold 14px Inter, sans-serif";
@@ -826,7 +976,7 @@
     closeCamera();
 
     if (cameraMode === 'lembur') {
-      await submitLemburPerJam(base64Data);
+      await prosesSubmitLembur(base64Data);
     } else {
       await prosesSubmitAbsen(base64Data);
     }
@@ -851,62 +1001,58 @@
     }
   }
 
-  // =========================================================================
-  // LEMBUR PER JAM
-  // =========================================================================
-  function hitungPreviewDurasiLembur() {
-    const m = document.getElementById('lemburMulai').value;
-    const s = document.getElementById('lemburSelesai').value;
-    if (!m || !s) return;
-    const p1 = m.split(":").map(Number);
-    const p2 = s.split(":").map(Number);
-    let menit = (p2[0] * 60 + p2[1]) - (p1[0] * 60 + p1[1]);
-    if (menit <= 0) menit += 24 * 60;
-    const jam = Math.floor(menit / 60);
-    const sisa = menit % 60;
-    const desimal = (menit / 60).toFixed(2);
-    document.getElementById('lemburDurasiPreview').innerText =
-      (sisa > 0 ? `${jam} Jam ${sisa} Menit` : `${jam} Jam`) + ` (${desimal} Jam)`;
-  }
-
-  async function submitLemburPerJam(fotoBase64) {
-    await kirimKeServer({
+  async function prosesSubmitLembur(fotoBase64) {
+    const uraian = document.getElementById('lemburTugasInput').value.trim();
+    const res = await kirimKeServer({
       action: "lembur_per_jam",
-      tanggal: document.getElementById('lemburTanggal').value,
+      jenisLembur: jenisLembur,
       nip: activeUser.nip,
       nama: activeUser.nama,
       role: activeUser.role,
       lokasi: activeUser.lokasi,
-      jamMulai: document.getElementById('lemburMulai').value,
-      jamSelesai: document.getElementById('lemburSelesai').value,
-      uraian: document.getElementById('lemburUraian').value.trim(),
+      uraian: uraian,
       koordinat: currentCoordStr,
       fotoBase64: fotoBase64
-    }, "Data Lembur Per Jam berhasil disimpan!");
-    document.getElementById('lemburUraian').value = '';
+    }, jenisLembur === 'masuk' ? "Awal Lembur berhasil tercatat!" : "Akhir Lembur & Durasi berhasil dicatat!");
+
+    if (res && res.status === "success") {
+      if (jenisLembur === 'masuk') {
+        document.getElementById('lemburTugasInput').value = '';
+        setJenisLembur('pulang');
+      } else {
+        setJenisLembur('masuk');
+      }
+    }
   }
 
-  function renderRiwayatLembur() {
-    const container = document.getElementById('riwayatLemburContainer');
+  function renderStatusOtorisasiLembur() {
+    const container = document.getElementById('statusOtorisasiLemburList');
     if (!container) return;
-    const isPimpinan = activeUser && ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
-    const list = isPimpinan
-      ? dbLemburList
-      : (activeUser ? dbLemburList.filter(l => String(l.nip) === String(activeUser.nip)) : []);
 
-    if (list.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-3">Belum ada catatan lembur per jam.</p>';
+    const myLogs = activeUser
+      ? dbLemburList.filter(l => String(l.nip).trim() === String(activeUser.nip).trim()).slice(0, 3)
+      : [];
+
+    if (myLogs.length === 0) {
+      container.innerHTML = '<p class="italic text-slate-400">Belum ada riwayat lembur per jam.</p>';
       return;
     }
-    container.innerHTML = list.map(l => `
-      <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex items-center justify-between">
-        <div>
-          <p class="font-bold text-slate-800">${l.nama} <span class="text-[9px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded font-bold">${l.totalDurasi}</span></p>
-          <p class="text-[10px] text-slate-500 mt-0.5">${l.tanggal} &bull; ${l.jamMulai} - ${l.jamSelesai}</p>
-          <p class="text-[10px] text-slate-600 mt-0.5">${l.uraian}</p>
+
+    container.innerHTML = myLogs.map(l => {
+      const isAktif = !l.jamSelesai || l.jamSelesai === "-";
+      const badge = isAktif
+        ? '<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[9px] font-bold">SEDANG LEMBUR</span>'
+        : `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${l.totalDurasi}</span>`;
+      return `
+        <div class="p-2 bg-emerald-50/50 border border-emerald-100 rounded-lg space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-800 text-[10.5px]">${l.tanggal} &bull; ${l.jamMulai.slice(0,5)} s/d ${isAktif ? '...' : l.jamSelesai.slice(0,5)}</span>
+            ${badge}
+          </div>
+          <p class="text-[10px] text-slate-600 truncate">${l.uraian}</p>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   // =========================================================================
@@ -932,12 +1078,12 @@
   function renderUserList() {
     const container = document.getElementById('userListContainer');
     container.innerHTML = dbKaryawan.map(user => `
-      <div onclick="promptLoginPin('${user.id}')" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50 cursor-pointer transition flex items-center justify-between">
-        <div>
-          <p class="font-bold text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
-          <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; ${user.lokasi}</p>
+      <div onclick="promptLoginPin('${user.id}')" class="p-2.5 border border-slate-100 rounded-xl hover:bg-emerald-50/70 active:scale-[0.99] cursor-pointer transition flex items-center justify-between">
+        <div class="min-w-0 pr-2">
+          <p class="font-bold text-slate-800 truncate">${user.nama} ${getRoleBadge(user.role)}</p>
+          <p class="text-[10px] text-slate-500 mt-0.5 truncate">NIP: ${user.nip} &bull; ${user.lokasi}</p>
         </div>
-        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg"><i class="fa-solid fa-key mr-1"></i>PIN</span>
+        <span class="text-[9px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg shrink-0"><i class="fa-solid fa-key mr-1"></i>PIN</span>
       </div>
     `).join('');
   }
@@ -1006,7 +1152,7 @@
     closePinModal();
 
     document.getElementById('headerActiveUserShort').innerText = activeUser.nama.split(' ')[0];
-    document.getElementById('headerStatusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0";
+    document.getElementById('headerStatusDot').className = "w-2 h-2 rounded-full bg-emerald-400 shrink-0";
     document.getElementById('izinEmailPengaju').value = activeUser.email || '';
     showToast(`Selamat datang, ${activeUser.nama}!`, "success");
 
@@ -1014,15 +1160,12 @@
       ? 'Skema SPV: <b>Admin Operasional &rarr; Manager</b>'
       : 'Skema Operator: <b>SPV &rarr; Admin Ops &rarr; Manager</b>';
 
-    // Tab TIM: SPV, Admin Operasional, & Manager
     const bolehTim = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
     document.getElementById('nav-tim').classList.toggle('hidden', !bolehTim);
 
-    // Tab ADMIN DB: Admin Operasional & Manager
     const bolehAdmin = ['Admin Operasional', 'Manager'].includes(activeUser.role);
     document.getElementById('nav-admin').classList.toggle('hidden', !bolehAdmin);
 
-    // Panel Approval Cuti di dalam tab Cuti: SPV, Admin Operasional, & Manager
     const bolehApproval = ['SPV', 'Admin Operasional', 'Manager'].includes(activeUser.role);
     document.getElementById('approvalSectionCard').classList.toggle('hidden', !bolehApproval);
 
@@ -1048,47 +1191,85 @@
 
     document.querySelectorAll('.tab-content-pane').forEach(el => el.classList.add('hidden'));
     document.getElementById(`tabContent-${tabId}`).classList.remove('hidden');
+
     document.querySelectorAll('.nav-btn').forEach(el => {
       el.classList.remove('text-emerald-600');
       el.classList.add('text-slate-400');
+      const ind = el.querySelector('.nav-indicator');
+      if (ind) ind.className = "nav-indicator w-6 h-0.5 rounded-full bg-transparent mb-1";
     });
     const navEl = document.getElementById(`nav-${tabId}`);
     if (navEl) {
       navEl.classList.remove('text-slate-400');
       navEl.classList.add('text-emerald-600');
+      const ind = navEl.querySelector('.nav-indicator');
+      if (ind) ind.className = "nav-indicator w-6 h-0.5 rounded-full bg-emerald-600 mb-1";
     }
   }
 
   // =========================================================================
-  // TAB TIM (DATA ABSEN MAN POWER — SPV, ADMIN OPERASIONAL, & MANAGER)
+  // TAB TIM (MONITORING ABSENSI & LOG LEMBUR TIM)
   // =========================================================================
+  function switchTimSubTab(sub) {
+    const isAbsen = (sub === 'absen');
+    document.getElementById('timAbsenSection').classList.toggle('hidden', !isAbsen);
+    document.getElementById('timLemburSection').classList.toggle('hidden', isAbsen);
+    document.getElementById('btnTimSubAbsen').className = isAbsen
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-emerald-700 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer";
+    document.getElementById('btnTimSubLembur').className = !isAbsen
+      ? "py-2 rounded-lg text-[11px] font-black bg-white text-amber-700 shadow-xs transition cursor-pointer"
+      : "py-2 rounded-lg text-[11px] font-bold text-slate-600 transition cursor-pointer";
+  }
+
   function renderTimAbsensi() {
-    const container = document.getElementById('timAbsenListContainer');
-    if (!container) return;
+    const absenContainer = document.getElementById('timAbsenListContainer');
+    const lemburContainer = document.getElementById('timLemburListContainer');
+    if (!absenContainer || !lemburContainer) return;
 
     const tglToday = getTodayDmy_();
     const hadirToday = dbAbsenList.filter(a => a.isToday || a.tanggal === tglToday).length;
     document.getElementById('timCountHadirHariIni').innerText = hadirToday;
-    document.getElementById('timCountTotalLog').innerText = dbAbsenList.length;
+    document.getElementById('timCountTotalLembur').innerText = dbLemburList.length;
+    document.getElementById('timCountTotalLog').innerText = `${dbAbsenList.length} Log`;
 
     if (dbAbsenList.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-4">Belum ada data absensi masuk.</p>';
-      return;
+      absenContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data absensi masuk.</p>';
+    } else {
+      absenContainer.innerHTML = dbAbsenList.map(item => `
+        <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-bold text-[11px] text-slate-800 truncate">${item.nama} ${getRoleBadge(item.role)}</p>
+            <p class="text-[9.5px] text-slate-500 mt-0.5">${item.tanggal} &bull; ${item.shift} &bull; <b>${item.totalJam}</b></p>
+            <p class="text-[9px] font-mono text-slate-400 mt-0.5 truncate">GPS: ${item.koordinat || '-'}</p>
+          </div>
+          <div class="text-right text-[10px] font-mono shrink-0 bg-white px-2.5 py-1.5 rounded-lg border border-slate-100">
+            <span class="block text-emerald-600 font-bold">IN : ${item.clockIn !== '-' ? item.clockIn.slice(0,5) : '-'}</span>
+            <span class="block text-rose-600 font-bold">OUT: ${item.clockOut !== '-' ? item.clockOut.slice(0,5) : '-'}</span>
+          </div>
+        </div>
+      `).join('');
     }
 
-    container.innerHTML = dbAbsenList.map(item => `
-      <div class="p-3 border border-slate-100 rounded-xl bg-slate-50 flex items-center justify-between">
-        <div class="pr-2">
-          <p class="font-bold text-[11px] text-slate-800">${item.nama} ${getRoleBadge(item.role)}</p>
-          <p class="text-[9px] text-slate-500 mt-0.5">${item.tanggal} &bull; ${item.shift} &bull; <b>${item.totalJam}</b></p>
-          <p class="text-[9px] font-mono text-slate-400 mt-0.5">GPS: ${item.koordinat || '-'}</p>
-        </div>
-        <div class="text-right text-[10px] font-mono shrink-0">
-          <span class="block text-emerald-600 font-bold">IN : ${item.clockIn !== '-' ? item.clockIn.slice(0,5) : '-'}</span>
-          <span class="block text-rose-600 font-bold">OUT: ${item.clockOut !== '-' ? item.clockOut.slice(0,5) : '-'}</span>
-        </div>
-      </div>
-    `).join('');
+    if (dbLemburList.length === 0) {
+      lemburContainer.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-5">Belum ada data lembur per jam tercatat.</p>';
+    } else {
+      lemburContainer.innerHTML = dbLemburList.map(l => {
+        const isAktif = !l.jamSelesai || l.jamSelesai === "-";
+        return `
+          <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 space-y-1">
+            <div class="flex items-center justify-between gap-2">
+              <p class="font-bold text-[11px] text-slate-800 truncate">${l.nama} ${getRoleBadge(l.role)}</p>
+              <span class="${isAktif ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'} px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0">
+                ${isAktif ? 'SEDANG LEMBUR' : l.totalDurasi}
+              </span>
+            </div>
+            <p class="text-[9.5px] text-slate-500">${l.tanggal} &bull; ${l.jamMulai.slice(0,5)} s/d ${isAktif ? '...' : l.jamSelesai.slice(0,5)}</p>
+            <p class="text-[10px] text-slate-600">${l.uraian}</p>
+          </div>
+        `;
+      }).join('');
+    }
   }
 
   // =========================================================================
@@ -1146,7 +1327,7 @@
       : "bg-rose-50 border border-rose-200 text-rose-800 p-2.5 rounded-xl text-[10px] font-semibold";
     btn.disabled = !valid;
     btn.className = valid
-      ? "w-full py-3 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-md cursor-pointer"
+      ? "w-full py-3 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.99] transition shadow-md cursor-pointer"
       : "w-full py-3 rounded-xl font-black text-xs text-white bg-slate-300 cursor-not-allowed transition";
   }
 
@@ -1187,7 +1368,7 @@
     const container = document.getElementById('approvalQueueContainer');
     if (!container) return;
     if (dbIzinList.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-3">Belum ada pengajuan masuk.</p>';
+      container.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-4">Belum ada pengajuan masuk.</p>';
       return;
     }
     container.innerHTML = dbIzinList.map(item => {
@@ -1198,21 +1379,21 @@
         if (activeUser.role === 'Manager' && item.appMgr === 'PENDING') canApprove = true;
       }
       const btns = canApprove ? `
-        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-100">
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">APPROVE</button>
-          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-rose-500 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">REJECT</button>
+        <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-200/70">
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">APPROVE</button>
+          <button onclick="promptApprovalPin('${item.idPengajuan}', 'REJECTED')" class="bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-lg text-[10px] font-bold cursor-pointer">REJECT</button>
         </div>` : '';
       return `
-        <div class="p-3 border border-slate-200 rounded-xl bg-slate-50 space-y-1">
-          <div class="flex justify-between items-start">
+        <div class="p-3 border border-slate-200/80 rounded-xl bg-slate-50/70 space-y-1.5">
+          <div class="flex justify-between items-start gap-2">
             <div><span class="font-bold text-slate-800">${item.nama}</span> ${getRoleBadge(item.role)}</div>
-            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold">${item.jenisIzin}</span>
+            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0">${item.jenisIzin}</span>
           </div>
           <p class="text-[10px] text-slate-600">${item.tglMulai} s/d ${item.tglSelesai} &bull; ${item.alasan}</p>
           <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] text-center">
-            <div class="bg-white p-1 rounded border"><b>SPV:</b> ${item.appSpv}</div>
-            <div class="bg-white p-1 rounded border"><b>ADM:</b> ${item.appAdmin}</div>
-            <div class="bg-white p-1 rounded border"><b>MGR:</b> ${item.appMgr}</div>
+            <div class="bg-white p-1.5 rounded-lg border border-slate-100"><b>SPV:</b> ${item.appSpv}</div>
+            <div class="bg-white p-1.5 rounded-lg border border-slate-100"><b>ADM:</b> ${item.appAdmin}</div>
+            <div class="bg-white p-1.5 rounded-lg border border-slate-100"><b>MGR:</b> ${item.appMgr}</div>
           </div>
           ${btns}
         </div>`;
@@ -1224,16 +1405,16 @@
     if (!container) return;
     const list = activeUser ? dbIzinList.filter(i => String(i.nip) === String(activeUser.nip)) : [];
     if (list.length === 0) {
-      container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">Belum ada riwayat pengajuan.</p>';
+      container.innerHTML = '<p class="text-[10.5px] text-slate-400 text-center py-3">Belum ada riwayat pengajuan.</p>';
       return;
     }
     container.innerHTML = list.map(item => `
-      <div class="p-2.5 border border-slate-100 rounded-xl bg-slate-50 flex justify-between items-center">
-        <div>
-          <p class="font-bold text-[11px] text-slate-800">${item.jenisIzin} (${item.tglMulai})</p>
-          <p class="text-[9px] text-slate-500">SPV: ${item.appSpv} | Adm: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
+      <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/80 flex justify-between items-center gap-2">
+        <div class="min-w-0">
+          <p class="font-bold text-[11px] text-slate-800 truncate">${item.jenisIzin} (${item.tglMulai})</p>
+          <p class="text-[9.5px] text-slate-500 mt-0.5 truncate">SPV: ${item.appSpv} | Adm: ${item.appAdmin} | Mgr: ${item.appMgr}</p>
         </div>
-        <span class="text-[9px] font-bold px-2 py-1 rounded bg-white border">${item.statusAkhir}</span>
+        <span class="text-[9px] font-bold px-2 py-1 rounded-lg bg-white border border-slate-200 shrink-0">${item.statusAkhir}</span>
       </div>
     `).join('');
   }
@@ -1245,15 +1426,15 @@
     const container = document.getElementById('adminDatabaseList');
     if (!container) return;
     container.innerHTML = dbKaryawan.map(user => `
-      <div class="p-2.5 border border-slate-100 rounded-xl flex items-center justify-between bg-slate-50">
-        <div class="pr-2">
-          <p class="font-bold text-xs text-slate-800">${user.nama} ${getRoleBadge(user.role)}</p>
-          <p class="text-[10px] text-slate-500">NIP: ${user.nip} &bull; PIN: <b>${user.pin}</b></p>
-          <p class="text-[9px] text-slate-400">${user.email || '-'} &bull; ${user.lokasi}</p>
+      <div class="p-3 border border-slate-100 rounded-xl flex items-center justify-between gap-2 bg-slate-50/80">
+        <div class="min-w-0">
+          <p class="font-bold text-xs text-slate-800 truncate">${user.nama} ${getRoleBadge(user.role)}</p>
+          <p class="text-[10px] text-slate-500 mt-0.5">NIP: ${user.nip} &bull; PIN: <b class="text-slate-700">${user.pin}</b></p>
+          <p class="text-[9.5px] text-slate-400 truncate">${user.email || '-'} &bull; ${user.lokasi}</p>
         </div>
         <div class="flex gap-1.5 shrink-0">
-          <button onclick="siapkanEditKaryawan('${user.id}')" class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
-          <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+          <button onclick="siapkanEditKaryawan('${user.id}')" class="w-8 h-8 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 flex items-center justify-center text-xs cursor-pointer transition"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button onclick="hapusKaryawan('${user.id}', '${user.nama}')" class="w-8 h-8 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center text-xs cursor-pointer transition"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
     `).join('');
@@ -1269,7 +1450,7 @@
     document.getElementById('empPin').value = emp.pin;
     document.getElementById('empEmail').value = emp.email || '';
     document.getElementById('empLokasi').value = emp.lokasi;
-    document.getElementById('formEmpTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-600 mr-1"></i>Edit Data Man Power';
+    document.getElementById('formEmpTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-600 mr-1.5"></i>Edit Data Man Power';
     document.getElementById('btnSaveEmp').innerText = "UPDATE MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.remove('hidden');
   }
@@ -1280,7 +1461,7 @@
     document.getElementById('empNama').value = '';
     document.getElementById('empPin').value = '';
     document.getElementById('empEmail').value = '';
-    document.getElementById('formEmpTitle').innerHTML = '<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i>Tambah Man Power';
+    document.getElementById('formEmpTitle').innerHTML = '<i class="fa-solid fa-user-plus text-blue-600 mr-1.5"></i>Tambah Man Power';
     document.getElementById('btnSaveEmp').innerText = "SIMPAN MAN POWER";
     document.getElementById('btnCancelEditEmp').classList.add('hidden');
   }
@@ -1365,7 +1546,7 @@
   function renderSemuaTampilan() {
     renderUserList();
     updateStatusTombolAbsen();
-    renderRiwayatLembur();
+    renderStatusOtorisasiLembur();
     renderTimAbsensi();
     renderApprovalQueue();
     renderRiwayatIzinUser();
@@ -1435,8 +1616,8 @@
     const toast = document.getElementById('toastNotification');
     document.getElementById('toastMessage').innerText = message;
     document.getElementById('toastIcon').className = type === 'success'
-      ? 'fa-solid fa-circle-check text-emerald-400 text-lg'
-      : 'fa-solid fa-circle-exclamation text-rose-400 text-lg';
+      ? 'fa-solid fa-circle-check text-emerald-400 text-base shrink-0'
+      : 'fa-solid fa-circle-exclamation text-rose-400 text-base shrink-0';
     toast.classList.remove('opacity-0', 'pointer-events-none');
     toast.classList.add('opacity-100');
     setTimeout(() => {
