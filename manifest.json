@@ -1,1 +1,25 @@
-
+{
+  "name": "PT. SGBS - GPMS V1.0",
+  "short_name": "GPMS V1.0",
+  "description": "One Stop Application PT. SGBS - Giant Parking Management System",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b132b",
+  "theme_color": "#0b132b",
+  "icons": [
+    {
+      "src": "GPMS.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "GPMS.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
