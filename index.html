@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>One Stop Application | PT. SGBS - GPMS V1.0</title>
+
+  <!-- KONFIGURASI PWA (STANDALONE TANPA LENCANA CHROME) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b132b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GPMS">
+  <link rel="icon" type="image/jpeg" href="GPMS.jpeg">
+  <link rel="apple-touch-icon" href="GPMS.jpeg">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -373,7 +384,7 @@
         </div>
       </div>
 
-      <!-- SUB-MODUL B: FORM CEKLIST KENDARAAN (SESUAI FORM LAMPIRAN) -->
+      <!-- SUB-MODUL B: FORM CEKLIST KENDARAAN -->
       <div id="laporanCeklisPane" class="space-y-3 hidden">
         <div class="bg-white border border-slate-200/70 rounded-2xl p-4 shadow-soft space-y-3">
           <div class="flex items-center justify-between">
@@ -986,12 +997,12 @@
   ];
 
   let dbKaryawan = [
-    { id: "EMP_1", nip: "New 01",       nama: "Mega Susilawati",       role: "Manager",           lokasi: "RS. Harum Sisma Medika", pin: "manager", email: "mega@sismadi.group.com",   status: "Aktif" },
-    { id: "EMP_2", nip: "New 02",       nama: "Ali Eka Wahyudi",       role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin",   email: "admsgbs@gmail.com",        status: "Aktif" },
-    { id: "EMP_3", nip: "01.001.12.11", nama: "Ahmad Sobari",          role: "SPV",               lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "sobariahmad344@gmail.com", status: "Aktif" },
+    { id: "EMP_1", nip: "New 01",       nama: "Mega Susilawati",       role: "Manager",           lokasi: "RS. Harum Sisma Medika", pin: "manager", email: "mega@sismadi.group.com",     status: "Aktif" },
+    { id: "EMP_2", nip: "New 02",       nama: "Ali Eka Wahyudi",       role: "Admin Operasional", lokasi: "RS. Harum Sisma Medika", pin: "admin",   email: "admsgbs@gmail.com",          status: "Aktif" },
+    { id: "EMP_3", nip: "01.001.12.11", nama: "Ahmad Sobari",          role: "SPV",               lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "sobariahmad344@gmail.com",   status: "Aktif" },
     { id: "EMP_4", nip: "01.007.01.20", nama: "Zia Dahri Rahmadi",     role: "Operator",          lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "ziadahrirahhmadi@gmail.com", status: "Aktif" },
-    { id: "EMP_5", nip: "01.004.02.18", nama: "Ahmad Firdaus",         role: "Operator",          lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "ahmadfiirdaus21@gmail.com", status: "Aktif" },
-    { id: "EMP_6", nip: "01.002.06.11", nama: "Chandra Wisnu Pranoto", role: "Operator",          lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "candracell515@gmail.com",  status: "Aktif" }
+    { id: "EMP_5", nip: "01.004.02.18", nama: "Ahmad Firdaus",         role: "Operator",          lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "ahmadfiirdaus21@gmail.com",  status: "Aktif" },
+    { id: "EMP_6", nip: "01.002.06.11", nama: "Chandra Wisnu Pranoto", role: "Operator",          lokasi: "RS. Harum Sisma Medika", pin: "1234",    email: "candracell515@gmail.com",    status: "Aktif" }
   ];
 
   let dbAbsenList = [];
@@ -1017,6 +1028,11 @@
   let cameraMode = "absen";
 
   window.onload = () => {
+    // Daftarkan Service Worker agar dapat diinstal sebagai aplikasi PWA standalone
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+
     muatCacheLokal();
     populatePatroliSelect();
     document.getElementById('ceklisTanggalInput').value = new Date().toISOString().split('T')[0];
