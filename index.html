@@ -185,7 +185,7 @@
           <button onclick="setJenisAbsen('pulang')" id="btnJenisPulang" class="py-2 rounded-lg text-[11px] font-black text-slate-500 transition cursor-pointer">ABSEN PULANG</button>
         </div>
         <div id="lemburActiveHint" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-bold text-emerald-800"><i class="fa-solid fa-clock mr-1"></i> Mode <b>Log Lembur Per Jam</b> aktif &mdash; tap tombol kamera di bawah untuk mencatat.</div>
-        <div id="clockInLockedNotice" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-semibold text-emerald-800"><i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih <b>ABSEN PULANG</b> saat selesai bertugas.</div>
+        <div id="clockInLockedNotice" class="hidden w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-center text-[10.5px] font-semibold text-emerald-800"><i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih manual <b>ABSEN PULANG</b> saat selesai bertugas.</div>
         <div class="relative flex items-center justify-center py-2">
           <div id="mainAbsenRing" class="absolute w-36 h-36 rounded-full bg-emerald-500/20 animate-pulse-ring"></div>
           <button id="mainAbsenBtn" onclick="triggerAbsenAction()" class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-glow-emerald border-4 border-white flex flex-col items-center justify-center px-3 text-center active:scale-95 transition cursor-pointer">
@@ -494,7 +494,7 @@
       <div class="absolute bottom-2.5 left-2.5 right-2.5 bg-black/65 backdrop-blur-xs text-white px-3 py-1.5 rounded-xl text-[9.5px] font-mono"><span id="camOverlayCoord">GPS: Mendeteksi koordinat...</span></div>
     </div>
     <div class="p-4 bg-white flex flex-col items-center space-y-1.5">
-      <button onclick="captureCameraFrame()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-lg flex items-center justify-center text-white active:scale-90 transition cursor-pointer"><i class="fa-solid fa-camera text-2xl"></i></button>
+      <button id="btnCaptureCamera" onclick="captureCameraFrame()" class="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 border-4 border-emerald-100 shadow-lg flex items-center justify-center text-white active:scale-90 transition cursor-pointer"><i class="fa-solid fa-camera text-2xl"></i></button>
       <span class="text-[9.5px] font-bold text-slate-400 uppercase">Kamera Live (1 Foto) &bull; Koordinat GPS Tercetak</span>
     </div>
   </div>
@@ -504,7 +504,7 @@
   // TEMPELKAN WEB APP URL APPS SCRIPT ANDA DI SINI:
   const SCRIPT_URL = "PASTE_URL_WEB_APP_BARU_DISINI";
 
-  // KOORDINAT BARU RS. HARUM SISMA MEDIKA (-6.248434, 106.910102)
+  // KOORDINAT RS. HARUM SISMA MEDIKA (-6.248434, 106.910102)
   const PROJECT_LOCATION = {
     name: "RS. HARUM SISMA MEDIKA",
     lat: -6.248434,
@@ -544,7 +544,7 @@
   let activeUser = null, pendingPinUser = null, pendingApprovalAction = null;
   let modeKehadiran = "Reguler (H)", jenisAbsen = "masuk", jenisLembur = "masuk";
   let isDinasLuar = false, isInsideRadius = false, currentCoordStr = "Belum terdeteksi", currentDistanceMeters = null;
-  let cameraStream = null, cameraMode = "absen";
+  let cameraStream = null, cameraMode = "absen", isSubmitting = false;
 
   window.onload = () => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
@@ -677,10 +677,15 @@
     updateStatusTombolAbsen();
   }
 
+  // FIX: Cocokkan tanggal aktual hari ini secara ketat (tidak bergantung flag cache isToday lama)
   function cekSudahAbsenMasukHariIni_() {
     if (!activeUser) return null;
     const tglToday = getTodayDmy_();
-    return dbAbsenList.find(a => String(a.nip).trim() === String(activeUser.nip).trim() && (a.isToday || a.tanggal === tglToday) && a.clockIn && a.clockIn !== "-") || null;
+    return dbAbsenList.find(a =>
+      String(a.nip).trim() === String(activeUser.nip).trim() &&
+      String(a.tanggal || "").trim() === tglToday &&
+      a.clockIn && a.clockIn !== "-" && String(a.clockIn).trim() !== ""
+    ) || null;
   }
 
   function cekSesiLemburAktif_() {
@@ -690,13 +695,17 @@
 
   function updateStatusTombolAbsen() {
     const absenHariIni = cekSudahAbsenMasukHariIni_();
-    document.getElementById('clockInSummary').innerText = (absenHariIni && absenHariIni.clockIn !== "-") ? absenHariIni.clockIn.slice(0, 5) : "--:--";
-    document.getElementById('clockOutSummary').innerText = (absenHariIni && absenHariIni.clockOut !== "-") ? absenHariIni.clockOut.slice(0, 5) : "--:--";
+    const hasClockIn = Boolean(absenHariIni && absenHariIni.clockIn && absenHariIni.clockIn !== "-" && String(absenHariIni.clockIn).trim() !== "");
+    const hasClockOut = Boolean(absenHariIni && absenHariIni.clockOut && absenHariIni.clockOut !== "-" && String(absenHariIni.clockOut).trim() !== "");
+
+    document.getElementById('clockInSummary').innerText = hasClockIn ? absenHariIni.clockIn.slice(0, 5) : "--:--";
+    document.getElementById('clockOutSummary').innerText = hasClockOut ? absenHariIni.clockOut.slice(0, 5) : "--:--";
 
     const notice = document.getElementById('clockInLockedNotice'), mainBtn = document.getElementById('mainAbsenBtn'),
           mainRing = document.getElementById('mainAbsenRing'), mainLabel = document.getElementById('mainAbsenLabel'),
           mainSub = document.getElementById('mainAbsenSub'), mainIcon = document.getElementById('mainAbsenIcon'),
-          btnMasuk = document.getElementById('btnJenisMasuk'), gpsOk = isInsideRadius || isDinasLuar;
+          btnMasuk = document.getElementById('btnJenisMasuk'), btnPulang = document.getElementById('btnJenisPulang'),
+          gpsOk = isInsideRadius || isDinasLuar;
 
     if (modeKehadiran === "Lembur (L)") {
       notice.classList.add('hidden');
@@ -717,13 +726,23 @@
       return;
     }
 
-    const sudahMasuk = Boolean(absenHariIni);
-    if (jenisAbsen === 'masuk' && sudahMasuk) {
-      notice.classList.remove('hidden'); btnMasuk.innerHTML = '<i class="fa-solid fa-lock mr-1"></i>SUDAH MASUK';
+    btnMasuk.innerHTML = hasClockIn ? '<i class="fa-solid fa-lock mr-1"></i>SUDAH MASUK' : 'ABSEN MASUK';
+    btnPulang.innerHTML = hasClockOut ? '<i class="fa-solid fa-lock mr-1"></i>SUDAH PULANG' : 'ABSEN PULANG';
+
+    if (jenisAbsen === 'masuk' && hasClockIn) {
+      notice.innerHTML = hasClockOut
+        ? '<i class="fa-solid fa-circle-check mr-1"></i> Absen Masuk & Pulang hari ini sudah lengkap tercatat.'
+        : '<i class="fa-solid fa-lock mr-1"></i> Anda sudah Absen Masuk hari ini. Pilih manual tab <b>ABSEN PULANG</b> saat selesai bertugas.';
+      notice.classList.remove('hidden');
       mainBtn.disabled = true; mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
       mainRing.className = "hidden"; mainIcon.className = "fa-solid fa-lock text-2xl mb-1"; mainLabel.innerText = "TERKUNCI"; mainSub.innerText = `In ${absenHariIni.clockIn.slice(0, 5)}`;
+    } else if (jenisAbsen === 'pulang' && hasClockOut) {
+      notice.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Absen Pulang hari ini sudah tercatat & terkunci.';
+      notice.classList.remove('hidden');
+      mainBtn.disabled = true; mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
+      mainRing.className = "hidden"; mainIcon.className = "fa-solid fa-lock text-2xl mb-1"; mainLabel.innerText = "SELESAI"; mainSub.innerText = `Out ${absenHariIni.clockOut.slice(0, 5)}`;
     } else {
-      notice.classList.add('hidden'); btnMasuk.innerText = sudahMasuk ? "✓ SUDAH MASUK" : "ABSEN MASUK";
+      notice.classList.add('hidden');
       if (!gpsOk) {
         mainBtn.disabled = true; mainBtn.className = "relative z-10 w-32 h-32 rounded-full bg-slate-200 text-slate-500 border-4 border-white flex flex-col items-center justify-center px-3 text-center cursor-not-allowed";
         mainRing.className = "hidden"; mainIcon.className = "fa-solid fa-location-dot text-2xl mb-1"; mainLabel.innerText = "LUAR RADIUS"; mainSub.innerText = "Max 1.000m";
@@ -746,6 +765,7 @@
   }
 
   function triggerAbsenAction() {
+    if (isSubmitting) { showToast("Sedang menyimpan data, tunggu sebentar...", "error"); return; }
     if (!activeUser) { showToast("Silakan pilih akun & masukkan PIN terlebih dahulu!", "error"); toggleUserDropdown(); return; }
     if (!isInsideRadius && !isDinasLuar) { showToast("Anda di luar radius 1.000m! Aktifkan Dinas Luar jika bertugas di luar.", "error"); return; }
     if (modeKehadiran === "Lembur (L)") {
@@ -755,11 +775,18 @@
       } else if (!cekSesiLemburAktif_()) { showToast("Belum ada sesi Awal Lembur (Masuk) yang aktif!", "error"); return; }
       openLiveCamera('lembur'); return;
     }
-    if (jenisAbsen === 'masuk' && cekSudahAbsenMasukHariIni_()) { showToast("Absen Masuk hari ini sudah terkunci!", "error"); return; }
+    const absenHariIni = cekSudahAbsenMasukHariIni_();
+    const hasClockOut = Boolean(absenHariIni && absenHariIni.clockOut && absenHariIni.clockOut !== "-" && String(absenHariIni.clockOut).trim() !== "");
+    if (jenisAbsen === 'masuk' && absenHariIni) { showToast("Absen Masuk hari ini sudah terkunci!", "error"); return; }
+    if (jenisAbsen === 'pulang') {
+      if (hasClockOut) { showToast("Absen Pulang hari ini sudah tercatat & terkunci!", "error"); return; }
+      if (!confirm("Yakin ingin melakukan ABSEN PULANG sekarang?")) return;
+    }
     openLiveCamera('absen');
   }
 
   async function openLiveCamera(mode) {
+    if (isSubmitting) return;
     if (!activeUser) { showToast("Silakan login dengan PIN terlebih dahulu!", "error"); toggleUserDropdown(); return; }
     if (mode === 'patroli' && !document.getElementById('patroliCatatanInput').value.trim()) { showToast("Isi keterangan / temuan lokasi patroli terlebih dahulu!", "error"); return; }
     cameraMode = mode;
@@ -790,32 +817,45 @@
   }
 
   async function captureCameraFrame() {
-    const video = document.getElementById('cameraVideo'), canvas = document.getElementById('captureCanvas');
-    canvas.width = 540; canvas.height = 720;
-    const ctx = canvas.getContext('2d');
-    if (cameraMode === 'patroli') ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    else { ctx.save(); ctx.scale(-1, 1); ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height); ctx.restore(); }
+    if (isSubmitting) return;
+    isSubmitting = true;
+    const btnCap = document.getElementById('btnCaptureCamera');
+    if (btnCap) btnCap.disabled = true;
+    try {
+      const video = document.getElementById('cameraVideo'), canvas = document.getElementById('captureCanvas');
+      canvas.width = 540; canvas.height = 720;
+      const ctx = canvas.getContext('2d');
+      if (cameraMode === 'patroli') ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      else { ctx.save(); ctx.scale(-1, 1); ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height); ctx.restore(); }
 
-    const nowStr = new Date().toLocaleString('id-ID'), titikObj = getSelectedPatroliObj_();
-    const statusLabel = cameraMode === 'patroli' ? `PATROLI | ${titikObj.nama}` : (cameraMode === 'lembur' ? `LEMBUR PER JAM (${jenisLembur === 'masuk' ? 'AWAL / MASUK' : 'AKHIR / PULANG'})${isDinasLuar ? ' [DINAS LUAR]' : ''}` : `ABSEN ${jenisAbsen.toUpperCase()} | ${modeKehadiran}${isDinasLuar ? ' [DINAS LUAR]' : ''}`);
-    const jarakText = currentDistanceMeters !== null ? `${currentDistanceMeters}m dari lokasi` : "GPS Aktif";
+      const nowStr = new Date().toLocaleString('id-ID'), titikObj = getSelectedPatroliObj_();
+      const statusLabel = cameraMode === 'patroli' ? `PATROLI | ${titikObj.nama}` : (cameraMode === 'lembur' ? `LEMBUR PER JAM (${jenisLembur === 'masuk' ? 'AWAL / MASUK' : 'AKHIR / PULANG'})${isDinasLuar ? ' [DINAS LUAR]' : ''}` : `ABSEN ${jenisAbsen.toUpperCase()} | ${modeKehadiran}${isDinasLuar ? ' [DINAS LUAR]' : ''}`);
+      const jarakText = currentDistanceMeters !== null ? `${currentDistanceMeters}m dari lokasi` : "GPS Aktif";
 
-    ctx.fillStyle = "rgba(11, 19, 43, 0.82)"; ctx.fillRect(0, canvas.height - 96, canvas.width, 96);
-    ctx.fillStyle = "#34d399"; ctx.font = "bold 13px Inter, sans-serif"; ctx.fillText(`PT. SGBS - GPMS V1.0 | ${statusLabel}`, 14, canvas.height - 72);
-    ctx.fillStyle = "#ffffff"; ctx.fillText(`${activeUser.nama} (${activeUser.nip} - ${activeUser.role})`, 14, canvas.height - 50);
-    ctx.font = "12px monospace"; ctx.fillText(`Waktu : ${nowStr} WIB`, 14, canvas.height - 30);
-    ctx.fillStyle = "#fde047"; ctx.fillText(`GPS   : ${currentCoordStr} (${jarakText})`, 14, canvas.height - 12);
+      ctx.fillStyle = "rgba(11, 19, 43, 0.82)"; ctx.fillRect(0, canvas.height - 96, canvas.width, 96);
+      ctx.fillStyle = "#34d399"; ctx.font = "bold 13px Inter, sans-serif"; ctx.fillText(`PT. SGBS - GPMS V1.0 | ${statusLabel}`, 14, canvas.height - 72);
+      ctx.fillStyle = "#ffffff"; ctx.fillText(`${activeUser.nama} (${activeUser.nip} - ${activeUser.role})`, 14, canvas.height - 50);
+      ctx.font = "12px monospace"; ctx.fillText(`Waktu : ${nowStr} WIB`, 14, canvas.height - 30);
+      ctx.fillStyle = "#fde047"; ctx.fillText(`GPS   : ${currentCoordStr} (${jarakText})`, 14, canvas.height - 12);
 
-    const base64Data = canvas.toDataURL('image/jpeg', 0.72);
-    closeCamera();
-    if (cameraMode === 'patroli') await prosesSubmitPatroli(base64Data);
-    else if (cameraMode === 'lembur') await prosesSubmitLembur(base64Data);
-    else await prosesSubmitAbsen(base64Data);
+      const base64Data = canvas.toDataURL('image/jpeg', 0.72);
+      closeCamera();
+      if (cameraMode === 'patroli') await prosesSubmitPatroli(base64Data);
+      else if (cameraMode === 'lembur') await prosesSubmitLembur(base64Data);
+      else await prosesSubmitAbsen(base64Data);
+    } finally {
+      isSubmitting = false;
+      if (btnCap) btnCap.disabled = false;
+    }
   }
 
+  // FIX: Tidak lagi auto-switch ke mode 'pulang' setelah Absen Masuk berhasil
   async function prosesSubmitAbsen(fotoBase64) {
-    const res = await kirimKeServer({ action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role, lokasi: activeUser.lokasi, shift: isDinasLuar ? `${modeKehadiran} [Dinas Luar]` : modeKehadiran, jenisAbsen, koordinat: currentCoordStr, fotoBase64 }, `Absen ${jenisAbsen.toUpperCase()} berhasil tercatat!`);
-    if (res && res.status === "success" && jenisAbsen === "masuk") setJenisAbsen("pulang");
+    await kirimKeServer({
+      action: "absen", nip: activeUser.nip, nama: activeUser.nama, role: activeUser.role, lokasi: activeUser.lokasi,
+      shift: isDinasLuar ? `${modeKehadiran} [Dinas Luar]` : modeKehadiran,
+      jenisAbsen, koordinat: currentCoordStr, fotoBase64
+    }, `Absen ${jenisAbsen.toUpperCase()} berhasil tercatat!`);
   }
 
   async function prosesSubmitLembur(fotoBase64) {
@@ -1039,6 +1079,7 @@
     document.getElementById('approvalSectionCard').classList.toggle('hidden', !bRT);
     document.getElementById('nav-admin').classList.toggle('hidden', !isAdminOrManager_(activeUser));
     document.getElementById('btnOpenPdfPreview').classList.toggle('hidden', !canExportPdf_(activeUser));
+    setJenisAbsen("masuk"); // FIX: Selalu mulai di tab ABSEN MASUK saat login akun
     switchTab('beranda'); renderSemuaTampilan(); syncServerData(false);
   }
 
@@ -1094,7 +1135,7 @@
     const fv = document.getElementById('timFilterPersonel') ? document.getElementById('timFilterPersonel').value : "ALL";
     const flt = (arr) => fv === "ALL" ? arr : (fv === "SELF" ? (activeUser ? arr.filter(x => String(x.nip).trim() === String(activeUser.nip).trim()) : []) : arr.filter(x => String(x.nip).trim() === String(fv).trim()));
     const fA = flt(dbAbsenList), fL = flt(dbLemburList), tglToday = getTodayDmy_();
-    document.getElementById('timCountHadirHariIni').innerText = dbAbsenList.filter(a => a.isToday || a.tanggal === tglToday).length;
+    document.getElementById('timCountHadirHariIni').innerText = dbAbsenList.filter(a => String(a.tanggal || "").trim() === tglToday).length;
     document.getElementById('timCountTotalLembur').innerText = dbLemburList.length;
     document.getElementById('timCountTotalLog').innerText = `${fA.length} Log`;
     document.getElementById('timCountLemburFiltered').innerText = `${fL.length} Log`;
