@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT. SGBS - GPMS V1.1 | Ceklis Kendaraan</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --primary: #0f4c81;
+      --primary-dark: #093256;
+      --accent: #0284c7;
+      --ok-bg: #dcfce7;
+      --ok-ink: #166534;
+      --inap-bg: #fef3c7;
+      --inap-ink: #92400e;
+      --err-bg: #fee2e2;
+      --err-ink: #991b1b;
+      --radius: 14px;
+      --shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+      padding: 16px;
+    }
+
+    .app-wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .badge-ver {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .sub-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .inap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .inap-item {
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .inap-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .plat-tag {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: var(--ink);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .pill-inap { background: var(--inap-bg); color: var(--inap-ink); }
+    .pill-baik { background: var(--ok-bg); color: var(--ok-ink); }
+    .pill-lainnya { background: var(--err-bg); color: var(--err-ink); }
+
+    .inap-meta {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .inap-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    select:focus, input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .seg-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .seg-btn {
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .seg-btn.active[data-cond="Baik"] {
+      background: var(--ok-bg);
+      border-color: #16a34a;
+      color: var(--ok-ink);
+    }
+
+    .seg-btn.active[data-cond="Inap"] {
+      background: var(--inap-bg);
+      border-color: #d97706;
+      color: var(--inap-ink);
+    }
+
+    .seg-btn.active[data-cond="Lainnya"] {
+      background: var(--err-bg);
+      border-color: #dc2626;
+      color: var(--err-ink);
+    }
+
+    .lainnya-box {
+      display: none;
+      border: 1px dashed #fca5a5;
+      background: #fef2f2;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 4px;
+      gap: 12px;
+    }
+
+    .lainnya-box.show {
+      display: grid;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-btn {
+      border: 1px solid #fca5a5;
+      background: #fff;
+      color: var(--err-ink);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .chip-btn.selected {
+      background: #dc2626;
+      color: #fff;
+      border-color: #dc2626;
+    }
+
+    .photo-preview-wrap {
+      margin-top: 8px;
+      display: none;
+    }
+
+    .photo-preview-wrap.show {
+      display: block;
+    }
+
+    .photo-preview-wrap img {
+      max-width: 100%;
+      max-height: 280px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 18px;
+      font-size: 0.94rem;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-soft {
+      background: #e2e8f0;
+      color: var(--ink);
+    }
+
+    .btn-warn {
+      background: #fef3c7;
+      color: var(--inap-ink);
+      border: 1px solid #fcd34d;
+    }
+
+    .btn-ok {
+      background: #dcfce7;
+      color: var(--ok-ink);
+      border: 1px solid #86efac;
+    }
+
+    .btn-danger-outline {
+      background: #fff;
+      color: var(--err-ink);
+      border: 1px solid #fca5a5;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .status-msg {
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-height: 20px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .toolbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrap">
+    <header class="topbar">
+      <div>
+        <h1>PT. SGBS - GPMS | Ceklis Kendaraan</h1>
+        <p>RS. Harum Sisma Medika (-6.248434, 106.910102) • Input Massal, Pantauan Inap &amp; Foto Kamera Live</p>
+      </div>
+      <div class="badge-ver">GPMS V1.1 • Modul Ceklis Unit</div>
+    </header>
+
+    <!-- Panel Pantauan Kendaraan Inap Aktif -->
+    <section class="card" aria-labelledby="inapTitle">
+      <div class="card-head">
+        <div>
+          <h2 id="inapTitle">Pantauan Kendaraan Inap Aktif</h2>
+          <div class="sub-note">Menampilkan unit berstatus <strong>Inap</strong> yang belum ditandai keluar beserta durasi menginap.</div>
+        </div>
+        <span class="pill pill-inap" id="inapCountBadge">0 Unit Aktif</span>
+      </div>
+      <div id="inapListContainer" class="inap-grid"></div>
+    </section>
+
+    <!-- Form Ceklis Kendaraan -->
+    <section class="card" aria-labelledby="formTitle">
+      <div class="card-head">
+        <div>
+          <h2 id="formTitle">Form Ceklis Kendaraan</h2>
+          <div class="sub-note">Status <strong>Baik</strong> atau <strong>Inap</strong> mendukung input banyak plat nomor sekaligus.</div>
+        </div>
+        <div class="sub-note" id="gpsStatusLabel">GPS: Siap mengambil lokasi...</div>
+      </div>
+
+      <form id="ceklisForm" class="form-grid">
+        <div class="field">
+          <label for="kategoriKendaraan">Kategori Kendaraan</label>
+          <select id="kategoriKendaraan" required>
+            <option value="Mobil">Mobil</option>
+            <option value="Motor">Motor</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Kondisi Kendaraan</label>
+          <div class="seg-group" role="group" aria-label="Kondisi Kendaraan">
+            <button type="button" class="seg-btn active" data-cond="Baik">Baik</button>
+            <button type="button" class="seg-btn" data-cond="Inap">Inap</button>
+            <button type="button" class="seg-btn" data-cond="Lainnya">Lainnya</button>
+          </div>
+        </div>
+
+        <!-- Input untuk Baik & Inap (mendukung massal) -->
+        <div class="field full" id="bulkPlateWrap">
+          <label for="platMassal">No. Polisi (Bisa Input Massal: pisahkan per baris atau koma)</label>
+          <textarea
+            id="platMassal"
+            placeholder="Contoh input massal:&#10;B 1234 XYZ, B 5678 ABC&#10;B 9012 DEF"
+          ></textarea>
+          <div class="sub-note">Setiap plat nomor akan otomatis dipisahkan menjadi entri tersendiri saat disimpan.</div>
+        </div>
+
+        <!-- Input untuk Lainnya (1 unit + kronologi + tombol cepat + foto live watermark) -->
+        <div class="field full">
+          <div id="lainnyaBox" class="lainnya-box">
+            <div class="field">
+              <label for="platTunggal">No. Polisi Unit Bermasalah</label>
+              <input type="text" id="platTunggal" placeholder="Contoh: B 4321 KLM" />
+            </div>
+
+            <div class="field">
+              <label>Tombol Cepat Kendala / Temuan</label>
+              <div class="quick-chips" id="quickChips">
+                <button type="button" class="chip-btn" data-issue="Penyok">Penyok</button>
+                <button type="button" class="chip-btn" data-issue="Kaca Terbuka">Kaca Terbuka</button>
+                <button type="button" class="chip-btn" data-issue="Kunci Menggantung">Kunci Menggantung</button>
+                <button type="button" class="chip-btn" data-issue="Kendaraan Baret">Kendaraan Baret</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="kronologiInput">Kronologi Temuan / Kondisi</label>
+              <textarea
+                id="kronologiInput"
+                placeholder="Tuliskan kronologi detail temuan di lapangan..."
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="liveCameraInput">Foto Kamera Live (Anti-Album / Tanpa Galeri + Watermark GPS)</label>
+              <input
+                type="file"
+                id="liveCameraInput"
+                accept="image/*"
+                capture="environment"
+              />
+              <div class="sub-note">Menggunakan kamera langsung perangkat (<code>capture="environment"</code>) dan otomatis menempelkan watermark GPS &amp; waktu.</div>
+              <div class="photo-preview-wrap" id="photoPreviewWrap">
+                <img id="watermarkedPreview" alt="Pratinjau foto ber-watermark GPS" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <div class="action-bar">
+            <button type="submit" class="btn btn-primary" id="submitBtn">Simpan Ceklis Kendaraan</button>
+            <div class="status-msg" id="statusMsg"></div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Riwayat Ceklis Terbaru -->
+    <section class="card" aria-labelledby="riwayatTitle">
+      <div class="card-head">
+        <div>
+          <h2 id="riwayatTitle">Riwayat Ceklis Kendaraan</h2>
+          <div class="sub-note">Data tersimpan lokal dan siap disinkronkan ke Google Sheets GPMS.</div>
+        </div>
+        <div class="toolbar-right">
+          <button type="button" class="btn btn-soft" id="exportCsvBtn">Unduh CSV</button>
+          <button type="button" class="btn btn-danger-outline" id="clearDataBtn">Reset Data Uji</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Kategori</th>
+              <th>No. Polisi</th>
+              <th>Kondisi</th>
+              <th>Keterangan / Kronologi</th>
+              <th>Bukti</th>
+            </tr>
+          </thead>
+          <tbody id="riwayatBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSfqNNRW4170t_nf1Sm-ENuRCXhlM_OkxjyTN4Z5Hd_CxCR6LFkOwDUqVp3UKYQAX1fw/exec";
+    const SITE_REF = { name: "RS. Harum Sisma Medika", lat: -6.248434, lng: 106.910102 };
+    const STORAGE_KEY = "gpms_v1_1_ceklis_kendaraan_v1";
+
+    let state = loadState();
+    let currentCondition = "Baik";
+    let selectedIssues = new Set();
+    let watermarkedPhotoDataUrl = "";
+    let currentCoords = { lat: SITE_REF.lat, lng: SITE_REF.lng, accuracy: null, source: "Default RS. Harum" };
+
+    const inapListContainer = document.getElementById("inapListContainer");
+    const inapCountBadge = document.getElementById("inapCountBadge");
+    const bulkPlateWrap = document.getElementById("bulkPlateWrap");
+    const lainnyaBox = document.getElementById("lainnyaBox");
+    const platMassalEl = document.getElementById("platMassal");
+    const platTunggalEl = document.getElementById("platTunggal");
+    const kronologiEl = document.getElementById("kronologiInput");
+    const liveCameraEl = document.getElementById("liveCameraInput");
+    const photoPreviewWrap = document.getElementById("photoPreviewWrap");
+    const watermarkedPreview = document.getElementById("watermarkedPreview");
+    const riwayatBody = document.getElementById("riwayatBody");
+    const statusMsg = document.getElementById("statusMsg");
+    const gpsStatusLabel = document.getElementById("gpsStatusLabel");
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return {
+            inapActive: Array.isArray(parsed.inapActive) ? parsed.inapActive : [],
+            logs: Array.isArray(parsed.logs) ? parsed.logs : []
+          };
+        }
+      } catch (err) {
+        console.warn("Gagal membaca localStorage:", err);
+      }
+      return { inapActive: [], logs: [] };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function setStatus(msg, isError = false) {
+      statusMsg.textContent = msg;
+      statusMsg.style.color = isError ? "#991b1b" : "#0f4c81";
+    }
+
+    function formatIdTime(isoStr) {
+      const d = new Date(isoStr);
+      if (Number.isNaN(d.getTime())) return isoStr || "-";
+      return d.toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function calcInapDays(startIso) {
+      const start = new Date(startIso).getTime();
+      const now = Date.now();
+      if (Number.isNaN(start)) return 1;
+      const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24)) + 1;
+      return Math.max(1, diffDays);
+    }
+
+    function normalizePlate(raw) {
+      return raw
+        .toUpperCase()
+        .replace(/[^A-Z0-9\s-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function parseBulkPlates(text) {
+      return text
+        .split(/[\n,;]+/)
+        .map(normalizePlate)
+        .filter(Boolean);
+    }
+
+    function detectGps() {
+      if (!navigator.geolocation) {
+        gpsStatusLabel.textContent = `GPS: ${SITE_REF.lat}, ${SITE_REF.lng} (Referensi RS)`;
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          currentCoords = {
+            lat: Number(pos.coords.latitude.toFixed(6)),
+            lng: Number(pos.coords.longitude.toFixed(6)),
+            accuracy: Math.round(pos.coords.accuracy),
+            source: "GPS Perangkat"
+          };
+          gpsStatusLabel.textContent = `GPS: ${currentCoords.lat}, ${currentCoords.lng} (±${currentCoords.accuracy}m)`;
+        },
+        () => {
+          gpsStatusLabel.textContent = `GPS: ${SITE_REF.lat}, ${SITE_REF.lng} (Fallback RS. Harum)`;
+        },
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 60000 }
+      );
+    }
+
+    // Pengaturan pilihan kondisi (Baik / Inap / Lainnya)
+    document.querySelectorAll(".seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".seg-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentCondition = btn.dataset.cond;
+
+        const isLainnya = currentCondition === "Lainnya";
+        lainnyaBox.classList.toggle("show", isLainnya);
+        bulkPlateWrap.style.display = isLainnya ? "none" : "flex";
+        setStatus("");
+      });
+    });
+
+    // Tombol cepat keluhan untuk kondisi Lainnya
+    document.querySelectorAll(".chip-btn").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const issue = chip.dataset.issue;
+        if (selectedIssues.has(issue)) {
+          selectedIssues.delete(issue);
+          chip.classList.remove("selected");
+        } else {
+          selectedIssues.add(issue);
+          chip.classList.add("selected");
+        }
+
+        const currentText = kronologiEl.value.trim();
+        const issueListText = Array.from(selectedIssues).join(", ");
+        if (issueListText && !currentText.includes(issueListText)) {
+          kronologiEl.value = currentText
+            ? `[${issueListText}] ${currentText}`
+            : `[${issueListText}] `;
+        }
+      });
+    });
+
+    // Proses foto kamera live + tempel watermark GPS & waktu
+    liveCameraEl.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 1024;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const stampTime = new Date().toLocaleString("id-ID");
+          const platInfo = normalizePlate(platTunggalEl.value) || "UNIT LAINNYA";
+          const line1 = `GPMS V1.1 • ${SITE_REF.name} • ${stampTime}`;
+          const line2 = `GPS: ${currentCoords.lat}, ${currentCoords.lng} • Plat: ${platInfo}`;
+
+          const boxH = Math.max(54, Math.round(h * 0.09));
+          ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+          ctx.fillRect(0, h - boxH, w, boxH);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = `bold ${Math.max(13, Math.round(boxH * 0.28))}px sans-serif`;
+          ctx.fillText(line1, 12, h - boxH + Math.round(boxH * 0.38));
+
+          ctx.fillStyle = "#fde68a";
+          ctx.font = `${Math.max(12, Math.round(boxH * 0.25))}px sans-serif`;
+          ctx.fillText(line2, 12, h - boxH + Math.round(boxH * 0.74));
+
+          watermarkedPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          watermarkedPreview.src = watermarkedPhotoDataUrl;
+          photoPreviewWrap.classList.add("show");
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    async function trySyncToSheets(payloadRows) {
+      if (!DEFAULT_SCRIPT_URL) return false;
+      try {
+        await fetch(DEFAULT_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "save_ceklis_kendaraan",
+            site: SITE_REF.name,
+            rows: payloadRows
+          })
+        });
+        return true;
+      } catch (err) {
+        console.warn("Sinkronisasi Sheets tertunda:", err);
+        return false;
+      }
+    }
+
+    function upsertInapActive(entry) {
+      const idx = state.inapActive.findIndex((item) => item.plat === entry.plat);
+      if (idx >= 0) {
+        state.inapActive[idx] = {
+          ...state.inapActive[idx],
+          kategori: entry.kategori,
+          lastCheckedAt: entry.timestamp
+        };
+      } else {
+        state.inapActive.unshift({
+          id: entry.id,
+          plat: entry.plat,
+          kategori: entry.kategori,
+          startAt: entry.timestamp,
+          lastCheckedAt: entry.timestamp
+        });
+      }
+    }
+
+    window.markInapChecked = function (plat) {
+      const nowIso = new Date().toISOString();
+      const item = state.inapActive.find((x) => x.plat === plat);
+      if (!item) return;
+      item.lastCheckedAt = nowIso;
+
+      state.logs.unshift({
+        id: "LOG-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+        timestamp: nowIso,
+        kategori: item.kategori,
+        plat: item.plat,
+        kondisi: "Inap",
+        keterangan: `Verifikasi ulang unit inap (Hari ke-${calcInapDays(item.startAt)})`,
+        hasPhoto: false
+      });
+
+      saveState();
+      renderAll();
+      setStatus(`Unit inap ${plat} berhasil dicek ulang.`);
+    };
+
+    window.markInapExited = function (plat) {
+      const nowIso = new Date().toISOString();
+      const idx = state.inapActive.findIndex((x) => x.plat === plat);
+      if (idx < 0) return;
+      const item = state.inapActive[idx];
+      state.inapActive.splice(idx, 1);
+
+      state.logs.unshift({
+        id: "LOG-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+        timestamp: nowIso,
+        kategori: item.kategori,
+        plat: item.plat,
+        kondisi: "Baik",
+        keterangan: `Kendaraan inap keluar area parkir (total ${calcInapDays(item.startAt)} hari)`,
+        hasPhoto: false
+      });
+
+      saveState();
+      renderAll();
+      setStatus(`Unit inap ${plat} ditandai sudah keluar.`);
+    };
+
+    document.getElementById("ceklisForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const kategori = document.getElementById("kategoriKendaraan").value;
+      const nowIso = new Date().toISOString();
+      const newRows = [];
+
+      if (currentCondition === "Lainnya") {
+        const plat = normalizePlate(platTunggalEl.value);
+        const kronologi = kronologiEl.value.trim();
+
+        if (!plat) {
+          setStatus("No. Polisi unit bermasalah wajib diisi.", true);
+          platTunggalEl.focus();
+          return;
+        }
+        if (!kronologi) {
+          setStatus("Kronologi temuan untuk kondisi Lainnya wajib diisi.", true);
+          kronologiEl.focus();
+          return;
+        }
+        if (!watermarkedPhotoDataUrl) {
+          setStatus("Ambil foto kamera live terlebih dahulu untuk kondisi Lainnya.", true);
+          liveCameraEl.focus();
+          return;
+        }
+
+        newRows.push({
+          id: "CHK-" + Date.now(),
+          timestamp: nowIso,
+          kategori,
+          plat,
+          kondisi: "Lainnya",
+          keterangan: kronologi,
+          hasPhoto: true,
+          photoDataUrl: watermarkedPhotoDataUrl,
+          gps: currentCoords
+        });
+      } else {
+        const plates = parseBulkPlates(platMassalEl.value);
+        if (!plates.length) {
+          setStatus("Masukkan minimal satu No. Polisi kendaraan.", true);
+          platMassalEl.focus();
+          return;
+        }
+
+        plates.forEach((plat, i) => {
+          const row = {
+            id: "CHK-" + Date.now() + "-" + i,
+            timestamp: nowIso,
+            kategori,
+            plat,
+            kondisi: currentCondition,
+            keterangan: currentCondition === "Inap" ? "Tercatat sebagai kendaraan inap" : "Kondisi baik",
+            hasPhoto: false,
+            gps: currentCoords
+          };
+          newRows.push(row);
+          if (currentCondition === "Inap") {
+            upsertInapActive(row);
+          }
+        });
+      }
+
+      state.logs.unshift(...newRows);
+      saveState();
+      renderAll();
+
+      const synced = await trySyncToSheets(newRows);
+      setStatus(
+        `${newRows.length} data ceklis (${currentCondition}) tersimpan` +
+          (synced ? " & dikirim ke Sheets." : " di perangkat.")
+      );
+
+      platMassalEl.value = "";
+      platTunggalEl.value = "";
+      kronologiEl.value = "";
+      liveCameraEl.value = "";
+      watermarkedPhotoDataUrl = "";
+      photoPreviewWrap.classList.remove("show");
+      selectedIssues.clear();
+      document.querySelectorAll(".chip-btn").forEach((c) => c.classList.remove("selected"));
+    });
+
+    function renderInapPanel() {
+      inapCountBadge.textContent = `${state.inapActive.length} Unit Aktif`;
+      if (!state.inapActive.length) {
+        inapListContainer.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Belum ada kendaraan inap aktif saat ini.</div>`;
+        return;
+      }
+
+      inapListContainer.innerHTML = state.inapActive
+        .map((item) => {
+          const hariKe = calcInapDays(item.startAt);
+          return `
+            <div class="inap-item">
+              <div class="inap-top">
+                <div>
+                  <div class="plat-tag">${item.plat}</div>
+                  <div class="inap-meta">Kategori: <strong>${item.kategori}</strong></div>
+                </div>
+                <span class="pill pill-inap">Hari ke-${hariKe}</span>
+              </div>
+              <div class="inap-meta">Masuk: ${formatIdTime(item.startAt)}</div>
+              <div class="inap-meta">Cek terakhir: ${formatIdTime(item.lastCheckedAt)}</div>
+              <div class="inap-actions">
+                <button type="button" class="btn btn-warn" style="flex:1;" onclick="window.markInapChecked('${item.plat}')">Cek Ulang</button>
+                <button type="button" class="btn btn-ok" style="flex:1;" onclick="window.markInapExited('${item.plat}')">Sudah Keluar</button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderRiwayatTable() {
+      if (!state.logs.length) {
+        riwayatBody.innerHTML = `<tr><td colspan="6" class="empty-state">Belum ada data ceklis kendaraan.</td></tr>`;
+        return;
+      }
+
+      riwayatBody.innerHTML = state.logs
+        .slice(0, 50)
+        .map((row) => {
+          const pillClass =
+            row.kondisi === "Baik"
+              ? "pill-baik"
+              : row.kondisi === "Inap"
+              ? "pill-inap"
+              : "pill-lainnya";
+
+          const buktiHtml = row.hasPhoto && row.photoDataUrl
+            ? `<a href="${row.photoDataUrl}" download="cek-${row.plat.replace(/\s+/g, "_")}.jpg">Foto GPS</a>`
+            : "-";
+
+          return `
+            <tr>
+              <td>${formatIdTime(row.timestamp)}</td>
+              <td>${row.kategori}</td>
+              <td><strong>${row.plat}</strong></td>
+              <td><span class="pill ${pillClass}">${row.kondisi}</span></td>
+              <td>${row.keterangan}</td>
+              <td>${buktiHtml}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function renderAll() {
+      renderInapPanel();
+      renderRiwayatTable();
+    }
+
+    document.getElementById("exportCsvBtn").addEventListener("click", () => {
+      if (!state.logs.length) {
+        setStatus("Tidak ada data untuk diunduh.", true);
+        return;
+      }
+      const headers = ["Waktu", "Kategori", "No Polisi", "Kondisi", "Keterangan", "Foto GPS"];
+      const lines = [
+        headers.join(","),
+        ...state.logs.map((r) =>
+          [
+            `"${formatIdTime(r.timestamp)}"`,
+            `"${r.kategori}"`,
+            `"${r.plat}"`,
+            `"${r.kondisi}"`,
+            `"${(r.keterangan || "").replace(/"/g, '""')}"`,
+            `"${r.hasPhoto ? "Ya" : "Tidak"}"`
+          ].join(",")
+        )
+      ];
+      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ceklis-kendaraan-gpms-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("clearDataBtn").addEventListener("click", () => {
+      state = { inapActive: [], logs: [] };
+      saveState();
+      renderAll();
+      setStatus("Data uji lokal berhasil direset.");
+    });
+
+    detectGps();
+    renderAll();
+  </script>
+</body>
+</html>
